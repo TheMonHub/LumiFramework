@@ -1,0 +1,139 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "common-ci-config",
+      "displayName": "Common CI Configuration",
+      "description": "Base configuration for CI builds (enables tests, docs, and install target).",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "LUMI_BUILD_TESTS": "ON",
+        "LUMI_BUILD_DOCS": "ON",
+        "LUMI_BUILD_EXAMPLES": "OFF",
+        "LUMI_INSTALL": "ON",
+        "LUMI_INSTALL_DOCS": "ON",
+        "LUMI_INSTALL_EXAMPLES": "OFF"
+      }
+    },
+    {
+      "name": "ci-shared-debug",
+      "displayName": "CI: Shared Lib (Debug)",
+      "description": "CI configuration for building the shared library in Debug mode.",
+      "inherits": "common-ci-config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "LUMI_BUILD_SHARED_LIBS": "ON",
+        "LUMI_BUILD_STATIC_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "ci-shared-release",
+      "displayName": "CI: Shared Lib (Release)",
+      "description": "CI configuration for building the shared library in Release mode.",
+      "inherits": "common-ci-config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "LUMI_BUILD_SHARED_LIBS": "ON",
+        "LUMI_BUILD_STATIC_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "ci-static-debug",
+      "displayName": "CI: Static Lib (Debug)",
+      "description": "CI configuration for building the static library in Debug mode.",
+      "inherits": "common-ci-config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "LUMI_BUILD_SHARED_LIBS": "OFF",
+        "LUMI_BUILD_STATIC_LIBS": "ON"
+      }
+    },
+    {
+      "name": "ci-static-release",
+      "displayName": "CI: Static Lib (Release)",
+      "description": "CI configuration for building the static library in Release mode.",
+      "inherits": "common-ci-config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "LUMI_BUILD_SHARED_LIBS": "OFF",
+        "LUMI_BUILD_STATIC_LIBS": "ON"
+      }
+    },
+    {
+      "name": "ci-packaging",
+      "displayName": "CI: Packaging Build",
+      "description": "Configuration specifically for building installers (Release, Shared Lib).",
+      "inherits": "ci-shared-release",
+      "cacheVariables": {
+        "LUMI_BUILD_EXAMPLES": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ci-build-debug-shared",
+      "displayName": "CI: Build Debug Shared",
+      "configurePreset": "ci-shared-debug"
+    },
+    {
+      "name": "ci-build-release-shared",
+      "displayName": "CI: Build Release Shared",
+      "configurePreset": "ci-shared-release"
+    },
+    {
+      "name": "ci-build-debug-static",
+      "displayName": "CI: Build Debug Static",
+      "configurePreset": "ci-static-debug"
+    },
+    {
+      "name": "ci-build-release-static",
+      "displayName": "CI: Build Release Static",
+      "configurePreset": "ci-static-release"
+    },
+    {
+      "name": "ci-build-docs",
+      "displayName": "CI: Build Documentation",
+      "configurePreset": "ci-shared-debug",
+      "targets": [
+        "doc"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ci-test-debug-shared",
+      "displayName": "CI: Run Tests (Debug Shared)",
+      "configurePreset": "ci-shared-debug"
+    },
+    {
+      "name": "ci-test-release-shared",
+      "displayName": "CI: Run Tests (Release Shared)",
+      "configurePreset": "ci-shared-release"
+    },
+    {
+      "name": "ci-test-debug-static",
+      "displayName": "CI: Run Tests (Debug Static)",
+      "configurePreset": "ci-static-debug"
+    },
+    {
+      "name": "ci-test-release-static",
+      "displayName": "CI: Run Tests (Release Static)",
+      "configurePreset": "ci-static-release"
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-package-release",
+      "displayName": "CI: Create Installer (Release)",
+      "configurePreset": "ci-packaging",
+      "generator": [
+        "WIX",
+        "DEB",
+        "RPM",
+        "TGZ",
+        "DragNDrop"
+      ]
+    }
+  ]
+}
