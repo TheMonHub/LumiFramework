@@ -89,6 +89,14 @@ set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 # Dependencies
 #-----------------------------------------------------------------------------
 FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest
+        GIT_TAG v1.17.0
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw
         GIT_TAG 3.4
@@ -272,7 +280,7 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     if (LUMI_INSTALL_EXAMPLES)
         install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples/"
                 DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/examples"
-                COMPONENT Lumi-dev)
+                COMPONENT Lumi-addon)
     endif ()
 endif ()
 
@@ -287,7 +295,11 @@ set(CPACK_COMPONENT_Lumi-dev_DESCRIPTION "Lumi Framework development files, incl
 set(CPACK_COMPONENT_Lumi-dev_DISPLAY_NAME "Lumi Development Files")
 set(CPACK_COMPONENT_Lumi-dev_DEPENDS Lumi)
 
-set(CPACK_COMPONENTS_ALL "Lumi" "Lumi-dev") # Explicitly list all components
+set(CPACK_COMPONENT_Lumi-addon_DESCRIPTION "Lumi Framework example applications, including source code and build scripts, to demonstrate usage.")
+set(CPACK_COMPONENT_Lumi-addon_DISPLAY_NAME "Lumi Additional")
+set(CPACK_COMPONENT_Lumi-addon_DEPENDS Lumi-dev)
+
+set(CPACK_COMPONENTS_ALL "Lumi" "Lumi-dev" "Lumi-addon") # Explicitly list all components
 
 set(CPACK_COMPONENT_Lumi_GROUP "Core Components")
 set(CPACK_COMPONENT_Lumi-dev_GROUP "Development Tools")
@@ -324,7 +336,7 @@ if (WIN32)
     set(CPACK_WIX_PRODUCT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/res/icon.ico")
     set(CPACK_WIX_UI_REF "WixUI_FeatureTree")
     set(CPACK_WIX_LICENSE_RTF "${CMAKE_CURRENT_SOURCE_DIR}/res/LICENSE.rtf")
-    set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "https://your_lumi_homepage.com")
+    set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "PLACEHOLDER_HOMEPAGE")
     set(CPACK_WIX_PROPERTY_ARPCONTACT "mono15.parnthakote@gmail.com")
     set(CPACK_WIX_ALLUSERS "perMachine")
 elseif (UNIX)
