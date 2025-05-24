@@ -3,3 +3,7 @@
 //
 
 #include "Lumi/lumi.h"
+
+#include <iostream>
+
+void Lumi::test() { std::cout << "Hello World!" << std::endl; }
