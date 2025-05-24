@@ -70,7 +70,7 @@ class DoxygenAwesomeFragmentCopyButton extends HTMLElement {
         let textContent = content.textContent
         // remove trailing newlines that appear in file listings
         let numberOfTrailingNewlines = 0
-        while (textContent.charAt(textContent.length - (numberOfTrailingNewlines + 1)) == '\n') {
+        while (textContent.charAt(textContent.length - (numberOfTrailingNewlines + 1)) === '\n') {
             numberOfTrailingNewlines++;
         }
         textContent = textContent.substring(0, textContent.length - numberOfTrailingNewlines)
