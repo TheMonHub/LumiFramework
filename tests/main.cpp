@@ -3,3 +3,6 @@
 //
 
 #include "main.h"
+#include "gtest/gtest.h"
+
+#include "Lumi/lumi.h"

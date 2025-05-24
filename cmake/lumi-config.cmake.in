@@ -1,0 +1,80 @@
+if (Lumi_FOUND)
+  return()
+endif()
+
+set(Lumi_FOUND FALSE)
+
+set(Lumi_VERSION @PROJECT_VERSION@)
+set(Lumi_MAJOR_VERSION @PROJECT_VERSION_MAJOR@)
+set(Lumi_MINOR_VERSION @PROJECT_VERSION_MINOR@)
+set(Lumi_PATCH_VERSION @PROJECT_VERSION_PATCH@)
+
+get_filename_component(Lumi_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" DIRECTORY)
+get_filename_component(Lumi_INSTALL_PREFIX "${Lumi_CMAKE_DIR}/../../.." ABSOLUTE)
+
+# Initialize include and library directories. These will be updated based on the found target.
+set(Lumi_INCLUDE_DIRS "")
+set(Lumi_LIBRARY_DIRS "")
+set(Lumi_LIBRARIES "")
+set(Lumi_DEFINITIONS "")
+
+# The macro import_targets is no longer strictly needed as we directly include lumi-targets.cmake
+# and then check for specific targets. However, it's harmless if left.
+macro(import_targets _type_to_import)
+    # This macro's internal logic for lumi-${_type_to_import}-targets.cmake is now
+    # effectively bypassed as we directly include lumi-targets.cmake below.
+    # It's kept for structural context but could be removed if desired.
+    if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
+        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+            "Lumi targets file not found.")
+        return()
+    endif()
+    include("${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
+endmacro()
+
+# --- Main logic to find and configure Lumi ---
+set(_lumi_found_target "")
+
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
+
+    # Determine which Lumi target (static or shared) was imported and is available
+    if(TARGET Lumi::LumiStatic)
+        set(_lumi_found_target Lumi::LumiStatic)
+        message(STATUS "-- Found static Lumi (version ${Lumi_VERSION})")
+    elseif(TARGET Lumi::LumiShared)
+        set(_lumi_found_target Lumi::LumiShared)
+        message(STATUS "-- Found shared Lumi (version ${Lumi_VERSION})")
+    else()
+        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "lumi-targets.cmake found, but neither Lumi::LumiStatic nor Lumi::LumiShared targets were created.")
+        set(Lumi_FOUND FALSE)
+    endif()
+
+    if(_lumi_found_target)
+        set(Lumi_FOUND TRUE)
+        # Populate Lumi_INCLUDE_DIRS, Lumi_LIBRARIES, Lumi_DEFINITIONS from the found target
+        get_target_property(Lumi_INTERFACE_INCLUDE_DIRECTORIES ${_lumi_found_target} INTERFACE_INCLUDE_DIRECTORIES)
+        set(Lumi_INCLUDE_DIRS "${Lumi_INTERFACE_INCLUDE_DIRECTORIES}")
+
+        if("${_lumi_found_target}" STREQUAL "Lumi::LumiStatic")
+            set(Lumi_LIBRARIES Lumi::LumiStatic)
+        elseif("${_lumi_found_target}" STREQUAL "Lumi::LumiShared")
+            set(Lumi_LIBRARIES Lumi::LumiShared)
+        endif()
+
+        get_target_property(Lumi_DEFINITIONS ${_lumi_found_target} INTERFACE_COMPILE_DEFINITIONS)
+    endif()
+
+else()
+    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "lumi-targets.cmake not found. Lumi may not have been installed correctly.")
+    set(Lumi_FOUND FALSE)
+endif()
+
+# Process standard find_package arguments
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Lumi
+                                REQUIRED_VARS Lumi_FOUND
+                                VERSION_VAR Lumi_VERSION)
+
+# Mark variables as advanced
+mark_as_advanced(Lumi_FOUND Lumi_INCLUDE_DIRS Lumi_LIBRARY_DIRS Lumi_LIBRARIES Lumi_DEFINITIONS)

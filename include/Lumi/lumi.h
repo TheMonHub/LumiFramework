@@ -23,7 +23,7 @@
  * @warning This class is not thread-safe without external synchronization.
  */
 class Lumi {
-		LUMI_EXPORT void test();
+		static LUMI_EXPORT void test();
 };
 
 
