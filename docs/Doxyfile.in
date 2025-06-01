@@ -42,7 +42,8 @@ RECURSIVE              = YES
 EXCLUDE_PATTERNS       = */tests/* \
                         */examples/* \
                         */third_party/*
-EXCLUDE                = "@CMAKE_CURRENT_SOURCE_DIR@/include/Lumi/export.h"
+EXCLUDE                = "@CMAKE_CURRENT_SOURCE_DIR@/include/Lumi/export.h" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/src/lumi.cpp"
 SOURCE_BROWSER         = YES
 VERBATIM_HEADERS       = YES
 

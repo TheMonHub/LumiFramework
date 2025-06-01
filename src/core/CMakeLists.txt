@@ -24,7 +24,10 @@ if (LUMI_BUILD_STATIC_LIBS)
     add_library(Lumi::CoreStatic ALIAS LumiStaticCore)
 
     configure_lumi_target(LumiStaticCore FALSE
-            "${LUMI_CORE_PUBLIC_HEADERS}")
+            "${LUMI_CORE_PUBLIC_HEADERS}"
+            Core)
+
+    set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiStaticCore)
 endif ()
 
 if (LUMI_BUILD_SHARED_LIBS)
@@ -32,6 +35,21 @@ if (LUMI_BUILD_SHARED_LIBS)
     set_target_properties(LumiSharedCore PROPERTIES OUTPUT_NAME "LumiCore")
     add_library(Lumi::CoreShared ALIAS LumiSharedCore)
 
+    # Generate export macros
+    generate_export_header(LumiSharedCore
+            EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/include/Lumi/Core/LumiCore_export.h"
+            EXPORT_MACRO_NAME LUMICORE_API
+            DEPRECATED_MACRO_NAME LUMICORE_DEPRECATED_API
+            NO_EXPORT_MACRO_NAME LUMICORE_NO_API)
+
+    # Add generated export header to public headers list
+    list(APPEND LUMI_CORE_PUBLIC_HEADERS "${CMAKE_BINARY_DIR}/include/Lumi/Core/LumiCore_export.h")
+
     configure_lumi_target(LumiSharedCore TRUE
-            "${LUMI_CORE_PUBLIC_HEADERS}")
+            "${LUMI_CORE_PUBLIC_HEADERS}"
+            "Core")
+
+    set_property(GLOBAL APPEND PROPERTY LUMI_SHARED_LIB_TARGETS LumiSharedCore)
 endif ()
+
+list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS} PARENT_SCOPE)

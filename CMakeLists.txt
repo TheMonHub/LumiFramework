@@ -23,16 +23,24 @@
 #
 # Library Building:
 # -DLUMI_BUILD_SHARED_LIBS=OFF  (Default: ON if Lumi is the top-level project)
-#   Builds Lumi as a shared library (DLL on Windows, .so on Linux, .dylib on macOS).
-# -DLUMI_BUILD_STATIC_LIBS=OFF   (Default: ON if Lumi is the top-level project)
-#   Builds Lumi as a static library (.lib on Windows, .a on Linux/macOS).
+#   Builds Lumi as shared libraries (DLL on Windows, .so on Linux, .dylib on macOS).
+# -DLUMI_BUILD_STATIC_LIBS=OFF  (Default: ON if Lumi is the top-level project)
+#   Builds Lumi as static libraries (.lib on Windows, .a on Linux/macOS).
+# -DLUMI_BUILD_MONOLITHIC_SHARED_LIB=OFF (Default: ON)
+#   Builds a single monolithic shared library (Lumi.dll/.so/.dylib) that includes all components.
+#   If this is ON, LUMI_BUILD_SHARED_LIBS for individual components may be ignored in favor of the monolithic build.
+# -DLUMI_BUILD_MONOLITHIC_STATIC_LIB=OFF (Default: ON if building static libs)
+#   Builds a single monolithic static library (Lumi.lib/.a) that includes all components.
+#
+# Component Building:
+# -DLUMI_BUILD_WINDOW=OFF       (Default: ON)
 #
 # Feature Building:
-# - DLUMI_BUILD_DOCS=OFF         (Default: ON)
+# - DLUMI_BUILD_DOCS=OFF        (Default: ON)
 #   Builds API documentation using Doxygen.
-# - DLUMI_BUILD_EXAMPLES=ON    (Default: OFF)
+# - DLUMI_BUILD_EXAMPLES=ON     (Default: OFF)
 #   Builds example applications demonstrating Lumi usage.
-# -DLUMI_BUILD_TESTS=ON       (Default: OFF)
+# -DLUMI_BUILD_TESTS=ON         (Default: OFF)
 #   Builds unit tests for Lumi.
 #
 # Installation:
@@ -68,12 +76,16 @@ include(GenerateExportHeader)
 #-----------------------------------------------------------------------------
 option(LUMI_BUILD_STATIC_LIBS "Build Lumi as a static library" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_SHARED_LIBS "Build Lumi as a shared library" ${IS_TOP_LEVEL_PROJECT})
+option(LUMI_BUILD_MONOLITHIC_SHARED_LIB "Build a single monolithic shared library (Lumi.dll/.so/.dylib) that includes all components" ON)
+option(LUMI_BUILD_MONOLITHIC_STATIC_LIB "Build a single monolithic static library (Lumi.lib/.a) that includes all components (interface if not true monolithic)" ON) # Default ON
 option(LUMI_INSTALL "Generate target for installing Lumi" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_INSTALL_DOCS "Install Lumi documentation" ON)
 option(LUMI_INSTALL_EXAMPLES "Install Lumi examples" ON)
 option(LUMI_BUILD_DOCS "Build project documentation with Doxygen" ON)
 option(LUMI_BUILD_EXAMPLES "Build Lumi examples" OFF)
 option(LUMI_BUILD_TESTS "Build Lumi tests" OFF)
+
+option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 
 # Define installation paths
 set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
@@ -122,80 +134,90 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${CMAKE_BINARY_DIR}/bin/MinSizeRe
 #-----------------------------------------------------------------------------
 # Dependencies
 #-----------------------------------------------------------------------------
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest
-        GIT_TAG v1.17.0
-)
-FetchContent_Declare(
-        glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw
-        GIT_TAG 3.4
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE) # To ensure Googletest links against shared C runtime
-FetchContent_MakeAvailable(googletest glfw)
+if (LUMI_BUILD_TESTS)
+    FetchContent_Declare(
+            googletest
+            GIT_REPOSITORY https://github.com/google/googletest
+            GIT_TAG v1.17.0
+    )
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE) # To ensure Googletest links against shared C runtime
+    FetchContent_MakeAvailable(googletest)
+endif ()
+
+if (LUMI_BUILD_DOCS)
+    find_package(Doxygen REQUIRED)
+    if (DOXYGEN_FOUND)
+        message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
+    else ()
+        message(FATAL_ERROR "Doxygen not found, but LUMI_BUILD_DOCS is ON")
+    endif ()
+endif ()
+
+if (LUMI_BUILD_WINDOW)
+    FetchContent_Declare(
+            glfw
+            GIT_REPOSITORY https://github.com/glfw/glfw
+            GIT_TAG 3.4
+    )
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "Disable GLFW's documentation build")
+    FetchContent_MakeAvailable(glfw)
+endif ()
 
 #-----------------------------------------------------------------------------
 # Library Targets
 #-----------------------------------------------------------------------------
-
 set(LUMI_COMMON_EXPORT_SET "LumiFrameworkTargets")
-set(LUMI_FRAMEWORK_PUBLIC_HEADERS
-        "${CMAKE_SOURCE_DIR}/include/Lumi/export.h"
-        "${CMAKE_SOURCE_DIR}/include/Lumi/lumi.h"
-)
 
-if (LUMI_FRAMEWORK_PUBLIC_HEADERS)
-    install(FILES ${LUMI_FRAMEWORK_PUBLIC_HEADERS}
-            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}"
-            COMPONENT Lumi-dev)
+set(LUMI_ALL_PUBLIC_HEADERS "") # Collect all headers for monolithic target's interface
+set_property(GLOBAL PROPERTY LUMI_STATIC_LIB_TARGETS "") # Store Lumi::LumiStaticCore, etc.
+set_property(GLOBAL PROPERTY LUMI_SHARED_LIB_TARGETS "") # Store Lumi::LumiSharedCore, etc.
+
+# Force static libs if monolithic shared is on (as per original logic)
+if (LUMI_BUILD_MONOLITHIC_SHARED_LIB AND NOT LUMI_BUILD_STATIC_LIBS)
+    set(LUMI_BUILD_STATIC_LIBS ON CACHE BOOL "Build Lumi as a static library" FORCE)
+    message(STATUS "LUMI_BUILD_MONOLITHIC_SHARED_LIB is ON. LUMI_BUILD_STATIC_LIBS forced ON.")
 endif ()
 
+# Build individual components
 if (LUMI_BUILD_STATIC_LIBS OR LUMI_BUILD_SHARED_LIBS)
     add_subdirectory(src/core)
-    add_subdirectory(src/window)
+else ()
+    message(STATUS "Skipping individual component library build: LUMI_BUILD_STATIC_LIBS and LUMI_BUILD_SHARED_LIBS are both OFF.")
 endif ()
 
-if (LUMI_BUILD_STATIC_LIBS)
-    # Concrete static umbrella library that includes a common source file
-    add_library(LumiStatic STATIC
-            src/lumi.cpp # This file makes it a concrete target
-    )
-    target_link_libraries(LumiStatic PRIVATE
-            LumiStaticCore
-            LumiStaticWindow
-    )
-    target_compile_definitions(LumiStatic PUBLIC LUMI_STATIC_DEFINE)
-    configure_lumi_target(LumiStatic FALSE
-            "${LUMI_FRAMEWORK_PUBLIC_HEADERS}")
-
-    # Generate the export header for this concrete static library
-    generate_export_header(LumiStatic
-            EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/include/Lumi/Lumi_static_export.h"
-            STATIC_DEFINE LUMI_STATIC_DEFINE
-            EXPORT_MACRO_NAME LUMI_EXPORT
-            DEPRECATED_MACRO_NAME LUMI_DEPRECATED_EXPORT
-            NO_EXPORT_MACRO_NAME LUMI_NO_EXPORT)
+if (LUMI_BUILD_WINDOW)
+    # add_subdirectory(src/window)
+else ()
+    message(STATUS "Skipping Window component build: LUMI_BUILD_WINDOW is OFF.")
 endif ()
 
-if (LUMI_BUILD_SHARED_LIBS)
-    # Concrete shared umbrella library that includes a common source file
-    add_library(LumiShared SHARED
-            src/lumi.cpp
-    )
-    target_link_libraries(LumiShared PRIVATE
-            LumiSharedCore
-            LumiSharedWindow
-    )
+# Retrieve the accumulated lists of targets from global properties
+get_property(LUMI_STATIC_LIB_TARGETS_LIST GLOBAL PROPERTY LUMI_STATIC_LIB_TARGETS)
+get_property(LUMI_SHARED_LIB_TARGETS_LIST GLOBAL PROPERTY LUMI_SHARED_LIB_TARGETS)
+
+# Monolithic Shared Library (Lumi::LumiShared)
+# This will be the primary "all-in-one" shared library
+if (LUMI_BUILD_MONOLITHIC_SHARED_LIB)
+    add_library(LumiShared SHARED src/lumi.cpp)
+    set_target_properties(LumiShared PROPERTIES OUTPUT_NAME "Lumi")
+
+    # Link all shared components into the monolithic shared library
+    target_link_libraries(LumiShared PUBLIC ${LUMI_SHARED_LIB_TARGETS_LIST} ${LUMI_STATIC_LIB_TARGETS_LIST})
+    add_library(Lumi::LumiShared ALIAS LumiShared)
+
+    # Configure the monolithic shared library for export
     configure_lumi_target(LumiShared TRUE
-            "${LUMI_FRAMEWORK_PUBLIC_HEADERS}")
+            "${LUMI_ALL_PUBLIC_HEADERS}"
+            "")
+endif ()
 
-    # Generate the export header for this concrete shared library
-    generate_export_header(LumiShared
-            EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/include/Lumi/Lumi_shared_export.h"
-            EXPORT_MACRO_NAME LUMI_EXPORT
-            DEPRECATED_MACRO_NAME LUMI_DEPRECATED_EXPORT
-            NO_EXPORT_MACRO_NAME LUMI_NO_EXPORT)
+# Monolithic Static Library (Lumi::LumiStatic) - As an INTERFACE library to group all static components
+# This allows linking all static components using one target.
+if (LUMI_BUILD_MONOLITHIC_STATIC_LIB AND LUMI_STATIC_LIB_TARGETS_LIST)
+    add_library(LumiStatic INTERFACE)
+    target_link_libraries(LumiStatic INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
+    add_library(Lumi::LumiStatic ALIAS LumiStatic)
+    install(TARGETS LumiStatic EXPORT "${LUMI_COMMON_EXPORT_SET}" COMPONENT Lumi-dev)
 endif ()
 
 #-----------------------------------------------------------------------------
@@ -213,7 +235,6 @@ endif ()
 # Documentation
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_DOCS)
-    find_package(Doxygen REQUIRED)
     if (DOXYGEN_FOUND)
         set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in")
         set(DOXYFILE_OUT "${CMAKE_CURRENT_BINARY_DIR}/docs/Doxyfile")
@@ -257,31 +278,12 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
                 NAMESPACE Lumi::)
     endif ()
 
-    # IMPORTANT: Install the generated global export headers
-    if (LUMI_BUILD_STATIC_LIBS)
-        install(FILES "${CMAKE_BINARY_DIR}/include/Lumi/Lumi_static_export.h"
-                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi"
-                COMPONENT Lumi-dev)
-    endif ()
-    if (LUMI_BUILD_SHARED_LIBS)
-        install(FILES "${CMAKE_BINARY_DIR}/include/Lumi/Lumi_shared_export.h"
-                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi"
-                COMPONENT Lumi-dev)
-    endif ()
-
     # Install CMake configuration files
     install(FILES
             "${CMAKE_CURRENT_BINARY_DIR}/lumi-config.cmake"
             "${CMAKE_CURRENT_BINARY_DIR}/lumi-config-version.cmake"
             COMPONENT Lumi-dev
             DESTINATION "${LUMI_INSTALL_CMAKEDIR}")
-
-    # Install examples if enabled
-    if (LUMI_INSTALL_EXAMPLES)
-        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples/"
-                DESTINATION "${CMAKE_INSTALL_DATADIR}/${LUMI_VERSIONED_SUBDIR}/examples"
-                COMPONENT Lumi-addon)
-    endif ()
 endif ()
 
 #-----------------------------------------------------------------------------
