@@ -34,7 +34,7 @@ HTML_COPY_CLIPBOARD    = NO
 #---------------------------------------------------------------------------
 INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@/include" \
                         "@CMAKE_CURRENT_SOURCE_DIR@/src"
-FILE_PATTERNS          = *.hpp \
+FILE_PATTERNS          = *.h \
                         *.cpp
 RECURSIVE              = YES
 EXCLUDE_PATTERNS       = */tests/* \
@@ -49,10 +49,11 @@ VERBATIM_HEADERS       = YES
 #---------------------------------------------------------------------------
 ENABLE_PREPROCESSING   = YES
 MACRO_EXPANSION        = YES
-PREDEFINED             = LUMI_EXPORT= \
-                        LUMI_NO_EXPORT= \
-                        LUMI_DEPRECATED_EXPORT= \
-                        LUMI_STATIC_DEFINE=
+PREDEFINED             = LUMI_API= \
+                        LUMI_NO_API= \
+                        LUMI_DEPRECATED_API= \
+                        LUMI_DEPRECATED_API_NO_EXPORT= \
+                        LUMI_DEPRECATED_API_EXPORT=
 
 #---------------------------------------------------------------------------
 # C++
