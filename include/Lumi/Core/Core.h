@@ -6,7 +6,7 @@
 #define CORE_H
 
 #include <string>
-#include "Lumi/Core/LumiCore_export.h"
+#include "Lumi/Core/Lumi_export.h"
 
 /**
  * @file Core.h
@@ -34,7 +34,7 @@ namespace Lumi {
 	 * @ingroup core_module // Optional: Use this to group related classes in Doxygen output.
 	 * // You'd define `core_module` in your Doxyfile or another comment block.
 	 */
-	class LUMICORE_API Core {
+	class LUMI_DEPRECATED_API_EXPORT Core {
 		public:
 			/**
 			 * @brief Get the current version of the Lumi Core library.
@@ -42,7 +42,7 @@ namespace Lumi {
 			 * @return A string representing the current version of the Lumi Core library,
 			 * typically in "major.minor.patch" format (e.g., "1.2.3").
 			 */
-			static LUMICORE_API std::string GetVersion();
+			static LUMI_API std::string GetVersion();
 
 			/**
 			 * @brief Get the license text for the Lumi Core library.
@@ -50,7 +50,7 @@ namespace Lumi {
 			 * @return A string containing the full license text under which the Lumi
 			 * Framework is distributed.
 			 */
-			static LUMICORE_API std::string GetLicense();
+			static LUMI_API std::string GetLicense();
 	};
 
 } // namespace Lumi

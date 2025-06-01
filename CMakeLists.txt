@@ -50,6 +50,9 @@
 #   Installs the generated Lumi documentation.
 # -DLUMI_INSTALL_EXAMPLES=OFF   (Default: ON)
 #   Installs the built Lumi examples.
+# TODO: Add CMakePresets.json
+# TODO: Add github workflows for formatting, building, testing, and packaging
+# TODO: Add github website pages for documentation using github workflows
 
 cmake_minimum_required(VERSION 3.16)
 project(Lumi
@@ -148,7 +151,8 @@ if (LUMI_BUILD_DOCS)
     find_package(Doxygen REQUIRED)
     message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}, version ${DOXYGEN_VERSION}")
     if (${DOXYGEN_VERSION} VERSION_LESS "1.10.0")
-        message(FATAL_ERROR "Doxygen version 1.10.0 or higher is required for Lumi documentation.")
+        message(WARNING "Doxygen version 1.10.0 or higher is required for Lumi documentation. Skipping documentation generation.")
+        set(LUMI_BUILD_DOCS OFF CACHE BOOL "Disable Lumi documentation build" FORCE)
     endif ()
 endif ()
 
@@ -175,7 +179,7 @@ if (EXISTS "${LUMI_LICENSE_FILE}")
     set(LUMI_LICENSE_TEXT_CONTENT "${LUMI_LICENSE_TEXT_CONTENT_ESCAPED}")
 else ()
     message(WARNING "License file not found at ${LUMI_LICENSE_FILE}. Embedding a default license text.")
-    set(LUMI_LICENSE_TEXT_CONTENT "Copyright (c) 2025 TheMonHub\\n\\n"
+    set(LUMI_LICENSE_TEXT_CONTENT "Copyright (c) XXXX TheMonHub\\n\\n"
             "This software is provided 'as-is', without any express or implied warranty.\\n"
             "In no event will the authors be held liable for any damages arising from the use of this software.\\n\\n"
             "Permission is granted to anyone to use this software for any purpose, including commercial applications, \\n"
@@ -312,6 +316,14 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
                 NAMESPACE Lumi::)
     endif ()
 
+    install(FILES "${CMAKE_SOURCE_DIR}/LICENSE"
+            DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+            COMPONENT Lumi)
+
+    install(FILES "${CMAKE_SOURCE_DIR}/LICENSE"
+            DESTINATION "${CMAKE_INSTALL_DOCDIR}"
+            COMPONENT Lumi)
+
     # Install CMake configuration files
     install(FILES
             "${CMAKE_CURRENT_BINARY_DIR}/lumi-config.cmake"
@@ -346,7 +358,6 @@ set(CPACK_COMPONENT_GROUP_Core_Components_DESCRIPTION "Essential runtime files f
 # CPack General Configuration
 #-----------------------------------------------------------------------------
 # TODO: Add res/icon.png
-# TODO: Add res/DESCRIPTION
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
