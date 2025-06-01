@@ -3,10 +3,10 @@
 //
 
 #include "main.h"
-#include "Lumi/0.1/Lumi/"
+#include "../include/Lumi/0.1/Lumi/
 
 int main() {
-	Lumi::main lumiMain;
+	Lumi::test lumiMain;
 	lumiMain.run();
 	return 0;
 }

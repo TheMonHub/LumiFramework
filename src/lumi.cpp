@@ -6,4 +6,4 @@
 
 #include <iostream>
 
-void Lumi::test() { std::cout << "Hello World!" << std::endl; }
+LUMI_EXPORT void Lumi::test() { std::cout << "Hello World!" << std::endl; }

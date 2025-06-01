@@ -152,6 +152,7 @@ if (LUMI_FRAMEWORK_PUBLIC_HEADERS)
 endif ()
 
 if (LUMI_BUILD_STATIC_LIBS OR LUMI_BUILD_SHARED_LIBS)
+    add_subdirectory(src/core)
     add_subdirectory(src/window)
 endif ()
 
@@ -161,6 +162,7 @@ if (LUMI_BUILD_STATIC_LIBS)
             src/lumi.cpp # This file makes it a concrete target
     )
     target_link_libraries(LumiStatic PRIVATE
+            LumiStaticCore
             LumiStaticWindow
     )
     target_compile_definitions(LumiStatic PUBLIC LUMI_STATIC_DEFINE)
@@ -182,6 +184,7 @@ if (LUMI_BUILD_SHARED_LIBS)
             src/lumi.cpp
     )
     target_link_libraries(LumiShared PRIVATE
+            LumiSharedCore
             LumiSharedWindow
     )
     configure_lumi_target(LumiShared TRUE
@@ -304,49 +307,22 @@ set(CPACK_COMPONENT_Lumi-dev_GROUP "Development Tools")
 set(CPACK_COMPONENT_GROUP_Core_Components_DESCRIPTION "Essential runtime files for Lumi Framework.")
 
 #-----------------------------------------------------------------------------
-# CPack General Configuration & Generator Selection
+# CPack General Configuration
 #-----------------------------------------------------------------------------
+# TODO: Add res/icon.png
+# TODO: Add res/DESCRIPTION
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGE_VENDOR "${PROJECT_COPYRIGHT_HOLDER}")
 set(CPACK_PACKAGE_HOMEPAGE_URL "${PROJECT_HOMEPAGE_URL}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/res/DESCRIPTION")
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/res/icon.png")
 set(CPACK_SET_DESTDIR ON)
 
-# --- Platform-specific CPack Generators ---
-if (WIN32)
-    set(CPACK_GENERATOR "WIX")
-
-    # --- WiX-specific variables ---
-    # These are crucial for proper MSI behavior, especially for upgrades.
-
-    # Generate unique GUIDs once and keep them constant for your project.
-    # You can generate GUIDs online (search for "GUID generator")
-    # This should be done only once and kept consistent across major versions.
-    set(CPACK_WIX_UPGRADE_GUID "PLACEHOLDER_GUID")
-    set(CPACK_WIX_CULTURES "en-US")
-    set(CPACK_WIX_PRODUCT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/res/icon.ico")
-    set(CPACK_WIX_UI_REF "WixUI_FeatureTree")
-    set(CPACK_WIX_LICENSE_RTF "${CMAKE_CURRENT_SOURCE_DIR}/res/LICENSE.rtf")
-    set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "${PROJECT_HOMEPAGE_URL}")
-    set(CPACK_WIX_PROPERTY_ARPCONTACT "mono15.parnthakote@gmail.com")
-    set(CPACK_WIX_ALLUSERS "perMachine")
-elseif (UNIX)
-    set(CPACK_GENERATOR "DEB;RPM;TGZ")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "TheMonHub")
-    set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${PROJECT_HOMEPAGE_URL}")
-    set(CPACK_PACKAGE_CONTACT "mono15.parnthakote@gmail.com")
-    set(CPACK_DEBIAN_PACKAGE_SECTION "libs")
-    set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-elseif (APPLE)
-    set(CPACK_GENERATOR "DragNDrop")
-    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME} ${PROJECT_VERSION}")
-endif ()
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     include(CPack)
