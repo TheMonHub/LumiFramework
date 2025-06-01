@@ -4,9 +4,9 @@
 
 #ifndef CORE_H
 #define CORE_H
-#include "Lumi/Core/LumiCore_export.h"
 
 #include <string>
+#include "Lumi/Core/LumiCore_export.h"
 
 /**
  * @file Core.h

@@ -1,0 +1,35 @@
+//
+// Created by Mono on 1/6/2025.
+//
+
+#ifndef METADATA_H_IN
+#define METADATA_H_IN
+
+/**
+ * @brief The full version string of the Lumi Framework.
+ * @details Format: "MAJOR.MINOR.PATCH" (e.g., "0.1.0").
+ */
+#define LUMI_VERSION_STRING "@PROJECT_VERSION@"
+
+/**
+ * @brief The major version number of the Lumi Framework.
+ */
+#define LUMI_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+
+/**
+ * @brief The minor version number of the Lumi Framework.
+ */
+#define LUMI_VERSION_MINOR @PROJECT_VERSION_MINOR@
+
+/**
+ * @brief The patch version number of the Lumi Framework.
+ */
+#define LUMI_VERSION_PATCH @PROJECT_VERSION_PATCH@
+
+/**
+ * @brief The full license text of the Lumi Framework.
+ * @details This macro contains the entire license information for the project.
+ */
+#define LUMI_LICENSE_TEXT "@LUMI_LICENSE_TEXT_FROM_CMAKE@"
+
+#endif //METADATA_H_IN

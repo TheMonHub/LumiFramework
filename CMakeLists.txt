@@ -146,10 +146,9 @@ endif ()
 
 if (LUMI_BUILD_DOCS)
     find_package(Doxygen REQUIRED)
-    if (DOXYGEN_FOUND)
-        message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
-    else ()
-        message(FATAL_ERROR "Doxygen not found, but LUMI_BUILD_DOCS is ON")
+    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}, version ${DOXYGEN_VERSION}")
+    if (${DOXYGEN_VERSION} VERSION_LESS "1.10.0")
+        message(FATAL_ERROR "Doxygen version 1.10.0 or higher is required for Lumi documentation.")
     endif ()
 endif ()
 
@@ -162,6 +161,44 @@ if (LUMI_BUILD_WINDOW)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "Disable GLFW's documentation build")
     FetchContent_MakeAvailable(glfw)
 endif ()
+
+#-----------------------------------------------------------------------------
+# Generate Lumi Export Header
+#-----------------------------------------------------------------------------
+set(LUMI_LICENSE_FILE "${CMAKE_SOURCE_DIR}/LICENSE")
+if (EXISTS "${LUMI_LICENSE_FILE}")
+    file(READ "${LUMI_LICENSE_FILE}" LUMI_LICENSE_TEXT_CONTENT_RAW)
+    # Replace newlines with "\\n" for C++ string literal
+    string(REPLACE "\n" "\\n\\\n" LUMI_LICENSE_TEXT_CONTENT_ESCAPED "${LUMI_LICENSE_TEXT_CONTENT_RAW}")
+    # Replace double quotes with escaped double quotes
+    string(REPLACE "\"" "\\\"" LUMI_LICENSE_TEXT_CONTENT_ESCAPED "${LUMI_LICENSE_TEXT_CONTENT_ESCAPED}")
+    set(LUMI_LICENSE_TEXT_CONTENT "${LUMI_LICENSE_TEXT_CONTENT_ESCAPED}")
+else ()
+    message(WARNING "License file not found at ${LUMI_LICENSE_FILE}. Embedding a default license text.")
+    set(LUMI_LICENSE_TEXT_CONTENT "Copyright (c) 2025 TheMonHub\\n\\n"
+            "This software is provided 'as-is', without any express or implied warranty.\\n"
+            "In no event will the authors be held liable for any damages arising from the use of this software.\\n\\n"
+            "Permission is granted to anyone to use this software for any purpose, including commercial applications, \\n"
+            "and to alter it and redistribute it freely, subject to the following restrictions:\\n\\n"
+            "1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software.\\n"
+            "2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.\\n"
+            "3. This notice may not be removed or altered from any source distribution.")
+endif ()
+
+# Make sure the variable is available for configure_file.
+set(LUMI_LICENSE_TEXT_FROM_CMAKE "${LUMI_LICENSE_TEXT_CONTENT}")
+
+# --- GLOBAL METADATA HEADER GENERATION ---
+# Metadata.h.in template should be at Lumi/include/Metadata.h.in
+set(LUMI_GLOBAL_METADATA_TEMPLATE "${CMAKE_SOURCE_DIR}/include/Lumi/Metadata.h.in")
+set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/Lumi/Metadata.h") # Output to build/Lumi/Metadata.h
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Lumi") # Ensure the output directory exists
+
+configure_file(
+        "${LUMI_GLOBAL_METADATA_TEMPLATE}"
+        "${LUMI_GENERATED_METADATA_OUTPUT}"
+        @ONLY # Important: Only replace @VAR@ style variables, not ${VAR}
+)
 
 #-----------------------------------------------------------------------------
 # Library Targets
@@ -235,24 +272,21 @@ endif ()
 # Documentation
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_DOCS)
-    if (DOXYGEN_FOUND)
-        set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in")
-        set(DOXYFILE_OUT "${CMAKE_CURRENT_BINARY_DIR}/docs/Doxyfile")
-        set(DOXY_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/docs")
+    set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in")
+    set(DOXYFILE_OUT "${CMAKE_CURRENT_BINARY_DIR}/docs/Doxyfile")
+    set(DOXY_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/docs")
 
-        configure_file("${DOXYFILE_IN}" "${DOXYFILE_OUT}" @ONLY)
+    configure_file("${DOXYFILE_IN}" "${DOXYFILE_OUT}" @ONLY)
 
-        add_custom_target(doc ALL
-                COMMAND ${DOXYGEN_EXECUTABLE} "${DOXYFILE_OUT}"
-                WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs"
-                COMMENT "Generating Doxygen documentation"
-                VERBATIM)
-
-        if (LUMI_INSTALL_DOCS)
-            install(DIRECTORY "${DOXY_OUTPUT_DIR}/"
-                    DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
-                    COMPONENT Lumi-dev)
-        endif ()
+    add_custom_target(doc ALL
+            COMMAND ${DOXYGEN_EXECUTABLE} "${DOXYFILE_OUT}"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs"
+            COMMENT "Generating Doxygen documentation"
+            VERBATIM)
+    if (LUMI_INSTALL_DOCS)
+        install(DIRECTORY "${DOXY_OUTPUT_DIR}/"
+                DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+                COMPONENT Lumi-dev)
     endif ()
 endif ()
 
