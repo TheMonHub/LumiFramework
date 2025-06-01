@@ -4,12 +4,15 @@ project(
         LANGUAGES CXX
 )
 
-find_package(glfw3 REQUIRED)
-find_package(Lumi REQUIRED)
-add_executable(ExampleWindow
+add_executable(Example
         main.cpp
 )
-link_libraries(ExampleWindow
+target_include_directories(Example
+        PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+target_link_libraries(Example
+        PRIVATE
         glfw
         Lumi::LumiStatic
 )

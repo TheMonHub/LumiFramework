@@ -2,11 +2,8 @@
 // Created by Mono on 31/5/2025.
 //
 
-#include "main.h"
-#include "../include/Lumi/0.1/Lumi/
+#include <main.h>
 
-int main() {
-	Lumi::test lumiMain;
-	lumiMain.run();
-	return 0;
-}
+#include "../include/Lumi/Core/Core.h"
+
+int main() { Lumi::test(); }

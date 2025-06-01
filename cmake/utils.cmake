@@ -10,7 +10,7 @@ endfunction()
 # target_name: The actual target name (e.g., LumiWindowStatic, LumiWindowShared, LumiFrameworkStatic)
 # is_shared_lib: TRUE if shared, FALSE if static
 # component_public_headers: List of public header files for this component
-macro(configure_lumi_target target_name is_shared_lib component_public_headers)
+macro(configure_lumi_target target_name is_shared_lib component_public_headers component_name)
     target_include_directories(${target_name}
             PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
@@ -34,27 +34,30 @@ macro(configure_lumi_target target_name is_shared_lib component_public_headers)
         # 1. Adding the target to the export set.
         # 2. Installing the physical library files (ARCHIVE, LIBRARY, RUNTIME).
         # 3. Installing public headers associated with the target property.
+
+        if ("${component_name}" STREQUAL "")
+            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}")
+            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/$<IF:$<STREQUAL:${is_shared_lib},TRUE>,shared,static>$<CONFIG>")
+            message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} directly under '${LUMI_VERSIONED_SUBDIR}'")
+            message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}'")
+        else ()
+            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/${component_name}")
+            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/$<IF:$<STREQUAL:${is_shared_lib},TRUE>,shared,static>/${component_name}$<CONFIG>")
+            message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${component_name}' folder.")
+            message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${component_name}' folder.")
+        endif ()
         install(TARGETS ${target_name}
                 EXPORT "${LUMI_COMMON_EXPORT_SET}"
                 COMPONENT Lumi-dev
-                # Common installation paths for static/shared library files
-                ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/${LUMI_VERSIONED_SUBDIR}/$<IF:$<STREQUAL:${is_shared_lib},TRUE>,shared,static>$<CONFIG>" COMPONENT Lumi-dev # For static libs and Windows import libs
-                LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/${LUMI_VERSIONED_SUBDIR}/shared$<CONFIG>" COMPONENT Lumi # For shared libs (non-Windows)
-                RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/${LUMI_VERSIONED_SUBDIR}/shared$<CONFIG>" COMPONENT Lumi # For Windows DLLs
+
+                ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}${INSTALL_DESTINATION}" COMPONENT Lumi-dev # For static libs and Windows import libs
+                LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}${INSTALL_DESTINATION}" COMPONENT Lumi # For shared libs (non-Windows)
+                RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}${INSTALL_DESTINATION}" COMPONENT Lumi # For Windows DLLs
 
                 # Install public headers from the PUBLIC_HEADER target property
                 # This ensures headers associated directly with the target are installed.
-                PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi" COMPONENT Lumi-dev
-        )
 
-        # Separate install(FILES) for specific headers if 'component_public_headers'
-        # contains additional headers not covered by PUBLIC_HEADER target property.
-        # If all headers are managed by PUBLIC_HEADER property, this block can be removed.
-        if (component_public_headers AND NOT "$<TARGET_PROPERTY:${target_name},PUBLIC_HEADER>" STREQUAL "${component_public_headers}")
-            message(WARNING "Consider moving installation of specific headers into PUBLIC_HEADER target property for '${target_name}'.")
-            install(FILES ${component_public_headers}
-                    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi"
-                    COMPONENT Lumi-dev)
-        endif ()
+                PUBLIC_HEADER DESTINATION "${PUBLIC_HEADER_DESTINATION}" COMPONENT Lumi-dev
+        )
     endif ()
 endmacro()
