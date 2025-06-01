@@ -1,26 +1,27 @@
 #-----------------------------------------------------------------------------
 # Library Sources
 #-----------------------------------------------------------------------------
+message("Configuring Lumi Window...")
 set(LUMI_WINDOW_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/window.cpp"
 )
 
 # Define public headers for the Window component
 set(LUMI_WINDOW_PUBLIC_HEADERS
-        "${CMAKE_SOURCE_DIR}/include/Lumi/window/main.h"
+        "${CMAKE_SOURCE_DIR}/include/Lumi/Window/Window.h"
 )
 
 # IDE source organization
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_WINDOW_SOURCES})
-source_group(TREE "${CMAKE_SOURCE_DIR}/include/Lumi/window" FILES ${LUMI_WINDOW_PUBLIC_HEADERS})
+source_group(TREE "${CMAKE_SOURCE_DIR}/include/Lumi/Window" FILES ${LUMI_WINDOW_PUBLIC_HEADERS})
 
 
 #-----------------------------------------------------------------------------
-
-
+# Build Configuration
+#-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
     add_library(LumiStaticWindow STATIC ${LUMI_WINDOW_SOURCES})
-    set_target_properties(LumiStaticWindow PROPERTIES OUTPUT_NAME "LumiWindow" PREFIX "")
+    set_target_properties(LumiStaticWindow PROPERTIES OUTPUT_NAME "LumiWindow")
     add_library(Lumi::WindowStatic ALIAS LumiStaticWindow)
 
     configure_lumi_target(LumiStaticWindow FALSE
@@ -31,7 +32,7 @@ endif ()
 
 if (LUMI_BUILD_SHARED_LIBS)
     add_library(LumiSharedWindow SHARED ${LUMI_WINDOW_SOURCES})
-    set_target_properties(LumiSharedWindow PROPERTIES OUTPUT_NAME "LumiWindow" PREFIX "")
+    set_target_properties(LumiSharedWindow PROPERTIES OUTPUT_NAME "LumiWindow")
     add_library(Lumi::WindowShared ALIAS LumiSharedWindow)
 
     configure_lumi_target(LumiSharedWindow TRUE
