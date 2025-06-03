@@ -29,8 +29,6 @@
 # -DLUMI_BUILD_MONOLITHIC_SHARED_LIB=OFF (Default: ON)
 #   Builds a single monolithic shared library (Lumi.dll/.so/.dylib) that includes all components.
 #   If this is ON, LUMI_BUILD_SHARED_LIBS for individual components may be ignored in favor of the monolithic build.
-# -DLUMI_BUILD_MONOLITHIC_STATIC_LIB=OFF (Default: ON if building static libs)
-#   Builds a single monolithic static library (Lumi.lib/.a) that includes all components.
 #
 # Component Building:
 # -DLUMI_BUILD_WINDOW=OFF       (Default: ON)
@@ -53,6 +51,7 @@
 # TODO: Add CMakePresets.json
 # TODO: Add github workflows for formatting, building, testing, and packaging
 # TODO: Add github website pages for documentation using github workflows
+# TODO: Add Window component (probably after core is done)
 
 cmake_minimum_required(VERSION 3.16)
 project(Lumi
@@ -80,7 +79,6 @@ option(LUMI_BUILD_ALL "Force build all components of Lumi" OFF)
 option(LUMI_BUILD_STATIC_LIBS "Build Lumi as a static library" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_SHARED_LIBS "Build Lumi as a shared library" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_MONOLITHIC_SHARED_LIB "Build a single monolithic shared library (Lumi.dll/.so/.dylib) that includes all components" ON)
-option(LUMI_BUILD_MONOLITHIC_STATIC_LIB "Build a single monolithic static library (Lumi.lib/.a) that includes all components (interface if not true monolithic)" ON) # Default ON
 option(LUMI_INSTALL "Generate target for installing Lumi" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_INSTALL_DOCS "Install Lumi documentation" ON)
 option(LUMI_INSTALL_EXAMPLES "Install Lumi examples" ON)
@@ -137,11 +135,23 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${CMAKE_BINARY_DIR}/bin/MinSizeRe
 #-----------------------------------------------------------------------------
 # Post-Configuration Setup
 #-----------------------------------------------------------------------------
+if (LUMI_BUILD_ALL)
+    set(LUMI_BUILD_MONOLITHIC_SHARED_LIB ON CACHE BOOL "Build a single monolithic shared library (Lumi.dll/.so/.dylib) that includes all components" FORCE)
+    message(STATUS "LUMI_BUILD_ALL is ON. LUMI_BUILD_MONOLITHIC_SHARED_LIB forced ON.")
+endif ()
+
 # Force static all libs if monolithic shared is on
 if (LUMI_BUILD_MONOLITHIC_SHARED_LIB)
     set(LUMI_BUILD_STATIC_LIBS ON CACHE BOOL "Build Lumi as a static library" FORCE)
     set(LUMI_BUILD_ALL ON CACHE BOOL "Force build all components of Lumi" FORCE)
     message(STATUS "LUMI_BUILD_MONOLITHIC_SHARED_LIB is ON. LUMI_BUILD_STATIC_LIBS forced ON and LUMI_BUILD_ALL.")
+endif ()
+
+if (LUMI_BUILD_ALL)
+    set(LUMI_BUILD_STATIC_LIBS ON CACHE BOOL "Build Lumi as a static library" FORCE)
+    set(LUMI_BUILD_SHARED_LIBS ON CACHE BOOL "Build Lumi as a shared library" FORCE)
+    set(LUMI_BUILD_WINDOW ON CACHE BOOL "Build Lumi Window component" FORCE)
+    message(STATUS "LUMI_BUILD_ALL is ON. All build components options are forced to ON.")
 endif ()
 
 #-----------------------------------------------------------------------------
@@ -258,7 +268,7 @@ endif ()
 
 # Monolithic Static Library (Lumi::LumiStatic) - As an INTERFACE library to group all static components
 # This allows linking all static components using one target.
-if (LUMI_BUILD_MONOLITHIC_STATIC_LIB AND LUMI_STATIC_LIB_TARGETS_LIST)
+if (LUMI_STATIC_LIB_TARGETS_LIST)
     add_library(LumiStatic INTERFACE)
     target_link_libraries(LumiStatic INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
     add_library(Lumi::LumiStatic ALIAS LumiStatic)
