@@ -5,7 +5,7 @@ project(
 )
 
 add_executable(LumiExamples
-        main.cpp
+        "main.cpp"
 )
 target_include_directories(LumiExamples
         PRIVATE
