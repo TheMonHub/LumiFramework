@@ -76,6 +76,7 @@ include(GenerateExportHeader)
 #-----------------------------------------------------------------------------
 # Build Options
 #-----------------------------------------------------------------------------
+option(LUMI_BUILD_ALL "Force build all components of Lumi" OFF)
 option(LUMI_BUILD_STATIC_LIBS "Build Lumi as a static library" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_SHARED_LIBS "Build Lumi as a shared library" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_MONOLITHIC_SHARED_LIB "Build a single monolithic shared library (Lumi.dll/.so/.dylib) that includes all components" ON)
@@ -132,6 +133,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin/Debug")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/Release")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/bin/RelWithDebInfo")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${CMAKE_BINARY_DIR}/bin/MinSizeRel")
+
+#-----------------------------------------------------------------------------
+# Post-Configuration Setup
+#-----------------------------------------------------------------------------
+# Force static all libs if monolithic shared is on
+if (LUMI_BUILD_MONOLITHIC_SHARED_LIB)
+    set(LUMI_BUILD_STATIC_LIBS ON CACHE BOOL "Build Lumi as a static library" FORCE)
+    set(LUMI_BUILD_ALL ON CACHE BOOL "Force build all components of Lumi" FORCE)
+    message(STATUS "LUMI_BUILD_MONOLITHIC_SHARED_LIB is ON. LUMI_BUILD_STATIC_LIBS forced ON and LUMI_BUILD_ALL.")
+endif ()
 
 #-----------------------------------------------------------------------------
 # Dependencies
@@ -211,12 +222,6 @@ set(LUMI_COMMON_EXPORT_SET "LumiFrameworkTargets")
 set(LUMI_ALL_PUBLIC_HEADERS "") # Collect all headers for monolithic target's interface
 set_property(GLOBAL PROPERTY LUMI_STATIC_LIB_TARGETS "") # Store Lumi::LumiStaticCore, etc.
 set_property(GLOBAL PROPERTY LUMI_SHARED_LIB_TARGETS "") # Store Lumi::LumiSharedCore, etc.
-
-# Force static libs if monolithic shared is on (as per original logic)
-if (LUMI_BUILD_MONOLITHIC_SHARED_LIB AND NOT LUMI_BUILD_STATIC_LIBS)
-    set(LUMI_BUILD_STATIC_LIBS ON CACHE BOOL "Build Lumi as a static library" FORCE)
-    message(STATUS "LUMI_BUILD_MONOLITHIC_SHARED_LIB is ON. LUMI_BUILD_STATIC_LIBS forced ON.")
-endif ()
 
 # Build individual components
 if (LUMI_BUILD_STATIC_LIBS OR LUMI_BUILD_SHARED_LIBS)
