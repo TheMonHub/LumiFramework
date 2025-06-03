@@ -8,12 +8,12 @@ set(LUMI_CORE_SOURCES
 
 # Define public headers for the core Lumi
 set(LUMI_CORE_PUBLIC_HEADERS
-        "${CMAKE_SOURCE_DIR}/include/Lumi/Core/Core.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/Lumi/Core/Core.h"
 )
 
 # IDE source organization
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
-source_group(TREE "${CMAKE_SOURCE_DIR}/include/Lumi/Core" FILES ${LUMI_CORE_PUBLIC_HEADERS})
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/Lumi/Core" FILES ${LUMI_CORE_PUBLIC_HEADERS})
 
 #-----------------------------------------------------------------------------
 # Build Configuration
@@ -37,13 +37,13 @@ if (LUMI_BUILD_SHARED_LIBS)
 
     # Generate export macros
     generate_export_header(LumiSharedCore
-            EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/include/Lumi/Core/Lumi_export.h"
+            EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/include/Lumi/Core/Lumi_export.h"
             EXPORT_MACRO_NAME LUMI_API
             DEPRECATED_MACRO_NAME LUMI_DEPRECATED_API
             NO_EXPORT_MACRO_NAME LUMI_NO_API)
 
     # Add generated export header to public headers list
-    list(APPEND LUMI_CORE_PUBLIC_HEADERS "${CMAKE_BINARY_DIR}/include/Lumi/Core/Lumi_export.h")
+    list(APPEND LUMI_CORE_PUBLIC_HEADERS "${CMAKE_CURRENT_BINARY_DIR}/include/Lumi/Core/Lumi_export.h")
 
     configure_lumi_target(LumiSharedCore TRUE
             "${LUMI_CORE_PUBLIC_HEADERS}"

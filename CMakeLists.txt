@@ -189,7 +189,7 @@ endif ()
 #-----------------------------------------------------------------------------
 # Generate Lumi Export Header
 #-----------------------------------------------------------------------------
-set(LUMI_LICENSE_FILE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(LUMI_LICENSE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 if (EXISTS "${LUMI_LICENSE_FILE}")
     file(READ "${LUMI_LICENSE_FILE}" LUMI_LICENSE_TEXT_CONTENT_RAW)
     # Replace newlines with "\\n" for C++ string literal
@@ -198,15 +198,8 @@ if (EXISTS "${LUMI_LICENSE_FILE}")
     string(REPLACE "\"" "\\\"" LUMI_LICENSE_TEXT_CONTENT_ESCAPED "${LUMI_LICENSE_TEXT_CONTENT_ESCAPED}")
     set(LUMI_LICENSE_TEXT_CONTENT "${LUMI_LICENSE_TEXT_CONTENT_ESCAPED}")
 else ()
-    message(WARNING "License file not found at ${LUMI_LICENSE_FILE}. Embedding a default license text.")
-    set(LUMI_LICENSE_TEXT_CONTENT "Copyright (c) XXXX TheMonHub\\n\\n"
-            "This software is provided 'as-is', without any express or implied warranty.\\n"
-            "In no event will the authors be held liable for any damages arising from the use of this software.\\n\\n"
-            "Permission is granted to anyone to use this software for any purpose, including commercial applications, \\n"
-            "and to alter it and redistribute it freely, subject to the following restrictions:\\n\\n"
-            "1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software.\\n"
-            "2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.\\n"
-            "3. This notice may not be removed or altered from any source distribution.")
+    message(WARNING "License file not found at ${LUMI_LICENSE_FILE}. Embedding a empty string.")
+    set(LUMI_LICENSE_TEXT_CONTENT "")
 endif ()
 
 # Make sure the variable is available for configure_file.
@@ -214,7 +207,7 @@ set(LUMI_LICENSE_TEXT_FROM_CMAKE "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
 # Metadata.h.in template should be at Lumi/include/Metadata.h.in
-set(LUMI_GLOBAL_METADATA_TEMPLATE "${CMAKE_SOURCE_DIR}/include/Lumi/Metadata.h.in")
+set(LUMI_GLOBAL_METADATA_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Lumi/Metadata.h.in")
 set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/Lumi/Metadata.h") # Output to build/Lumi/Metadata.h
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Lumi") # Ensure the output directory exists
 
@@ -305,6 +298,9 @@ if (LUMI_BUILD_DOCS)
         install(DIRECTORY "${DOXY_OUTPUT_DIR}/"
                 DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
                 COMPONENT Lumi-dev)
+        install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen-awesome-css-LICENSE.txt"
+                DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+                COMPONENT Lumi-dev)
     endif ()
 endif ()
 
@@ -330,7 +326,7 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
                 NAMESPACE Lumi::)
     endif ()
 
-    install(FILES "${CMAKE_SOURCE_DIR}/LICENSE"
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
             DESTINATION "${CMAKE_INSTALL_DOCDIR}"
             COMPONENT Lumi)
 
