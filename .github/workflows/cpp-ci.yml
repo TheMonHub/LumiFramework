@@ -1,4 +1,4 @@
-name: LUMI CI
+name: Lumi CI Ubuntu
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
       - name: Run Clang-Tidy
         if: matrix.compiler == 'clang'
         run: |
-          sudo apt-get update && sudo apt-get install -y clang-tidy
+          sudo apt-get update && sudo apt-get install -y clang-tidy doxygen
           cmake -S . -B build-${{ matrix.compiler }}-${{ matrix.build_type }}-lint \
                 -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
                 -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ \
