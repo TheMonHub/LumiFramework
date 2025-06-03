@@ -38,13 +38,10 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
 
     # Priority for setting Lumi_LIBRARIES and Lumi_DEFINITIONS:
     # 1. Monolithic Static (Lumi::LumiStatic) - if it exists.
-    # 2. Monolithic Shared (Lumi::LumiShared) - if it exists and static wasn't chosen.
-    # 3. No aggregate target, user must link individual components.
+    # 2. No aggregate target, user must link individual components.
 
-    if (TARGET Lumi::LumiStatic) # <-- STATIC FIRST
+    if (TARGET Lumi::LumiStatic)
         set(_lumi_chosen_default_target Lumi::LumiStatic)
-    elseif (TARGET Lumi::LumiShared) # <-- THEN SHARED
-        set(_lumi_chosen_default_target Lumi::LumiShared)
     endif()
 
     if (_lumi_chosen_default_target)
@@ -53,14 +50,12 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
         message(STATUS "-- Found Lumi framework (version ${Lumi_VERSION}). Default target: ${_lumi_chosen_default_target}")
     else()
         # No aggregate target found (e.g., only individual component targets like Lumi::LumiStaticCore were built/installed)
-        message(STATUS [[-- Found Lumi framework targets (version ${Lumi_VERSION}). No aggregate Lumi target (Lumi::LumiShared or Lumi::LumiStatic) found.
-Please link specific components (e.g., Lumi::LumiStaticCore, Lumi::LumiSharedCore).]])
+        message(STATUS [[Found Lumi framework targets (version ${Lumi_VERSION}). No aggregate Lumi target (Lumi::LumiStatic and etc.) found.
+Please link specific components (e.g., Lumi::LumiStaticCore, Lumi::LumiStaticWindow).]])
 
         # Fallback for definitions from a common component if no aggregate target is available
         if (TARGET Lumi::LumiStaticCore)
             get_target_property(Lumi_DEFINITIONS Lumi::LumiStaticCore INTERFACE_COMPILE_DEFINITIONS)
-        elseif (TARGET Lumi::LumiSharedCore)
-            get_target_property(Lumi_DEFINITIONS Lumi::LumiSharedCore INTERFACE_COMPILE_DEFINITIONS)
         endif()
     endif()
 
@@ -69,12 +64,6 @@ else()
     set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "lumi-targets.cmake not found. Lumi may not have been installed or built correctly.")
     set(Lumi_FOUND FALSE)
 endif()
-
-# Process standard find_package arguments
-find_package_handle_standard_args(Lumi
-                                REQUIRED_VARS Lumi_FOUND
-                                VERSION_VAR Lumi_VERSION
-                                )
 
 # Mark variables as advanced so they don't clutter the CMake GUI by default
 mark_as_advanced(Lumi_FOUND Lumi_INCLUDE_DIRS Lumi_LIBRARIES Lumi_DEFINITIONS)

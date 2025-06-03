@@ -4,15 +4,20 @@ project(
         LANGUAGES CXX
 )
 
+find_package(Lumi REQUIRED)
+
+message(STATUS "${Lumi_INCLUDE_DIRS}")
+
 add_executable(Example
         main.cpp
 )
 target_include_directories(Example
         PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${Lumi_INCLUDE_DIRS}"
 )
 target_link_libraries(Example
         PRIVATE
         glfw
-        Lumi::LumiStatic
+        ${Lumi_LIBRARIES}
 )

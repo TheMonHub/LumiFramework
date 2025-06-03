@@ -20,7 +20,8 @@ HTML_COLORSTYLE_GAMMA  = 80
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_TREEVIEW      = YES
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = "@CMAKE_CURRENT_SOURCE_DIR@"
+STRIP_FROM_PATH        = "@CMAKE_CURRENT_SOURCE_DIR@" \
+                        "@CMAKE_CURRENT_BINARY_DIR@"
 DISABLE_INDEX          = NO
 FULL_SIDEBAR           = NO
 HTML_EXTRA_FILES       = @CMAKE_CURRENT_SOURCE_DIR@/docs/doxygen-awesome-fragment-copy-button.js \
@@ -33,14 +34,13 @@ HTML_COPY_CLIPBOARD    = NO
 # Input
 #---------------------------------------------------------------------------
 INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@/include" \
-                        "@CMAKE_CURRENT_SOURCE_DIR@/src"
+                        "@CMAKE_CURRENT_SOURCE_DIR@/src" \
+                        "@CMAKE_CURRENT_BINARY_DIR@/include"
 FILE_PATTERNS          = *.h \
                         *.cpp
 RECURSIVE              = YES
-EXCLUDE_PATTERNS       = */tests/* \
-                        */examples/* \
-                        */third_party/*
-EXCLUDE                = "@CMAKE_CURRENT_SOURCE_DIR@/src/lumi.cpp"
+EXCLUDE_PATTERNS       =
+EXCLUDE                =
 SOURCE_BROWSER         = YES
 VERBATIM_HEADERS       = YES
 
@@ -49,11 +49,7 @@ VERBATIM_HEADERS       = YES
 #---------------------------------------------------------------------------
 ENABLE_PREPROCESSING   = YES
 MACRO_EXPANSION        = YES
-PREDEFINED             = LUMI_API= \
-                        LUMI_NO_API= \
-                        LUMI_DEPRECATED_API= \
-                        LUMI_DEPRECATED_API_NO_EXPORT= \
-                        LUMI_DEPRECATED_API_EXPORT=
+PREDEFINED             =
 
 #---------------------------------------------------------------------------
 # C++
