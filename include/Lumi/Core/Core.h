@@ -31,8 +31,7 @@ namespace Lumi {
 	 * for framework-wide operations or access to core utilities.
 	 * It provides methods to query framework information like version and license details.
 	 *
-	 * @ingroup core_module // Optional: Use this to group related classes in Doxygen output.
-	 * // You'd define `core_module` in your Doxyfile or another comment block.
+	 * @ingroup core_module
 	 */
 	class LUMI_DEPRECATED_API_EXPORT Core {
 		public:
