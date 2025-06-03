@@ -1,0 +1,180 @@
+name: LUMI CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Debug, Release]
+        compiler: [gcc, clang]
+        include:
+          - os: ubuntu-latest
+            build_type: Debug
+            compiler: clang
+            sanitizer: "Address;Undefined"
+            name_suffix: " (Sanitizers)"
+          - os: ubuntu-latest
+            build_type: Debug
+            compiler: gcc
+            coverage: true
+            name_suffix: " (Coverage)"
+
+    name: ${{ matrix.os }} / ${{ matrix.compiler }} (${{ matrix.build_type }})${{ matrix.name_suffix }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: First Interaction
+        uses: actions/first-interaction@v1.3.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: "Hello @{{ contributor }}! Thanks for opening your first issue in this repository. We appreciate your contribution!"
+          pr-message: "Welcome, @{{ contributor }}! We're excited to see your first pull request. We'll review it shortly!"
+
+      - name: Check Code Formatting
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc' && matrix.build_type == 'Debug'
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang-format
+          find . -name "*.cpp" -o -name "*.hpp" -o -name "*.c" -o -name "*.h" \
+            | xargs clang-format --Werror --dry-run
+
+      - name: Run Clang-Tidy
+        if: matrix.compiler == 'clang'
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang-tidy
+          cmake -S . -B build-${{ matrix.compiler }}-${{ matrix.build_type }}-lint \
+                -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+                -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ \
+                -DCMAKE_CXX_CLANG_TIDY="clang-tidy;-p=build-${{ matrix.compiler }}-${{ matrix.build_type }}-lint" \
+                -G "Ninja"
+          cmake --build build-${{ matrix.compiler }}-${{ matrix.build_type }}-lint
+        continue-on-error: true
+
+      - name: Get CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"
+          ninjaVersion: latest
+
+      - name: Cache CMake FetchContent dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/cmake
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-cmake-deps-${{ hashFiles('**/CMakeLists.txt', '**/cmake/*.cmake') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-cmake-deps-
+            ${{ runner.os }}-${{ matrix.compiler }}-cmake-deps-
+            ${{ runner.os }}-cmake-deps-
+
+      - name: Configure CMake for Build and Tests
+        id: configure_cmake
+        shell: bash
+        run: |
+          BUILD_DIR="build-${{ matrix.compiler }}-${{ matrix.build_type }}"
+          CMAKE_ARGS="-S . -B ${BUILD_DIR} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ -G Ninja"
+
+          if [ -n "${{ matrix.sanitizer }}" ]; then
+            echo "::group::Configuring with Sanitizers: ${{ matrix.sanitizer }}"
+            SANITIZER_FLAGS=""
+            if [[ "${{ matrix.sanitizer }}" == *"Address"* ]]; then
+              SANITIZER_FLAGS+=" -fsanitize=address"
+            fi
+            if [[ "${{ matrix.sanitizer }}" == *"Undefined"* ]]; then
+              SANITIZER_FLAGS+=" -fsanitize=undefined"
+            fi
+            if [[ "${{ matrix.sanitizer }}" == *"Leak"* ]]; then
+              SANITIZER_FLAGS+=" -fsanitize=leak"
+            fi
+            if [[ "${{ matrix.sanitizer }}" == *"Thread"* ]]; then
+              SANITIZER_FLAGS+=" -fsanitize=thread"
+            fi
+            SANITIZER_FLAGS+=" -fno-omit-frame-pointer"
+            CMAKE_ARGS="${CMAKE_ARGS} -DCMAKE_CXX_FLAGS=\"${SANITIZER_FLAGS}\" -DCMAKE_C_FLAGS=\"${SANITIZER_FLAGS}\""
+            echo "Sanitizer C/CXX Flags: ${SANITIZER_FLAGS}"
+            echo "::endgroup::"
+          fi
+
+          if [ "${{ matrix.coverage }}" == "true" ]; then
+            echo "::group::Configuring for Code Coverage"
+            CMAKE_ARGS="${CMAKE_ARGS} -DCMAKE_CXX_FLAGS=\"--coverage\" -DCMAKE_C_FLAGS=\"--coverage\" -DCMAKE_EXE_LINKER_FLAGS=\"--coverage\" -DCMAKE_SHARED_LINKER_FLAGS=\"--coverage\""
+            echo "Coverage C/CXX Flags applied"
+            echo "::endgroup::"
+          fi
+
+          echo "Running CMake configure with args: ${CMAKE_ARGS}"
+          cmake ${CMAKE_ARGS}
+
+      - name: Build Project
+        run: |
+          BUILD_DIR="build-${{ matrix.compiler }}-${{ matrix.build_type }}"
+          cmake --build ${BUILD_DIR} --parallel $(nproc)
+
+      - name: Run Tests
+        run: |
+          BUILD_DIR="build-${{ matrix.compiler }}-${{ matrix.build_type }}"
+          cd ${BUILD_DIR}
+          ctest --output-on-failure --output-junit results.xml
+        continue-on-error: true
+
+      - name: Generate and Upload Code Coverage Report
+        if: matrix.coverage == true
+        run: |
+          BUILD_DIR="build-${{ matrix.compiler }}-${{ matrix.build_type }}"
+          sudo apt-get update && sudo apt-get install -y lcov gcovr
+          
+          gcovr --xml --output "${BUILD_DIR}/coverage.xml" \
+                --root ../ \
+                --exclude ".*(test|Test|catch)/.*" \
+                --exclude ".*(third_party|external)/.*" \
+                "${BUILD_DIR}"
+
+          gcovr --html --output "${BUILD_DIR}/coverage_report.html" \
+                --root ../ \
+                --exclude ".*(test|Test|catch)/.*" \
+                --exclude ".*(third_party|external)/.*" \
+                "${BUILD_DIR}"
+
+      - name: Upload Code Coverage to Codecov
+        if: matrix.coverage == true
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: build-${{ matrix.compiler }}-${{ matrix.build_type }}/coverage.xml
+          flags: ${{ matrix.os }},${{ matrix.compiler }},${{ matrix.build_type }},coverage
+          fail_ci_if_error: true
+
+      - name: Publish Test Results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: ${{ matrix.os }} / ${{ matrix.compiler }} (${{ matrix.build_type }}) Test Results
+          path: build-${{ matrix.compiler }}-${{ matrix.build_type }}/results.xml
+          reporter: junit
+          fail-on-error: true
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-build-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: |
+            build-${{ matrix.compiler }}-${{ matrix.build_type }}/bin/
+            build-${{ matrix.compiler }}-${{ matrix.build_type }}/lib/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload HTML Coverage Report
+        if: matrix.coverage == true && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: build-${{ matrix.compiler }}-${{ matrix.build_type }}/coverage_report.html
+          retention-days: 7
