@@ -7,6 +7,6 @@
 #include <Core/Core.h>
 
 int main() {
-	std::cout << Lumi::Core::GetVersionString();
+	std::cout << "Lumi Version: " << Lumi::Core::GetVersionString() << std::endl;
 	std::cout << Lumi::Core::GetLicense();
 }

@@ -31,15 +31,14 @@ macro(configure_lumi_target target_name component_public_headers component_name)
         # 1. Adding the target to the export set.
         # 2. Installing the physical library files (ARCHIVE, LIBRARY, RUNTIME).
         # 3. Installing public headers associated with the target property.
-        # FIXME: fix message output to not show IF conditionals $<IF:$<STREQUAL:${is_shared_lib},TRUE>,shared,static>
         if ("${component_name}" STREQUAL "")
-            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}")
-            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/$<IF:$<STREQUAL:${is_shared_lib},TRUE>,shared,static>$<CONFIG>")
+            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Lumi/${LUMI_VERSIONED_SUBDIR}")
+            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/$<CONFIG>")
             message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}' folder.")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}'")
         else ()
-            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/${component_name}")
-            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/$<IF:$<STREQUAL:${is_shared_lib},TRUE>,shared,static>/${component_name}$<CONFIG>")
+            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi/${component_name}")
+            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/${component_name}$<CONFIG>")
             message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${component_name}' folder.")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${component_name}' folder.")
         endif ()
