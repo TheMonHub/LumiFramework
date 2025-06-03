@@ -27,7 +27,7 @@ macro(configure_lumi_target target_name is_shared_lib component_public_headers c
     if (${is_shared_lib})
         set_target_properties(${target_name} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
     endif ()
-    set_target_properties(${target_name} PROPERTIES DEBUG_POSTFIX "d")
+    set_target_properties(${target_name} PROPERTIES DEBUG_POSTFIX "D")
 
     if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
         # This single install(TARGETS) command handles:
