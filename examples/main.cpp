@@ -4,9 +4,9 @@
 
 #include "main.h"
 #include <iostream>
-#include "../include/Lumi/Core/Core.h"
+#include <Core/Core.h>
 
 int main() {
-	std::cout << Lumi::Core::GetVersion();
+	std::cout << "Lumi Version: " << Lumi::Core::GetVersionString() << std::endl;
 	std::cout << Lumi::Core::GetLicense();
 }

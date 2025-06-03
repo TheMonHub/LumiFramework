@@ -2,8 +2,18 @@
 // Created by Mono on 1/6/2025.
 //
 
-#ifndef METADATA_H_IN
-#define METADATA_H_IN
+#ifndef METADATA_H
+#define METADATA_H
+
+/**
+ * @file Metadata.h
+ * @brief Contains metadata definitions for the Lumi Framework.
+ *
+ * This file defines macros that provide versioning and licensing information
+ * for the Lumi Framework. These macros are used throughout the framework to
+ * ensure consistency and to provide information about the framework's version
+ * and licensing.
+ */
 
 /**
  * @brief The full version string of the Lumi Framework.
@@ -32,4 +42,4 @@
  */
 #define LUMI_LICENSE_TEXT "@LUMI_LICENSE_TEXT_FROM_CMAKE@"
 
-#endif //METADATA_H_IN
+#endif //METADATA_H

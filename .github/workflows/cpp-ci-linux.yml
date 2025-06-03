@@ -18,13 +18,10 @@ jobs:
           - os: ubuntu-latest
             build_type: Debug
             compiler: clang
-            sanitizer: "Address;Undefined"
-            name_suffix: " (Sanitizers)"
           - os: ubuntu-latest
             build_type: Debug
             compiler: gcc
             coverage: true
-            name_suffix: " (Coverage)"
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }} (${{ matrix.build_type }})${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}

@@ -1,0 +1,156 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "ci-base",
+      "hidden": true,
+      "description": "Base preset for CI builds",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "LUMI_BUILD_STATIC_LIBS": "ON",
+        "LUMI_BUILD_ALL": "OFF",
+        "LUMI_BUILD_DOCS": "OFF",
+        "LUMI_BUILD_TESTS": "OFF",
+        "LUMI_INSTALL": "OFF",
+        "LUMI_INSTALL_DOCS": "OFF",
+        "LUMI_INSTALL_EXAMPLES": "OFF"
+      }
+    },
+    {
+      "name": "ci-tests",
+      "displayName": "CI: Build & Test",
+      "description": "Configures for building and testing Lumi with static libraries.",
+      "inherits": "ci-base",
+      "binaryDir": "${sourceDir}/build/ci-tests-static",
+      "cacheVariables": {
+        "LUMI_BUILD_DOCS": "OFF",
+        "LUMI_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "ci-docs",
+      "displayName": "CI: Build Documentation",
+      "description": "Configures for building Lumi's Doxygen documentation.",
+      "inherits": "ci-base",
+      "binaryDir": "${sourceDir}/build/ci-docs",
+      "cacheVariables": {
+        "LUMI_BUILD_DOCS": "ON",
+        "LUMI_BUILD_STATIC_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "ci-all",
+      "displayName": "CI: Build All",
+      "description": "Configures for building all Lumi components and features as static libraries.",
+      "inherits": "ci-base",
+      "binaryDir": "${sourceDir}/build/ci-all-static",
+      "cacheVariables": {
+        "LUMI_BUILD_ALL": "ON"
+      }
+    },
+    {
+      "name": "ci-examples",
+      "displayName": "CI: Build Examples",
+      "description": "Configures for building Lumi examples.",
+      "inherits": "ci-base",
+      "binaryDir": "${sourceDir}/build/ci-examples",
+      "cacheVariables": {
+        "LUMI_BUILD_EXAMPLES": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ci-tests-build",
+      "displayName": "CI: Build Tests",
+      "configurePreset": "ci-tests",
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-docs-build",
+      "displayName": "CI: Build Docs",
+      "configurePreset": "ci-docs",
+      "configuration": "Release",
+      "targets": [
+        "doc"
+      ]
+    },
+    {
+      "name": "ci-all-build",
+      "displayName": "CI: Build All",
+      "configurePreset": "ci-all",
+      "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ci-tests-run",
+      "displayName": "CI: Run Tests",
+      "configurePreset": "ci-tests",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true,
+        "verbosity": "verbose"
+      },
+      "echoCommand": true
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-workflow-tests",
+      "displayName": "CI Workflow: Build & Test",
+      "description": "Configures, Builds, and Tests Lumi",
+      "steps": [
+        {
+          "type": "configure",
+          "preset": "ci-tests"
+        },
+        {
+          "type": "build",
+          "preset": "ci-tests-build"
+        },
+        {
+          "type": "test",
+          "preset": "ci-tests-run"
+        }
+      ]
+    },
+    {
+      "name": "ci-workflow-docs",
+      "displayName": "CI Workflow: Build Docs",
+      "description": "Configures and Builds Lumi's documentation.",
+      "steps": [
+        {
+          "type": "configure",
+          "preset": "ci-docs"
+        },
+        {
+          "type": "build",
+          "preset": "ci-docs-build"
+        }
+      ]
+    },
+    {
+      "name": "ci-workflow-all",
+      "displayName": "CI Workflow: Build All",
+      "description": "Configures and Builds all Lumi components",
+      "steps": [
+        {
+          "type": "configure",
+          "preset": "ci-all"
+        },
+        {
+          "type": "build",
+          "preset": "ci-all-build"
+        }
+      ]
+    }
+  ],
+  "vendor": {}
+}
