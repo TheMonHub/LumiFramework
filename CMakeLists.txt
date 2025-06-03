@@ -78,7 +78,7 @@ option(LUMI_BUILD_TESTS "Build Lumi tests" OFF)
 option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 
 # Define installation paths
-set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
         CACHE STRING "Install path for Lumi package-related CMake files")
 set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 

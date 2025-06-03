@@ -6,8 +6,6 @@ project(
 
 find_package(Lumi REQUIRED)
 
-message(STATUS "${Lumi_INCLUDE_DIRS}")
-
 add_executable(Example
         main.cpp
 )
