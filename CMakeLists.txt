@@ -61,7 +61,6 @@ project(Lumi
         HOMEPAGE_URL "https://github.com/TheMonHub/LumiFramework"
         LANGUAGES CXX)
 
-
 # License and copyright information
 set(PROJECT_COPYRIGHT_HOLDER "TheMonHub")
 
