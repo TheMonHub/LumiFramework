@@ -18,15 +18,15 @@
 
 # Build Options:
 # Core Options:
-# -DLUMI_BUILD_STATIC_LIBS=ON/OFF    Build static libraries (Default: ON if top-level)
+# -DLUMI_BUILD_STATIC_LIBS=ON/OFF    Build static libraries (Default: ON)
 
 # Components:
 # -DLUMI_BUILD_WINDOW=ON/OFF         Build Window component (Default: ON)
 
 # Features:
 # -DLUMI_BUILD_DOCS=ON/OFF          Build documentation (Default: ON)
-# -DLUMI_BUILD_EXAMPLES=ON/OFF      Build examples (Default: OFF)
-# -DLUMI_BUILD_TESTS=ON/OFF         Build tests (Default: OFF)
+# -DLUMI_BUILD_EXAMPLES=ON/OFF      Build examples (Default: ON if top-level)
+# -DLUMI_BUILD_TESTS=ON/OFF         Build tests (Default: ON if top-level)
 
 # Installation:
 # -DLUMI_INSTALL=ON/OFF             Install library (Default: ON if top-level)
@@ -65,15 +65,15 @@ include(cmake/utils.cmake)
 # Build Options
 #-----------------------------------------------------------------------------
 option(LUMI_BUILD_ALL "Force build all components of Lumi" OFF)
-option(LUMI_BUILD_STATIC_LIBS "Build Lumi as static libraries" ${IS_TOP_LEVEL_PROJECT})
+option(LUMI_BUILD_STATIC_LIBS "Build Lumi as static libraries" ON)
 
 option(LUMI_INSTALL "Install Lumi" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_INSTALL_DOCS "Install Lumi documentation" ON)
-option(LUMI_INSTALL_EXAMPLES "Install Lumi examples" ON)
+option(LUMI_INSTALL_EXAMPLES "Install Lumi examples" ${IS_TOP_LEVEL_PROJECT})
 
 option(LUMI_BUILD_DOCS "Build project documentation with Doxygen" ON)
 option(LUMI_BUILD_EXAMPLES "Build Lumi examples" OFF)
-option(LUMI_BUILD_TESTS "Build Lumi tests" OFF)
+option(LUMI_BUILD_TESTS "Build Lumi tests" ${IS_TOP_LEVEL_PROJECT})
 
 option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 
@@ -119,11 +119,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${CMAKE_BINARY_DIR}/bin/MinSizeRe
 # Post-Configuration Setup
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_ALL)
-    set(LUMI_BUILD_SHARED_LIBS ON CACHE BOOL "Build Lumi as a shared library" FORCE)
+    set(LUMI_BUILD_STATIC_LIBS  ON CACHE BOOL "Build Lumi as static libraries" FORCE)
 endif ()
 
-if (LUMI_BUILD_ALL OR LUMI_BUILD_SHARED_LIBS)
-    set(LUMI_BUILD_SHARED_LIBS ON CACHE BOOL "Build Lumi as a shared library" FORCE)
+if (LUMI_BUILD_ALL OR LUMI_BUILD_TESTS OR LUMI_BUILD_EXAMPLES)
+    set(LUMI_BUILD_STATIC_LIBS  ON CACHE BOOL "Build Lumi as static libraries" FORCE)
     set(LUMI_BUILD_WINDOW ON CACHE BOOL "Build Lumi Window component" FORCE)
     message(STATUS "All build components options are ON.")
 endif ()

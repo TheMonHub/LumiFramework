@@ -9,7 +9,7 @@ add_executable(LumiTests
 
 target_link_libraries(LumiTests
         PRIVATE
-        Lumi
+        Lumi::LumiStatic
         GTest::gtest_main
 )
 

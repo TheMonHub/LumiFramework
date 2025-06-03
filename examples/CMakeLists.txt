@@ -1,21 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 project(
-        EXAMPLES
+        LumiExamples
         LANGUAGES CXX
 )
 
-find_package(Lumi REQUIRED)
-
-add_executable(Example
+add_executable(LumiExamples
         main.cpp
 )
-target_include_directories(Example
+target_include_directories(LumiExamples
         PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "${Lumi_INCLUDE_DIRS}"
 )
-target_link_libraries(Example
+target_link_libraries(LumiExamples
         PRIVATE
-        glfw
-        ${Lumi_LIBRARIES}
+        Lumi::LumiStatic
 )
