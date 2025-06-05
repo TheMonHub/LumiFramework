@@ -122,9 +122,7 @@
         "outputOnFailure": true,
         "verbosity": "verbose"
       },
-      "args": [
-        "--gtest_output=xml:${sourceDir}/build/test.xml"
-      ]
+      "args": "--gtest_output=xml:${sourceDir}/build/test.xml"
     }
   ],
   "workflowPresets": [
