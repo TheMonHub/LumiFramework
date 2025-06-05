@@ -110,17 +110,17 @@
         {
           "name": "Configure",
           "type": "configure",
-          "configurePreset": "ci-tests"
+          "preset": "ci-tests"
         },
         {
           "name": "Build",
           "type": "build",
-          "buildPreset": "ci-tests-build"
+          "preset": "ci-tests-build"
         },
         {
           "name": "Test",
           "type": "test",
-          "testPreset": "ci-tests-run"
+          "preset": "ci-tests-run"
         }
       ]
     },
@@ -132,12 +132,12 @@
         {
           "name": "Configure",
           "type": "configure",
-          "configurePreset": "ci-docs"
+          "preset": "ci-docs"
         },
         {
           "name": "Build",
           "type": "build",
-          "buildPreset": "ci-docs-build"
+          "preset": "ci-docs-build"
         }
       ]
     },
@@ -149,12 +149,12 @@
         {
           "name": "Configure",
           "type": "configure",
-          "configurePreset": "ci-all"
+          "preset": "ci-all"
         },
         {
           "name": "Build",
           "type": "build",
-          "buildPreset": "ci-all-build"
+          "preset": "ci-all-build"
         }
       ]
     }
