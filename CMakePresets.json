@@ -35,6 +35,17 @@
       }
     },
     {
+      "name": "ci-cov",
+      "displayName": "CI: Build & Test with Coverage",
+      "description": "Configures for building and testing Lumi with static libraries and coverage instrumentation.",
+      "inherits": "ci-tests",
+      "binaryDir": "${sourceDir}/cov",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fprofile-arcs -ftest-coverage",
+        "CMAKE_C_FLAGS": "-fprofile-arcs -ftest-coverage"
+      }
+    },
+    {
       "name": "ci-docs",
       "displayName": "CI: Build Documentation",
       "description": "Configures for building Lumi's Doxygen documentation.",
@@ -110,6 +121,25 @@
         {
           "type": "configure",
           "name": "ci-tests"
+        },
+        {
+          "type": "build",
+          "name": "ci-tests-build"
+        },
+        {
+          "type": "test",
+          "name": "ci-tests-run"
+        }
+      ]
+    },
+    {
+      "name": "ci-workflow-cov",
+      "displayName": "CI Workflow: Build & Test with Coverage",
+      "description": "Configures, Builds, and Tests Lumi with coverage instrumentation.",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-cov"
         },
         {
           "type": "build",
