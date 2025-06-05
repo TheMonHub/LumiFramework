@@ -39,7 +39,7 @@ jobs:
           lcov --remove coverage.info '*/_deps/*' '*/tests/*' '*/usr/*' --output-file coverage-filtered.info
       - name: Generate Cobertura XML Report
         run: |
-          gcovr --xml --output coverage.xml coverage -filtered.info
+          gcovr --xml --output coverage.xml coverage-filtered.info
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
