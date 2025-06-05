@@ -39,9 +39,11 @@ jobs:
           issue-message: "Hello @{{ contributor }}! Thanks for opening your first issue in this repository. We appreciate your contribution!"
           pr-message: "Welcome, @{{ contributor }}! We're excited to see your first pull request. We'll review it shortly!"
       - name: Set up Build Environment
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ${{ matrix.apt_packages }} libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: {{ matrix.apt_packages }} libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          version: 1.0
+          execute_install_scripts: true
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
         with:
