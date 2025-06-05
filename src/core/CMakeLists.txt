@@ -5,6 +5,7 @@ message(STATUS "Configuring Lumi Core...")
 # Define sources
 set(LUMI_CORE_SOURCES
         "${LUMI_SOURCE_DIR}/src/core/core.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/coremeta.cpp"
 )
 
 # Define public headers

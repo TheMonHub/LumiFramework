@@ -1,0 +1,5 @@
+#nav-sync {
+    display: none !important;
+    pointer-events: none;
+    user-select: none;
+}

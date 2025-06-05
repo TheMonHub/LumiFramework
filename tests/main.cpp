@@ -3,13 +3,8 @@
 //
 #include "gtest/gtest.h"
 
-#include "Lumi/Core/Core.h"
-
-#include "Lumi/Metadata.h"
+#include "Lumi/Core/CoreMeta.h"
 
 using namespace Lumi;
-using namespace Lumi::Metadata;
 
-TEST(LumiCoreTest, LicenseCheck) {
-	EXPECT_TRUE(Core::LicenseAvailable());
-}
+TEST(LumiCoreTest, LicenseCheck) { EXPECT_TRUE(Metadata::License::LicenseAvailable()); }
