@@ -33,22 +33,19 @@ jobs:
 
       - name: Configure CMake with Coverage Preset
         run: cmake --workflow --preset ci-workflow-coverage
-
       - name: Generate LCOV Report
-        working-directory: ${{github.workspace}}/build
         run: |
-          lcov --capture --directory . --output-file coverage.info
+          lcov --capture --directory ./build --output-file coverage.info
           lcov --remove coverage.info '*/_deps/*' '*/tests/*' --output-file cov.info
 
       - name: Generate Cobertura XML Report
-        working-directory: ${{github.workspace}}/build
         run: |
           gcovr --xml --output coverage.xml cov.info
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ${{github.workspace}}/build/coverage.xml
+          files: ${{github.workspace}}/coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
           plugins: noop
