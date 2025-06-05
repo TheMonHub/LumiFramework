@@ -37,7 +37,7 @@ jobs:
         run: |
           lcov --capture --directory ./build --output-file coverage.info
           lcov --remove coverage.info '*/_deps/*' --output-file cov1.info
-          lcov --remove cov1.info '*/tests/*' '*/usr/*' cov.info
+          lcov --remove cov1.info '*/tests/*' '*/usr/*' --output-file cov.info
 
       - name: Generate Cobertura XML Report
         run: |
