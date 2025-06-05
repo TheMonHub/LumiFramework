@@ -110,23 +110,17 @@
         {
           "name": "Configure",
           "type": "configure",
-          "configure": {
-            "preset": "ci-tests"
-          }
+          "name": "ci-tests"
         },
         {
           "name": "Build",
           "type": "build",
-          "build": {
-            "preset": "ci-tests-build"
-          }
+          "name": "ci-tests-build"
         },
         {
           "name": "Test",
           "type": "test",
-          "test": {
-            "preset": "ci-tests-run"
-          }
+          "name": "ci-tests-run"
         }
       ]
     },
@@ -138,16 +132,12 @@
         {
           "name": "Configure",
           "type": "configure",
-          "configure": {
-            "preset": "ci-docs"
-          }
+          "name": "ci-docs"
         },
         {
           "name": "Build",
           "type": "build",
-          "build": {
-            "preset": "ci-docs-build"
-          }
+          "name": "ci-docs-build"
         }
       ]
     },
@@ -159,16 +149,12 @@
         {
           "name": "Configure",
           "type": "configure",
-          "configure": {
-            "preset": "ci-all"
-          }
+          "name": "ci-all"
         },
         {
           "name": "Build",
           "type": "build",
-          "build": {
-            "preset": "ci-all-build"
-          }
+          "name": "ci-all-build"
         }
       ]
     }
