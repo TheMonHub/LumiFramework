@@ -41,7 +41,7 @@ jobs:
       - name: Set up Build Environment
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: {{ matrix.apt_packages }} libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          packages: ${{ matrix.apt_packages }} libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
           version: 1.0
           execute_install_scripts: true
       - name: Set up CMake and Ninja
