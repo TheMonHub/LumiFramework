@@ -108,17 +108,14 @@
       "description": "Configures, Builds, and Tests Lumi",
       "steps": [
         {
-          "name": "Configure",
           "type": "configure",
           "name": "ci-tests"
         },
         {
-          "name": "Build",
           "type": "build",
           "name": "ci-tests-build"
         },
         {
-          "name": "Test",
           "type": "test",
           "name": "ci-tests-run"
         }
@@ -130,12 +127,10 @@
       "description": "Configures and Builds Lumi's documentation.",
       "steps": [
         {
-          "name": "Configure",
           "type": "configure",
           "name": "ci-docs"
         },
         {
-          "name": "Build",
           "type": "build",
           "name": "ci-docs-build"
         }
@@ -147,12 +142,10 @@
       "description": "Configures and Builds all Lumi components",
       "steps": [
         {
-          "name": "Configure",
           "type": "configure",
           "name": "ci-all"
         },
         {
-          "name": "Build",
           "type": "build",
           "name": "ci-all-build"
         }
