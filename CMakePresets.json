@@ -10,7 +10,7 @@
       "name": "ci-base",
       "hidden": true,
       "description": "Base preset for CI builds",
-      "binaryDir": "${sourceDir}/build/${presetName}",
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "LUMI_BUILD_STATIC_LIBS": "ON",
@@ -27,7 +27,7 @@
       "displayName": "CI: Build & Test",
       "description": "Configures for building and testing Lumi with static libraries.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build/ci-tests-static",
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "LUMI_BUILD_DOCS": "OFF",
         "LUMI_BUILD_TESTS": "ON"
@@ -38,7 +38,7 @@
       "displayName": "CI: Build Documentation",
       "description": "Configures for building Lumi's Doxygen documentation.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build/ci-docs",
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "LUMI_BUILD_DOCS": "ON",
         "LUMI_BUILD_STATIC_LIBS": "OFF"
@@ -49,7 +49,7 @@
       "displayName": "CI: Build All",
       "description": "Configures for building all Lumi components and features as static libraries.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build/ci-all-static",
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "LUMI_BUILD_ALL": "ON"
       }
@@ -59,7 +59,7 @@
       "displayName": "CI: Build Examples",
       "description": "Configures for building Lumi examples.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build/ci-examples",
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "LUMI_BUILD_EXAMPLES": "ON"
       }
