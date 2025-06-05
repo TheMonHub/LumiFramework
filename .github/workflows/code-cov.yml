@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - master
+      - develop
   pull_request:
     branches:
       - main
-      - master
+      - develop
 
 jobs:
   build-and-test-coverage:
@@ -32,7 +32,7 @@ jobs:
           ninjaVersion: latest
 
       - name: Configure CMake with Coverage Preset
-        run: cmake --workflow --preset ci-workflow-cov
+        run: cmake --workflow --preset ci-workflow-coverage
 
       - name: Generate LCOV Report
         working-directory: ${{github.workspace}}/cov
