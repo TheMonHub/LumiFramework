@@ -29,6 +29,7 @@
       "inherits": "ci-base",
       "binaryDir": "${sourceDir}/build/ci-tests-static",
       "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
         "LUMI_BUILD_DOCS": "OFF",
         "LUMI_BUILD_TESTS": "ON"
       }
@@ -70,7 +71,7 @@
       "name": "ci-tests-build",
       "displayName": "CI: Build Tests",
       "configurePreset": "ci-tests",
-      "configuration": "Release"
+      "configuration": "Debug"
     },
     {
       "name": "ci-docs-build",

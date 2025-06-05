@@ -4,12 +4,11 @@ endif ()
 
 add_executable(LumiTests
         main.cpp
-        main.h
 )
 
 target_link_libraries(LumiTests
         PRIVATE
-        Lumi::LumiStatic
+        LumiStatic
         GTest::gtest_main
 )
 

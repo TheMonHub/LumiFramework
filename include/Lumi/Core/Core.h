@@ -37,50 +37,49 @@
 namespace Lumi {
 
     /**
-     * @brief The main Core class for the Lumi framework.
-     *
-     * This class encapsulates core functionalities and serves as a central point
-     * for framework-wide operations or access to core utilities.
-     * It provides methods to query framework information like version and license details.
-     * @ingroup Core
-     */
-    class Core {
-       public:
+	 * @brief The main Core class for the Lumi framework.
+	 *
+	 * This class encapsulates core functionalities and serves as a central point
+	 * for framework-wide operations or access to core utilities.
+	 * It provides methods to query framework information like version and license details.
+	 * @ingroup Core
+	 */
+	namespace Core {
+
+		/**
+		 * @name Version Information
+		 * @brief Methods to query the version of the Lumi Core library.
+		 * @{
+		 */
 
        /**
-        * @name Version Information
-        * @brief Methods to query the version of the Lumi Core library.
-        * @{
-        */
+		 * @brief Get the current version of the Lumi Core library.
+		 *
+		 * @return A string literal representing the current version of the Lumi Core library,
+		 * typically in "major.minor.patch" format (e.g., "1.2.3").
+		 */
+		std::string_view GetVersionString();
 
-       /**
-        * @brief Get the current version of the Lumi Core library.
-        *
-        * @return A string representing the current version of the Lumi Core library,
-        * typically in "major.minor.patch" format (e.g., "1.2.3").
-        */
-       static std::string GetVersionString();
-
-       /**
-        * @brief Get the major version number of the Lumi Core library.
-        *
-        * @return The major version number (e.g., 1 for version "1.2.3").
-        */
-       static unsigned int GetVersionMajor();
+		/**
+		 * @brief Get the major version number of the Lumi Core library.
+		 *
+		 * @return The major version number (e.g., 1 for version "1.2.3").
+		 */
+       unsigned int GetVersionMajor();
 
        /**
        * @brief Get the minor version number of the Lumi Core library.
        *
        * @return The minor version number (e.g., 2 for version "1.2.3").
        */
-       static unsigned int GetVersionMinor();
+       unsigned int GetVersionMinor();
 
        /**
         * @brief Get the patch version number of the Lumi Core library.
         *
         * @return The patch version number (e.g., 3 for version "1.2.3").
         */
-       static unsigned int GetVersionPatch();
+       unsigned int GetVersionPatch();
 
        /** @} */
 
@@ -93,12 +92,12 @@ namespace Lumi {
        /**
         * @brief Get the license text for the Lumi Core library.
         *
-        * @return A string containing the full license text under which the Lumi
+        * @return A string literal containing the full license text under which the Lumi
         * Framework is distributed.
         *
         * @note This method can return an empty string if the license file is not available at build time. To check if the license is available, you can check the `LicenseAvailable` method.
         */
-       static std::string GetLicense();
+       std::string_view GetLicense();
 
        /**
         * @brief Check if the Lumi library license text is available.
@@ -108,11 +107,11 @@ namespace Lumi {
         * @note This method confirms whether the license string returned by `GetLicense()`
         * is populated with actual license text.
         */
-       static bool LicenseAvailable();
+       bool LicenseAvailable();
 
        /** @} */
     };
 
-} // namespace Lumi
+}
 
 #endif // CORE_H
