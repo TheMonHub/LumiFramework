@@ -98,8 +98,7 @@
       "output": {
         "outputOnFailure": true,
         "verbosity": "verbose"
-      },
-      "echoCommand": true
+      }
     }
   ],
   "workflowPresets": [
@@ -109,16 +108,19 @@
       "description": "Configures, Builds, and Tests Lumi",
       "steps": [
         {
+          "name": "Configure",
           "type": "configure",
-          "preset": "ci-tests"
+          "configurePreset": "ci-tests"
         },
         {
+          "name": "Build",
           "type": "build",
-          "preset": "ci-tests-build"
+          "buildPreset": "ci-tests-build"
         },
         {
+          "name": "Test",
           "type": "test",
-          "preset": "ci-tests-run"
+          "testPreset": "ci-tests-run"
         }
       ]
     },
@@ -128,12 +130,14 @@
       "description": "Configures and Builds Lumi's documentation.",
       "steps": [
         {
+          "name": "Configure",
           "type": "configure",
-          "preset": "ci-docs"
+          "configurePreset": "ci-docs"
         },
         {
+          "name": "Build",
           "type": "build",
-          "preset": "ci-docs-build"
+          "buildPreset": "ci-docs-build"
         }
       ]
     },
@@ -143,12 +147,14 @@
       "description": "Configures and Builds all Lumi components",
       "steps": [
         {
+          "name": "Configure",
           "type": "configure",
-          "preset": "ci-all"
+          "configurePreset": "ci-all"
         },
         {
+          "name": "Build",
           "type": "build",
-          "preset": "ci-all-build"
+          "buildPreset": "ci-all-build"
         }
       ]
     }
