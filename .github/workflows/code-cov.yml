@@ -12,6 +12,7 @@ on:
 
 jobs:
   build-and-test-coverage:
+      name : Test Coverage
     runs-on: ubuntu-latest
 
     steps:
