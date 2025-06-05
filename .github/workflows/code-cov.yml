@@ -31,7 +31,7 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
 
-      - name: Configure CMake with Coverage Preset
+      - name: Build CMake Coverage Tests
         run: cmake --workflow --preset ci-workflow-coverage
       - name: Generate LCOV Report
         run: |
