@@ -36,10 +36,10 @@ jobs:
       - name: Generate LCOV Report
         run: |
           lcov --capture --directory ./build --output-file coverage.info
-          lcov --remove coverage.info '*/_deps/*' '*/tests/*' '*/usr/*' --output-file cov.info
+          lcov --remove coverage.info '*/_deps/*' '*/tests/*' '*/usr/*' --output-file coverage-filtered.info
       - name: Generate Cobertura XML Report
         run: |
-          gcovr --xml --output coverage.xml cov.info
+          gcovr --xml --output coverage.xml coverage -filtered.info
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
@@ -53,3 +53,21 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Artifacts (Binaries)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-binaries
+          path: |
+            build/bin/Debug/LumiTests
+            
+            build/lib/Debug/*.a
+            build/lib/Debug/*.lib
+      - name: Upload Artifacts (Reports)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-reports
+          path: |
+            coverage.xml
+            coverage.info
+            coverage-filtered.info
+            build/test-results.xml
