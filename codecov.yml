@@ -3,10 +3,6 @@ coverage:
     project:
       default:
         target: 0%
-plugins:
-  gcov: false
-  xcode: false
-  pycoverage: false
 
 ignore:
   - "**/*_deps/**"
