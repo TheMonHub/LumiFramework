@@ -1,4 +1,4 @@
-name: Lumi CI Ubuntu
+name: Lumi CI Ubuntu Test
 
 on:
   push:
@@ -11,17 +11,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        build_type: [Debug, Release]
-        compiler: [gcc, clang]
+        os: [ ubuntu-latest ]
+        build_type: [ Debug ]
+        compiler: [ gcc, clang ]
         include:
           - os: ubuntu-latest
             build_type: Debug
             compiler: clang
+            apt_packages: "clang lld llvm"
           - os: ubuntu-latest
             build_type: Debug
             compiler: gcc
             coverage: true
+            apt_packages: "gcc g++ lcov"
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }} (${{ matrix.build_type }})${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}
@@ -36,3 +38,26 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: "Hello @{{ contributor }}! Thanks for opening your first issue in this repository. We appreciate your contribution!"
           pr-message: "Welcome, @{{ contributor }}! We're excited to see your first pull request. We'll review it shortly!"
+      - name: Set up Build Environment
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: ${{ matrix.apt_packages }} libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          version: 1.0
+          execute_install_scripts: true
+      - name: Set up CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+      - name: Run Tests
+        run: |
+          cmake --workflow --preset=ci-workflow-tests
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-binaries-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: |
+            build/bin/Debug/LumiTests
+            
+            build/lib/Debug/*.a
+            build/lib/Debug/*.lib

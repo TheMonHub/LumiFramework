@@ -4,11 +4,26 @@
 
 #ifndef CORE_H
 #define CORE_H
-
-#include <string>
+#include <string_view>
 
 /**
- * @file Core.h
+ * @mainpage %Lumi Framework Documentation
+ *
+ * @section intro_sec Introduction
+ * Welcome to the %Lumi Framework documentation!
+ * %Lumi is a modern C++ framework designed to provide a robust and flexible foundation for building applications.
+ * This documentation covers the components, utilities, and features of the %Lumi framework.
+ *
+ * @section core_sec Core Module
+ * @ref Core "Core Module"
+ *  is the module of the %Lumi framework, which provides essential functionalities and utilities.
+ * @note this module is mandatory for all Lumi components and serves as the foundation for the entire framework.
+ * @subsection features_sec Features
+ * - License and version information (@ref Metadata "Metadata")
+ */
+
+/**
+ * @file
  * @brief Core header of the Lumi framework.
  *
  * This file specifically declares the main `Lumi::Core` class, which serves
@@ -33,86 +48,20 @@
  * A Central namespace that encapsulates all classes, functions, and utilities
  * of the Lumi framework. It serves as the primary namespace for all Lumi-related
  * components and functionalities.
+ * @attention This namespace is the root of the Lumi framework and contains all other namespaces.
+ *
+ * @ingroup Core
  */
 namespace Lumi {
-
-    /**
-     * @brief The main Core class for the Lumi framework.
-     *
-     * This class encapsulates core functionalities and serves as a central point
-     * for framework-wide operations or access to core utilities.
-     * It provides methods to query framework information like version and license details.
-     * @ingroup Core
-     */
-    class Core {
-       public:
-
-       /**
-        * @name Version Information
-        * @brief Methods to query the version of the Lumi Core library.
-        * @{
-        */
-
-       /**
-        * @brief Get the current version of the Lumi Core library.
-        *
-        * @return A string representing the current version of the Lumi Core library,
-        * typically in "major.minor.patch" format (e.g., "1.2.3").
-        */
-       static std::string GetVersionString();
-
-       /**
-        * @brief Get the major version number of the Lumi Core library.
-        *
-        * @return The major version number (e.g., 1 for version "1.2.3").
-        */
-       static unsigned int GetVersionMajor();
-
-       /**
-       * @brief Get the minor version number of the Lumi Core library.
-       *
-       * @return The minor version number (e.g., 2 for version "1.2.3").
-       */
-       static unsigned int GetVersionMinor();
-
-       /**
-        * @brief Get the patch version number of the Lumi Core library.
-        *
-        * @return The patch version number (e.g., 3 for version "1.2.3").
-        */
-       static unsigned int GetVersionPatch();
-
-       /** @} */
-
-       /**
-        * @name License Information
-        * @brief Methods to query license details of the Lumi Framework.
-        * @{
-        */
-
-       /**
-        * @brief Get the license text for the Lumi Core library.
-        *
-        * @return A string containing the full license text under which the Lumi
-        * Framework is distributed.
-        *
-        * @note This method can return an empty string if the license file is not available at build time. To check if the license is available, you can check the `LicenseAvailable` method.
-        */
-       static std::string GetLicense();
-
-       /**
-        * @brief Check if the Lumi library license text is available.
-        *
-        * @return `true` if the license text is accessible at runtime; `false` otherwise.
-        *
-        * @note This method confirms whether the license string returned by `GetLicense()`
-        * is populated with actual license text.
-        */
-       static bool LicenseAvailable();
-
-       /** @} */
-    };
-
-} // namespace Lumi
+	/**
+	 * @namespace Lumi::Core
+	 * @brief The main Core namespace for the Lumi framework.
+	 *
+	 * This namespace encapsulates core functionalities and serves as a central point
+	 * for framework-wide operations or access to core utilities.
+	 * @ingroup Core
+	 */
+	namespace Core {}
+}
 
 #endif // CORE_H

@@ -20,21 +20,23 @@ HTML_COLORSTYLE_GAMMA  = 80
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_TREEVIEW      = YES
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = "@CMAKE_CURRENT_SOURCE_DIR@" \
+STRIP_FROM_PATH        = "@LUMI_SOURCE_DIR@" \
                         "@CMAKE_CURRENT_BINARY_DIR@"
 DISABLE_INDEX          = NO
 FULL_SIDEBAR           = NO
-HTML_EXTRA_FILES       = @CMAKE_CURRENT_SOURCE_DIR@/docs/doxygen-awesome-fragment-copy-button.js \
-                        @CMAKE_CURRENT_SOURCE_DIR@/docs/doxygen-awesome-interactive-toc.js
-HTML_EXTRA_STYLESHEET  = @CMAKE_CURRENT_SOURCE_DIR@/docs/doxygen-awesome.css \
-                        @CMAKE_CURRENT_SOURCE_DIR@/docs/doxygen-awesome-sidebar-only.css
+HTML_EXTRA_FILES       = @LUMI_SOURCE_DIR@/docs/doxygen-awesome-fragment-copy-button.js \
+                        @LUMI_SOURCE_DIR@/docs/doxygen-awesome-interactive-toc.js
+HTML_EXTRA_STYLESHEET  = @LUMI_SOURCE_DIR@/docs/doxygen-awesome.css \
+                        @LUMI_SOURCE_DIR@/docs/doxygen-awesome-sidebar-only.css \
+                        @LUMI_SOURCE_DIR@/docs/disable-sync.css
 HTML_COPY_CLIPBOARD    = NO
+SORT_MEMBER_DOCS       = NO
 
 #---------------------------------------------------------------------------
 # Input
 #---------------------------------------------------------------------------
-INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@/include" \
-                        "@CMAKE_CURRENT_SOURCE_DIR@/src" \
+INPUT                  = "@LUMI_SOURCE_DIR@/include" \
+                        "@LUMI_SOURCE_DIR@/src" \
                         "@CMAKE_CURRENT_BINARY_DIR@/include"
 FILE_PATTERNS          = *.h \
                         *.cpp

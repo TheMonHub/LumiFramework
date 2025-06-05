@@ -27,10 +27,20 @@
       "displayName": "CI: Build & Test",
       "description": "Configures for building and testing Lumi with static libraries.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
         "LUMI_BUILD_DOCS": "OFF",
         "LUMI_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "ci-coverage",
+      "displayName": "CI: Build & Test with Coverage",
+      "description": "Configures for building and testing Lumi with coverage instrumentation.",
+      "inherits": "ci-tests",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fprofile-arcs -ftest-coverage",
+        "CMAKE_C_FLAGS": "-fprofile-arcs -ftest-coverage"
       }
     },
     {
@@ -49,7 +59,6 @@
       "displayName": "CI: Build All",
       "description": "Configures for building all Lumi components and features as static libraries.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "LUMI_BUILD_ALL": "ON"
       }
@@ -59,7 +68,6 @@
       "displayName": "CI: Build Examples",
       "description": "Configures for building Lumi examples.",
       "inherits": "ci-base",
-      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "LUMI_BUILD_EXAMPLES": "ON"
       }
@@ -70,7 +78,13 @@
       "name": "ci-tests-build",
       "displayName": "CI: Build Tests",
       "configurePreset": "ci-tests",
-      "configuration": "Release"
+      "configuration": "Debug"
+    },
+    {
+      "name": "ci-tests-build-coverage",
+      "displayName": "CI: Build Tests with Coverage",
+      "configurePreset": "ci-coverage",
+      "configuration": "Debug"
     },
     {
       "name": "ci-docs-build",
@@ -93,12 +107,24 @@
       "name": "ci-tests-run",
       "displayName": "CI: Run Tests",
       "configurePreset": "ci-tests",
-      "configuration": "Release",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true,
+        "verbosity": "verbose"
+      }
+    },
+    {
+      "name": "ci-coverage-run",
+      "displayName": "CI: Run Tests with Coverage",
+      "configurePreset": "ci-coverage",
+      "configuration": "Debug",
       "output": {
         "outputOnFailure": true,
         "verbosity": "verbose"
       },
-      "echoCommand": true
+      "environment": {
+        "GTEST_OUTPUT": "xml:${sourceDir}/build/test-results.xml"
+      }
     }
   ],
   "workflowPresets": [
@@ -109,15 +135,34 @@
       "steps": [
         {
           "type": "configure",
-          "preset": "ci-tests"
+          "name": "ci-tests"
         },
         {
           "type": "build",
-          "preset": "ci-tests-build"
+          "name": "ci-tests-build"
         },
         {
           "type": "test",
-          "preset": "ci-tests-run"
+          "name": "ci-tests-run"
+        }
+      ]
+    },
+    {
+      "name": "ci-workflow-coverage",
+      "displayName": "CI Workflow: Build & Test with Coverage",
+      "description": "Configures, Builds, and Tests Lumi with coverage instrumentation.",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-coverage"
+        },
+        {
+          "type": "build",
+          "name": "ci-tests-build-coverage"
+        },
+        {
+          "type": "test",
+          "name": "ci-coverage-run"
         }
       ]
     },
@@ -128,11 +173,11 @@
       "steps": [
         {
           "type": "configure",
-          "preset": "ci-docs"
+          "name": "ci-docs"
         },
         {
           "type": "build",
-          "preset": "ci-docs-build"
+          "name": "ci-docs-build"
         }
       ]
     },
@@ -143,11 +188,11 @@
       "steps": [
         {
           "type": "configure",
-          "preset": "ci-all"
+          "name": "ci-all"
         },
         {
           "type": "build",
-          "preset": "ci-all-build"
+          "name": "ci-all-build"
         }
       ]
     }
