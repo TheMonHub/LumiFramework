@@ -1,6 +1,7 @@
 # LumiFramework
 
 ## LumiFramework: A C++ Framework Library for Desktop Applications
+[![codecov](https://codecov.io/gh/TheMonHub/LumiFramework/graph/badge.svg?token=2YN92BA4JE)](https://codecov.io/gh/TheMonHub/LumiFramework)
 
 Lumi is a **C++ framework library** meticulously designed to simplify and accelerate the development of **robust,
 high-performance, and interactive cross-platform desktop applications**. It functions as a powerful library that
