@@ -21,7 +21,15 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: clang-format
-      - name: Run linters
+      - name: Run clang-tidy
+        uses: HorstBaerbel/action-clang-tidy@1.2
+        with:
+            scandir: '.'
+            builddir: 'build'
+            excludedirs: 'tests,examples'
+            extensions: 'cpp,h'
+      - name: Run clang-format
         uses: wearerequired/lint-action@v2.3.0
         with:
           clang_format: true
+          clang_format_auto_fix: 'true'
