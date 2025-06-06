@@ -32,8 +32,7 @@ Lumi achieves its mission by adhering to a clear philosophy and offering distinc
   system APIs. This eliminates the burden on developers to research, select, and integrate these complex foundational
   components from scratch, ensuring a stable and performant base.
 
-* **Modularity & Developer Control:** Lumi is built with supreme modularity in mind. It is provided as both **static and
-  share libraries**, offering unparalleled flexibility in how you link it to your project. Unlike monolithic frameworks
+* **Modularity & Developer Control:** Lumi is built with supreme modularity in mind. It is provided as **static libraries**, Unlike monolithic frameworks
   that often dictate your application's entire architecture, Lumi adapts to *your* application's logic. It provides
   granular, lower-level access, empowering you to easily swap out default implementations, integrate other third-party
   libraries seamlessly, or inject your own custom solutions precisely where your application demands it.
