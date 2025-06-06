@@ -14,17 +14,16 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-
-      - name: Install Doxygen
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: doxygen
       - name: Set up Build Environment
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev clang lld llvm
+          packages: wget libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev clang lld llvm make
           version: 1.0
           execute_install_scripts: true
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1
+        with:
+          version: "1.14.0"
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
         with:
