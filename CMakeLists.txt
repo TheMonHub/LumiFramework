@@ -159,11 +159,6 @@ if (LUMI_BUILD_WINDOW)
     FetchContent_MakeAvailable(glfw)
 endif ()
 
-configure_file(
-        "${LUMI_SOURCE_DIR}/cmake/.clang-tidy.in"
-        "${CMAKE_BINARY_DIR}/_deps/.clang-tidy"
-)
-
 #-----------------------------------------------------------------------------
 # Generate Lumi Export Header
 #-----------------------------------------------------------------------------

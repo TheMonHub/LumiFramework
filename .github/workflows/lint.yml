@@ -31,9 +31,10 @@ jobs:
         with:
           clang_format: true
       - name: Run Clang-Tidy
-        run: |
-          mkdir -p build
-          cd build
-          cmake .. -DLUMI_BUILD_DOCS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
-          cd ..
-          run-clang-tidy -p build/ -quiet
+        uses: HorstBaerbel/action-clang-tidy@1.2
+        with:
+          scandir: '.'
+          builddir: 'build'
+          excludedirs: '_deps'
+          extensions: 'cpp,h'
+          cmakeoptions: '-DLUMI_BUILD_DOCS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug'
