@@ -11,6 +11,7 @@ set(LUMI_CORE_SOURCES
 # Define public headers
 set(LUMI_CORE_PUBLIC_HEADERS
         "${LUMI_SOURCE_DIR}/include/Lumi/Core/Core.h"
+        "${LUMI_SOURCE_DIR}/include/Lumi/Core/CoreMeta.h"
 )
 
 # Define dependencies
