@@ -21,6 +21,16 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: clang-format clang-tidy
+      - name: Setup build environment
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          version: 1.0
+          execute_install_scripts: true
       - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
         with:
