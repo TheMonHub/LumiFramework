@@ -17,24 +17,15 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Setup packages
+      - name: Install Clang-Format
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format clang-tidy libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev git
-      - name: Setup build environment
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: latest
-          ninjaVersion: latest
+          packages: clang-format
       - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
         with:
           clang_format: true
-      - name: Run Clang-Tidy
-        uses: HorstBaerbel/action-clang-tidy@1.2
+      - name: cppcheck
+        uses: deep5050/cppcheck-action@main
         with:
-          scandir: '.'
-          builddir: 'build'
-          excludedirs: '_deps'
-          extensions: 'cpp,h'
-          cmakeoptions: '-DLUMI_BUILD_DOCS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
