@@ -36,8 +36,4 @@ jobs:
           cd build
           cmake .. -DLUMI_BUILD_DOCS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
           cd ..
-          run-clang-tidy -p build/
-          if [ $? -ne 0 ]; then
-              echo "Clang-Tidy found issues. Please fix them before merging."
-              exit 1
-          fi
+          run-clang-tidy -p build/ -quiet
