@@ -5,7 +5,6 @@
 #include "Lumi/Core/CoreMeta.h"
 
 #include <string_view>
-#include "Lumi/Core/Core.h"
 
 #include "Lumi/Metadata.h"
 

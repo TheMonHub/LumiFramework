@@ -6,7 +6,7 @@ on:
 
 permissions:
   checks: write
-  contents: write
+  contents: read
 
 jobs:
   run-linters:
@@ -21,7 +21,17 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: clang-format clang-tidy
-      - name: Run linters
+      - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
         with:
           clang_format: true
+      - name: Run Clang-Tidy
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DLUMI_BUILD_DOCS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+          run-clang-tidy -p build/
+          if [ $? -ne 0 ]; then
+              echo "Clang-Tidy found issues. Please fix them before merging."
+              exit 1
+          fi

@@ -17,11 +17,13 @@
 # - TGZ
 
 # Build Options:
+# -DLUMI_BUILD_ALL=ON/OFF           Force build all components of Lumi (Default: OFF)
+
 # Core Options:
-# -DLUMI_BUILD_STATIC_LIBS=ON/OFF    Build static libraries (Default: ON)
+# -DLUMI_BUILD_STATIC_LIBS=ON/OFF   Build static libraries (Default: ON)
 
 # Components:
-# -DLUMI_BUILD_WINDOW=ON/OFF         Build Window component (Default: ON)
+# -DLUMI_BUILD_WINDOW=ON/OFF        Build Window component (Default: ON)
 
 # Features:
 # -DLUMI_BUILD_DOCS=ON/OFF          Build documentation (Default: ON)
@@ -33,9 +35,6 @@
 # -DLUMI_INSTALL_DOCS=ON/OFF        Install documentation (Default: ON)
 # -DLUMI_INSTALL_EXAMPLES=ON/OFF    Install examples (Default: ON)
 
-# TODO: Add CMakePresets.json
-# TODO: Add github workflows
-# TODO: Add documentation website
 # TODO: Add Window component
 
 
@@ -159,6 +158,11 @@ if (LUMI_BUILD_WINDOW)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "Disable GLFW's documentation build")
     FetchContent_MakeAvailable(glfw)
 endif ()
+
+configure_file(
+        "${LUMI_SOURCE_DIR}/cmake/.clang-tidy.in"
+        "${CMAKE_BINARY_DIR}/_deps/.clang-tidy"
+)
 
 #-----------------------------------------------------------------------------
 # Generate Lumi Export Header
