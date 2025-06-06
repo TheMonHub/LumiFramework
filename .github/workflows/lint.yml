@@ -17,10 +17,10 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Install Clang-Format and Clang-Tidy
+      - name: Setup packages
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format clang-tidy libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          packages: clang-format clang-tidy libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev git
       - name: Setup build environment
         uses: lukka/get-cmake@latest
         with:
