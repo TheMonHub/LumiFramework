@@ -73,7 +73,7 @@ namespace Lumi::Metadata {
 		 * @return The patch version number (e.g., 3 for version "1.2.3").
 		 */
 		unsigned int GetVersionPatch();
-	}
+	} // namespace Version
 
 	/**
 	 * @namespace Lumi::Metadata::License
@@ -105,7 +105,7 @@ namespace Lumi::Metadata {
 		 * @see GetLicense()
 		 */
 		bool LicenseAvailable();
-	}
-}
+	} // namespace License
+} // namespace Lumi::Metadata
 
 #endif // COREMETA_H

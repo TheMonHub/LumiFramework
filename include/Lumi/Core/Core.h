@@ -62,6 +62,6 @@ namespace Lumi {
 	 * @ingroup Core
 	 */
 	namespace Core {}
-}
+} // namespace Lumi
 
 #endif // CORE_H

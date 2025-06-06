@@ -1,4 +1,4 @@
-name: Linting
+name: Lint
 
 on:
   push:
@@ -10,26 +10,18 @@ permissions:
 
 jobs:
   run-linters:
-    name: Linters
+    name: Format and Lint Code
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Install ClangFormat
+      - name: Install Clang-Format and Clang-Tidy
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format
-      - name: Run clang-tidy
-        uses: HorstBaerbel/action-clang-tidy@1.2
-        with:
-            scandir: '.'
-            builddir: 'build'
-            excludedirs: 'tests,examples'
-            extensions: 'cpp,h'
-      - name: Run clang-format
-        uses: wearerequired/lint-action@v2.3.0
+          packages: clang-format clang-tidy
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
         with:
           clang_format: true
-          clang_format_auto_fix: 'true'

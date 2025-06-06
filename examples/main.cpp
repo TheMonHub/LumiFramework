@@ -3,8 +3,8 @@
 //
 
 #include "main.h"
-#include <iostream>
 #include <Core/Core.h>
+#include <iostream>
 
 int main() {
 	std::cout << "Lumi Version: " << Lumi::Core::GetVersionString() << std::endl;

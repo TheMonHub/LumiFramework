@@ -17,8 +17,8 @@ namespace Lumi::Metadata::Version {
 	unsigned int GetVersionMajor() { return LUMI_VERSION_MAJOR; }
 	unsigned int GetVersionMinor() { return LUMI_VERSION_MINOR; }
 	unsigned int GetVersionPatch() { return LUMI_VERSION_PATCH; }
-}
+} // namespace Lumi::Metadata::Version
 namespace Lumi::Metadata::License {
 	std::string_view GetLicense() { return LUMI_LICENSE_TEXT; }
 	bool LicenseAvailable() { return !LUMI_LICENSE_TEXT.empty(); }
-}
+} // namespace Lumi::Metadata::License
