@@ -1,3 +1,6 @@
+// Copyright (c) 2025 TheMonHub
+// Licensed under zlib License
+
 //
 // Created by Mono on 31/5/2025.
 //
@@ -6,7 +9,7 @@
 #define MAIN_H
 
 
-class main {};
+int main();
 
 
 #endif // MAIN_H

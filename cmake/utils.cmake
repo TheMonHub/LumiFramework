@@ -22,7 +22,9 @@ macro(configure_lumi_target target_name component_public_headers component_name)
 
     set_target_properties(${target_name} PROPERTIES
             PUBLIC_HEADER "${component_public_headers}"
-            VERSION ${PROJECT_VERSION})
+            VERSION ${PROJECT_VERSION}
+            OUTPUT_NAME "Lumi${component_name}"
+    )
 
     set_target_properties(${target_name} PROPERTIES DEBUG_POSTFIX "D")
 

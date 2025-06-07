@@ -4,14 +4,12 @@
 message(STATUS "Configuring Lumi Core...")
 # Define sources
 set(LUMI_CORE_SOURCES
-        "${LUMI_SOURCE_DIR}/src/core/core.cpp"
-        "${LUMI_SOURCE_DIR}/src/core/coremeta.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/"
 )
 
 # Define public headers
 set(LUMI_CORE_PUBLIC_HEADERS
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/Core.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/CoreMeta.h"
+        "${LUMI_SOURCE_DIR}/include/Lumi/Core/"
 )
 
 # Define dependencies
@@ -27,8 +25,7 @@ source_group(TREE "${LUMI_SOURCE_DIR}/include/Lumi/Core" FILES ${LUMI_CORE_PUBLI
 # Build Configuration
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
-    add_library(LumiStaticCore STATIC ${LUMI_CORE_SOURCES})
-    set_target_properties(LumiStaticCore PROPERTIES OUTPUT_NAME "LumiCore")
+    add_library(LumiStaticCore STATIC ${LUMI_CORE_SOURCES} ${LUMI_CORE_PUBLIC_HEADERS})
     add_library(Lumi::CoreStatic ALIAS LumiStaticCore)
 
     target_link_libraries(
