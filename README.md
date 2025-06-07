@@ -1,75 +1,32 @@
-# LumiFramework
-
 ## LumiFramework: A C++ Framework Library for Desktop Applications
 [![codecov](https://codecov.io/gh/TheMonHub/LumiFramework/graph/badge.svg?token=2YN92BA4JE)](https://codecov.io/gh/TheMonHub/LumiFramework)
 
-Lumi is a **C++ framework library** meticulously designed to simplify and accelerate the development of **robust,
-high-performance, and interactive cross-platform desktop applications**. It functions as a powerful library that
-provides the foundational structure and utilities typically found in a full-fledged framework, all while maintaining the
-flexibility and control characteristic of a well-designed library. Lumi's primary goal is to significantly reduce
-boilerplate code and abstract away common complexities, allowing developers to dedicate their focus to the unique logic
-and innovation of their applications.
+LumiFramework is a C++ library designed to make building cross-platform desktop applications easier and faster. It focuses on helping developers create powerful, interactive apps for **Windows, Linux, and macOS** without getting bogged down by complex setup or repetitive code.
 
-### Core Philosophy & Features
+---
 
-Lumi achieves its mission by adhering to a clear philosophy and offering distinct features:
+### What LumiFramework Offers
 
-* **Designed for Low-Level Control with Optional High-Level Framework Features:** Lumi is fundamentally built to provide
-  developers with granular control over low-level aspects of application development. Simultaneously, it offers optional
-  higher-level abstractions and framework-like components, such as a core application loop, event handling mechanisms,
-  and rendering pipeline integration. This dual approach allows developers to choose their desired level of abstraction,
-  enabling direct low-level manipulation when needed, or leveraging convenient high-level features for rapid
-  development.
+* **Flexible Control:** Lumi gives you the best of both worlds. You can dive deep and control low-level details, or use its built-in features like the **application loop** and **event handling** for quicker development.
+* **A Library That Acts Like a Framework:** While it's a library, Lumi provides many components you'd expect from a full framework. You're free to use as much or as little of it as your project needs, fitting seamlessly into your existing C++ setup.
+* **Ready-Made Foundation:** It handles the tricky parts of cross-platform development, like **window management, input, and graphics**, by integrating reliable libraries like GLFW. This means you don't have to research and set these up yourself.
+* **Highly Modular:** Lumi is built for flexibility. It is provided as a **static library**, and you can easily swap out its default parts, or integrate your own custom code and other third-party libraries. It adapts to **your application's architecture**, not the other way around.
+* **Built for C++ Developers:** Lumi understands what C++ developers need. It provides the essential scaffolding while keeping you in charge of your application's unique logic and features.
 
-* **A Library Acting as a Framework:** Lumi provides a comprehensive set of building blocks and higher-level
-  abstractions, including a core application loop, event handling mechanisms, and rendering pipeline integration. These
-  components are offered as part of the library, allowing developers to adopt as much or as little of the "framework"
-  structure as their project requires. You can leverage Lumi for its opinionated defaults for rapid development, or
-  integrate its individual components into an existing architecture.
+---
 
-* **Curated Cross-Platform Foundation:** At its heart, Lumi provides robust, cross-platform abstractions for fundamental
-  desktop application elements such as window management, input handling, and graphics context creation. It
-  intelligently integrates and builds upon **preselected, battle-tested low-level libraries** (like GLFW) and direct
-  system APIs. This eliminates the burden on developers to research, select, and integrate these complex foundational
-  components from scratch, ensuring a stable and performant base.
+### Our Vision for LumiFramework
 
-* **Modularity & Developer Control:** Lumi is built with supreme modularity in mind. It is provided as **static libraries**, Unlike monolithic frameworks
-  that often dictate your application's entire architecture, Lumi adapts to *your* application's logic. It provides
-  granular, lower-level access, empowering you to easily swap out default implementations, integrate other third-party
-  libraries seamlessly, or inject your own custom solutions precisely where your application demands it.
+We want LumiFramework to become the **go-to foundation for C++ desktop development**. Our goal is to empower developers to focus on innovation by simplifying underlying complexities, ensuring they spend time solving unique problems rather than battling boilerplate code. We believe in providing powerful tools and smart defaults that are always customizable, making Lumi a complementary part of your C++ ecosystem, not a restrictive one.
 
-* **Empowering C++ Developers:** Lumi is crafted by C++ developers, for C++ developers. While it offers essential
-  scaffolding and higher-level abstractions (such as a core application loop and event dispatching), it ensures you
-  remain entirely in charge of your application's unique features and core work. Lumi integrates smoothly into your
-  existing C++ environment, empowering you to craft your own application architecture, rendering strategies, and overall
-  logic with **significantly less complexity and a heightened level of focus**.
+---
 
-### Vision & Goals
+### License Information
 
-LumiFramework is born from the desire to make advanced C++ desktop application development more accessible and
-enjoyable, without compromising on performance or developer control. Our vision for LumiFramework is to be:
+LumiFramework is distributed under the terms of the **zlib license**. This permissive open-source license allows you to use, modify, and distribute the software freely, even for commercial projects, with minimal restrictions.
 
-* **The Premier Foundation for Desktop C++:** A trusted, reliable, and continuously evolving core for building a diverse
-  range of desktop applications, from powerful utilities to immersive interactive experiences. We are explicitly focused
-  on **Windows, Linux, and macOS** as our primary target platforms.
-
-* **Truly Developer-Centric:** We believe developers should spend their time solving unique problems, not wrestling with
-  boilerplate or rigid framework structures. Lumi will always prioritize developer autonomy, offering powerful tools and
-  sensible defaults that can be easily customized or bypassed, ensuring it complements your workflow.
-
-* **A Catalyst for Innovation:** By simplifying the underlying complexities of cross-platform setup and low-level
-  interactions, Lumi aims to empower developers to bring their unique ideas to life faster, fostering greater innovation
-  within the C++ desktop application space.
-
-* **Modular & Extensible:** Lumi will consistently strive for maximum modularity, allowing developers to integrate their
-  preferred libraries and custom implementations seamlessly. This means Lumi will always be a complementary tool within
-  your existing C++ ecosystem, not a restrictive replacement.
+---
 
 ### Project Status
 
-LumiFramework is currently in its **active development and execution phase**. Our primary focus is on building a robust
-and stable **core foundation** and establishing its key features.
-
-At this time, we are **not yet accepting external contributions**. We appreciate your interest, and comprehensive
-contribution guidelines (along with a code of conduct) will be made available once the project reaches a more mature and
-stable state.
+LumiFramework is currently in **active development**. We're focused on building a solid core foundation. Please note, we are **not yet accepting external contributions**, but we appreciate your interest! Guidelines for contributing will be available once the project is more mature.
