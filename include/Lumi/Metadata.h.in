@@ -7,13 +7,14 @@
 
 #include <string_view>
 
-namespace Lumi::Information {
-    constexpr std::string_view LUMI_VERSION_STRING = "@PROJECT_VERSION@";
+namespace Lumi::Info::Raw {
+    constexpr std::string_view LUMI_VERSION_FULL_STRING = "@PROJECT_VERSION@";
+    constexpr std::string_view LUMI_VERSION_STRING = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
+    constexpr std::string_view LUMI_VERSION_TAG = "@VERSION_TAG@";
     constexpr unsigned int LUMI_VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
     constexpr unsigned int LUMI_VERSION_MINOR = @PROJECT_VERSION_MINOR@;
     constexpr unsigned int LUMI_VERSION_PATCH = @PROJECT_VERSION_PATCH@;
-    constexpr std::string_view LUMI_LICENSE_TEXT = "@LUMI_LICENSE_TEXT_FROM_CMAKE@";
-    const std::string_view LUMI_BUILD_TYPE = "@CMAKE_BUILD_TYPE@";
+    constexpr std::string_view LUMI_LICENSE_TEXT = "@LUMI_LICENSE_TEXT@";
 }
 
 #endif //METADATA_H

@@ -59,6 +59,40 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" IS_TOP_
 set(LUMI_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 message(NOTICE "Lumi source directory: ${LUMI_SOURCE_DIR}")
 
+# Set Lumi version tag
+# alpha, beta, rc, or dev
+set(VERSION_TAG "dev")
+
+if ("${VERSION_TAG}" STREQUAL "alpha")
+    set(LUMI_VERSION_TAG "-alpha")
+elseif ("${VERSION_TAG}" STREQUAL "beta")
+    set(LUMI_VERSION_TAG "-beta")
+elseif ("${VERSION_TAG}" STREQUAL "rc")
+    set(LUMI_VERSION_TAG "-rc.")
+elseif ("${VERSION_TAG}" STREQUAL "dev")
+    set(LUMI_VERSION_TAG "-dev")
+elseif ("${VERSION_TAG}" STREQUAL "")
+    message(WARNING "VERSION_TAG is empty. Please set it to 'alpha', 'beta', 'rc', 'dev', or 'release'. Defaulting to empty tag.")
+    set(LUMI_VERSION_TAG "")
+else ()
+    message(FATAL_ERROR "Unknown VERSION_TAG '${VERSION_TAG}'. Expected 'alpha', 'beta', 'rc', 'dev', or 'release'.")
+    set(LUMI_VERSION_TAG "")
+endif ()
+
+# If this is a release candidate, set this to the appropriate version.
+# For example, if this is the first release candidate, set it to "1".
+set(LUMI_RELEASE_CANDIDATE_VERSION "")
+if ("${VERSION_TAG}" STREQUAL "rc")
+    if ("${LUMI_RELEASE_CANDIDATE_VERSION}" STREQUAL "")
+        message(FATAL_ERROR "LUMI_RELEASE_CANDIDATE_VERSION must be set when VERSION_TAG is 'rc'.")
+    endif ()
+else ()
+    set(LUMI_RELEASE_CANDIDATE_VERSION "")
+endif ()
+
+# Set Lumi version based on the project version and tag
+set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
+
 # Required CMake modules
 include(FetchContent)
 include(GNUInstallDirs)
@@ -164,7 +198,7 @@ if (LUMI_BUILD_WINDOW)
 endif ()
 
 #-----------------------------------------------------------------------------
-# Generate Lumi Export Header
+# Generate Lumi Header
 #-----------------------------------------------------------------------------
 set(LUMI_LICENSE_FILE "${LUMI_SOURCE_DIR}/LICENSE")
 if (EXISTS "${LUMI_LICENSE_FILE}")
@@ -180,18 +214,16 @@ else ()
 endif ()
 
 # Make sure the variable is available for configure_file.
-set(LUMI_LICENSE_TEXT_FROM_CMAKE "${LUMI_LICENSE_TEXT_CONTENT}")
+set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
 # Metadata.h.in template should be at Lumi/include/Metadata.h.in
-set(LUMI_GLOBAL_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h.in")
-set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/Lumi/Metadata.h") # Output to build/Lumi/Metadata.h
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Lumi") # Ensure the output directory exists
-
+set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h.in")
+set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h") # Output to include/Lumi/Metadata.h
 configure_file(
-        "${LUMI_GLOBAL_METADATA_TEMPLATE}"
+        "${LUMI_METADATA_TEMPLATE}"
         "${LUMI_GENERATED_METADATA_OUTPUT}"
-        @ONLY # Important: Only replace @VAR@ style variables, not ${VAR}
+        @ONLY
 )
 
 #-----------------------------------------------------------------------------

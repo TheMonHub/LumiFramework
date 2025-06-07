@@ -2,14 +2,23 @@
 # Library Sources
 #-----------------------------------------------------------------------------
 message(STATUS "Configuring Lumi Core...")
+
+#-----------------------------------------------------------------------------
+if (NOT EXISTS "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h")
+    message(FATAL_ERROR "Metadata header file not found.")
+endif ()
+
 # Define sources
 set(LUMI_CORE_SOURCES
-        "${LUMI_SOURCE_DIR}/src/core/"
+        "${LUMI_SOURCE_DIR}/src/core/error_handler.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/info.cpp"
 )
 
 # Define public headers
 set(LUMI_CORE_PUBLIC_HEADERS
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/"
+        "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorHandler.h"
+        "${LUMI_SOURCE_DIR}/include/Lumi/Core/Info.h"
+        "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h"
 )
 
 # Define dependencies
@@ -19,7 +28,7 @@ set(LUMI_CORE_DEPENDENCIES
 
 # IDE source organization
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
-source_group(TREE "${LUMI_SOURCE_DIR}/include/Lumi/Core" FILES ${LUMI_CORE_PUBLIC_HEADERS})
+source_group(TREE "${LUMI_SOURCE_DIR}/include/Lumi" FILES ${LUMI_CORE_PUBLIC_HEADERS})
 
 #-----------------------------------------------------------------------------
 # Build Configuration

@@ -20,8 +20,7 @@ HTML_COLORSTYLE_GAMMA  = 80
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_TREEVIEW      = YES
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = "@LUMI_SOURCE_DIR@" \
-                        "@CMAKE_CURRENT_BINARY_DIR@"
+STRIP_FROM_PATH        = "@LUMI_SOURCE_DIR@"
 DISABLE_INDEX          = NO
 FULL_SIDEBAR           = NO
 HTML_EXTRA_FILES       = @LUMI_SOURCE_DIR@/docs/doxygen-awesome-fragment-copy-button.js \
@@ -36,8 +35,7 @@ SORT_MEMBER_DOCS       = NO
 # Input
 #---------------------------------------------------------------------------
 INPUT                  = "@LUMI_SOURCE_DIR@/include" \
-                        "@LUMI_SOURCE_DIR@/src" \
-                        "@CMAKE_CURRENT_BINARY_DIR@/include"
+                        "@LUMI_SOURCE_DIR@/src"
 FILE_PATTERNS          = *.h \
                         *.cpp
 RECURSIVE              = YES
