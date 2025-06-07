@@ -16,6 +16,11 @@
 # - ZIP
 # - TGZ
 
+# Currently supported workflows:
+# - Build and install
+# - Add as subdirectory
+# - Manual linking for non-CMake project
+
 # Build Options:
 # -DLUMI_BUILD_ALL=ON/OFF           Force build all components of Lumi (Default: OFF)
 
