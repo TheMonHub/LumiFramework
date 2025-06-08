@@ -216,6 +216,8 @@ namespace Lumi::ErrorHandler {
    "Access denied. By me.",
    "I told you to never strap a buttered bread to a cat! The buttered cat paradox!",
    "Skibidi toilet is overated.",
+   "This generation is cooked.",
+   "Congratulations. You found an error!",
    "Your mo-",
    "-m so big, I have to split this across two messages.",
 			"Lumi's health bar is critically low. Time for a health pack (and some code fixes)."};
