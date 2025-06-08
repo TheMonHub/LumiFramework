@@ -263,17 +263,17 @@ namespace Lumi::ErrorHandler {
 	std::string LUMI_ASSERT_STRING(const AssertType type) noexcept {
 		switch (type) {
 			case AssertType::GREATER:
-				return "Value greater than";
+				return "Value greater than ";
 			case AssertType::LOWER:
-				return "Value lower than";
+				return "Value lower than ";
 			case AssertType::GREATER_EQUAL:
-				return "Value greater equal than";
+				return "Value greater equal than ";
 			case AssertType::LOWER_EQUAL:
-				return "Value lower equal than";
+				return "Value lower equal than ";
 			case AssertType::EQUAL:
 			case AssertType::NONE:
 			default:
-				return "Value equal to";
+				return "Value equal to ";
 		}
 	}
 

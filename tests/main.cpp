@@ -6,8 +6,5 @@
 //
 #include "gtest/gtest.h"
 
-// #include "Lumi/Core/Info.h"
+#include "Lumi/Core/ErrorHandler.h"
 
-// using namespace Lumi;
-
-// TEST(LumiCoreTest, LicenseCheck) { EXPECT_TRUE(Information::License::LicenseAvailable()); }
