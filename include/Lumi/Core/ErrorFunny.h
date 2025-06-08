@@ -190,7 +190,7 @@ namespace Lumi::ErrorHandler {
    "Coffee is for loser.",
    "IMM LIGHTTT-ING CODE AND SHIT, CAUSE IMMM IN FREAKING LUMI FRAMEWORKKKK!!",
    "Your mom so dumb, she can't even solve this error.",
-   "I'm literally crying."
+   "HELIKOPTER HELIKOPTER!!.",
    "You can't blame a 15 years old.",
    "Shh... I'm thinking.",
    "I told you to never strap a bread with jam to a cat! The jam cat paradox!",
