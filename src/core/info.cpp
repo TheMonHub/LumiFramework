@@ -27,12 +27,11 @@ namespace Lumi::Info {
 
 		VersionTag GetVersionTag() {
 			static const std::unordered_map<std::string_view, VersionTag> tagMap = {
-				{"dev", VersionTag::Dev},
-				{"alpha", VersionTag::Alpha},
-				{"beta", VersionTag::Beta},
-				{"rc", VersionTag::ReleaseCandidate},
-				{"release", VersionTag::Release}
-			};
+					{"dev", VersionTag::Dev},
+					{"alpha", VersionTag::Alpha},
+					{"beta", VersionTag::Beta},
+					{"rc", VersionTag::ReleaseCandidate},
+					{"release", VersionTag::Release}};
 
 			if (const auto it = tagMap.find(LUMI_VERSION_TAG); it != tagMap.end()) {
 				return it->second;

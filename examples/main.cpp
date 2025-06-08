@@ -16,5 +16,6 @@ int main() {
 	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Warning);
 	std::cout << "\n" << "Lumi Version: " << Lumi::Info::Version::GetVersionString(true) << "\n" << std::endl;
 	std::cout << Lumi::Info::License::GetLicenseString() << "\n" << std::endl;
-	Lumi::ErrorHandler::LUMI_LOG("Yay", Lumi::ErrorHandler::LogCode::InternalError, Lumi::ErrorHandler::LogSeverity::Fatal);
+	Lumi::ErrorHandler::LUMI_LOG("Yay", Lumi::ErrorHandler::LogCode::InternalError,
+								 Lumi::ErrorHandler::LogSeverity::Fatal);
 }
