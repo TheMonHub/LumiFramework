@@ -23,7 +23,7 @@ macro(configure_lumi_target target_name component_public_headers component_name)
     set_target_properties(${target_name} PROPERTIES
             PUBLIC_HEADER "${component_public_headers}"
             VERSION ${PROJECT_VERSION}
-            OUTPUT_NAME "Lumi${component_name}"
+            OUTPUT_NAME "${target_name}"
     )
 
     set_target_properties(${target_name} PROPERTIES DEBUG_POSTFIX "D")
@@ -35,12 +35,12 @@ macro(configure_lumi_target target_name component_public_headers component_name)
         # 3. Installing public headers associated with the target property.
         if ("${component_name}" STREQUAL "")
             set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Lumi/${LUMI_VERSIONED_SUBDIR}")
-            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/$<CONFIG>")
+            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/")
             message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}' folder.")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}'")
         else ()
             set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi/${component_name}")
-            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/${component_name}$<CONFIG>")
+            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/${component_name}/")
             message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${component_name}' folder.")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${component_name}' folder.")
         endif ()

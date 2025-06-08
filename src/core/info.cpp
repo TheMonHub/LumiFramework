@@ -5,9 +5,6 @@
 // Created by Mono on 7/6/2025.
 //
 
-#include <cstring>
-
-
 #include <string_view>
 #include "Lumi/Core/ErrorHandler.h"
 #include "Lumi/Core/Info.h"
@@ -29,18 +26,17 @@ namespace Lumi::Info {
 		unsigned int GetVersionPatch() { return LUMI_VERSION_PATCH; }
 
 		VersionTag GetVersionTag() {
-			const std::string_view::const_pointer VersionTagString = LUMI_VERSION_TAG.data();
+			static const std::unordered_map<std::string_view, VersionTag> tagMap = {
+				{"dev", VersionTag::Dev},
+				{"alpha", VersionTag::Alpha},
+				{"beta", VersionTag::Beta},
+				{"rc", VersionTag::ReleaseCandidate},
+				{"release", VersionTag::Release}
+			};
 
-			if (std::strcmp(VersionTagString, "dev") == 0)
-				return VersionTag::Dev;
-			if (std::strcmp(VersionTagString, "alpha") == 0)
-				return VersionTag::Alpha;
-			if (std::strcmp(VersionTagString, "beta") == 0)
-				return VersionTag::Beta;
-			if (std::strcmp(VersionTagString, "rc") == 0)
-				return VersionTag::ReleaseCandidate;
-			if (std::strcmp(VersionTagString, "release") == 0)
-				return VersionTag::Release;
+			if (const auto it = tagMap.find(LUMI_VERSION_TAG); it != tagMap.end()) {
+				return it->second;
+			}
 
 			return VersionTag::None;
 		}
@@ -65,8 +61,7 @@ namespace Lumi::Info {
 	} // namespace Version
 	namespace License {
 		std::string_view GetLicenseString() {
-			if (IsLicenseAvailable() == false) {
-				LUMI_ERROR("License is not available.", ErrorCode::AssertionFailed, "true", false);
+			if (LUMI_ASSERT(IsLicenseAvailable(), true)) {
 				return "";
 			}
 			return LUMI_LICENSE_TEXT;

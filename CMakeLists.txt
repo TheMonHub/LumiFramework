@@ -264,12 +264,12 @@ message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 # Monolithic Static Library (Lumi::LumiStatic) - As an INTERFACE library to group all static components
 # This allows linking all static components using one target.
 if (LUMI_STATIC_LIB_TARGETS_LIST)
-    add_library(LumiStatic INTERFACE)
-    target_link_libraries(LumiStatic INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
-    add_library(Lumi::LumiStatic ALIAS LumiStatic)
-    install(TARGETS LumiStatic EXPORT "${LUMI_COMMON_EXPORT_SET}" COMPONENT Lumi-dev)
+    add_library(Lumi INTERFACE)
+    target_link_libraries(Lumi INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
+    add_library(Lumi::Lumi ALIAS Lumi)
+    install(TARGETS Lumi EXPORT "${LUMI_COMMON_EXPORT_SET}" COMPONENT Lumi-dev)
 
-    message(STATUS "Created Lumi::LumiStatic interface library to group all static components.")
+    message(STATUS "Created Lumi::Lumi interface library to group all static components.")
 endif ()
 
 #-----------------------------------------------------------------------------
