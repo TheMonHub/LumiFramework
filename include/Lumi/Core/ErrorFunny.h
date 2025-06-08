@@ -187,6 +187,11 @@ namespace Lumi::ErrorHandler {
    "Lost my keys again.",
    "This message is a potato.",
    "IMM LIGHTTT-ING CODE AND SHIT, CAUSE IMMM IN FREAKING LUMI FRAMEWORKKKK!!",
+   "Your mom so dumb, she can't even solve this error.",
+   ";-; I'm literally crying."
+   "I told you to never strap a bread with jam to a cat!",
+   "Your mo-",
+   "-m so big, I have to saperate this between two messages",
 			"Lumi's health bar is critically low. Time for a health pack (and some code fixes)."};
 }
 
