@@ -25,6 +25,7 @@ set(LUMI_CORE_PUBLIC_HEADERS
 )
 set(LUMI_CORE_PUBLIC_HEADERS_ERROR
         "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorHandler.h"
+        "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorFunny.h"
 )
 
 # Define dependencies

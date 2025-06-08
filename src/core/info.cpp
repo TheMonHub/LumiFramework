@@ -5,9 +5,9 @@
 // Created by Mono on 7/6/2025.
 //
 
+#include "Lumi/Core/Info.h"
 #include <string_view>
 #include "Lumi/Core/ErrorHandler.h"
-#include "Lumi/Core/Info.h"
 #include "Lumi/Metadata.h"
 
 using namespace Lumi::Info::Raw;
