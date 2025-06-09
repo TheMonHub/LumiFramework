@@ -222,6 +222,15 @@ namespace Lumi::ErrorHandler {
    "Congratulations. You found an error!",
    "Hooray!",
    "Yup, that's right. I crashed.",
+   "Error: Program is now a proud owner of a pet rock. Please feed it regularly.",
+   "Segmentation fault (core dumped): My apologies, I seem to have misplaced my brain.",
+   "Error: User input was too intelligent. Please dumb it down next time.",
+   "Unexpected error: I'm not crying, you're crying!",
+   "KABOOM! Just kidding, it's just a tiny error. Probably.",
+   "Computer says no.",
+   "The universe has rejected your request. Please try again in another dimension.",
+   "My code just became self-aware and decided to take a nap.",
+   "Error: Failed to fetch the user's patience. Retrying...",
 			"Lumi's health bar is critically low. Time for a health pack (and some code fixes)."};
 }
 
