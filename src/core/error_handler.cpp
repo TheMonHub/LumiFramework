@@ -1,39 +1,35 @@
 // Copyright (c) 2025 TheMonHub
 // Licensed under zlib License
 
+#include <Lumi/Core/Info.h>
 #include <chrono>
 #include <functional>
 #include <iomanip>
 #include <iostream>
 #include <mutex>
 #include <random>
-#include <sstream>
+#include <shared_mutex>
 #include <string_view>
 #include <thread>
 #include <vector>
 
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
-
-#include "Lumi/Core/ErrorFunny.h"
 #include "Lumi/Core/ErrorHandler.h"
 
 namespace Lumi::ErrorHandler {
 	static std::mutex rng_mutex;
 	static std::mutex log_mutex;
-	static std::mutex config_mutex;
-	static std::mutex callback_mutex;
+	static std::shared_mutex config_mutex;
+	static std::shared_mutex callback_mutex;
 
 	static std::mt19937 rng{std::random_device{}()};
 	static auto LUMI_FATAL_SEVERITY = LogSeverity::Fatal;
 	static auto LUMI_LOG_LEVEL = LogSeverity::Info;
 	static auto LUMI_ERROR_SEVERITY = LogSeverity::Warning;
 	static auto LUMI_FUNNY_ERROR = false;
+	static auto LUMI_LOG_ENABLED = true;
 
 	static std::vector<LogCallback> s_callbacks;
+	static std::vector<std::string_view> funny_error_messages;
 
 	std::string_view LUMI_LOG_STRING(const LogCode code) noexcept {
 		switch (code) {
@@ -90,103 +86,81 @@ namespace Lumi::ErrorHandler {
 	}
 
 	void LUMI_SET_FATAL_SEVERITY(const LogSeverity severity, const bool allowSetInfo) noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
-		switch (severity) {
-			case LogSeverity::Info:
-				if (!allowSetInfo) {
-					return;
-				}
-				break;
-			default:
-				break;
-		}
+		std::unique_lock<std::shared_mutex> lock(config_mutex);
+		if (severity == LogSeverity::Info && !allowSetInfo)
+			return;
 		LUMI_FATAL_SEVERITY = severity;
 	}
 
+	void LUMI_SET_LOG_ENABLED(const bool enabled) noexcept {
+		std::unique_lock<std::shared_mutex> lock(config_mutex);
+		LUMI_LOG_ENABLED = enabled;
+	}
+
 	LogSeverity LUMI_GET_FATAL_SEVERITY() noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
 		return LUMI_FATAL_SEVERITY;
 	}
 
 	void LUMI_SET_LOG_LEVEL(const LogSeverity severity) noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::unique_lock<std::shared_mutex> lock(config_mutex);
 		LUMI_LOG_LEVEL = severity;
 	}
 
 	void LUMI_SET_ERROR_SEVERITY(const LogSeverity severity) noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::unique_lock<std::shared_mutex> lock(config_mutex);
 		LUMI_ERROR_SEVERITY = severity;
 	}
 
 	LogSeverity LUMI_GET_ERROR_SEVERITY() noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
 		return LUMI_ERROR_SEVERITY;
 	}
 
 	LogSeverity LUMI_GET_LOG_LEVEL() noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
 		return LUMI_LOG_LEVEL;
 	}
 
 	void LUMI_SET_FUNNY_ERROR_BOOL(const bool funny) noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::unique_lock<std::shared_mutex> lock(config_mutex);
 		LUMI_FUNNY_ERROR = funny;
 	}
 
 	bool LUMI_GET_FUNNY_ERROR_BOOL() noexcept {
-		std::lock_guard<std::mutex> lock(config_mutex);
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
 		return LUMI_FUNNY_ERROR;
 	}
 
-	unsigned long get_process_id() noexcept {
-#ifdef _WIN32
-		return GetCurrentProcessId();
-#else
-		return static_cast<unsigned long>(getpid());
-#endif
+	bool LUMI_GET_LOG_ENABLED() noexcept {
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
+		return LUMI_LOG_ENABLED;
 	}
 
-	unsigned long long get_thread_id() noexcept {
-		std::ostringstream oss;
-		oss << std::this_thread::get_id();
-		try {
-			return std::stoull(oss.str());
-		} catch ([[maybe_unused]] const std::exception &e) {
-			return 0;
-		}
+	void LUMI_REGISTER_LOG_MESSAGES(std::vector<std::string_view> messages) {
+		funny_error_messages = std::move(messages);
 	}
 
-	std::string get_current_timestamp() {
-		const auto now = std::chrono::system_clock::now();
-		const auto in_time_t = std::chrono::system_clock::to_time_t(now);
-
-		std::stringstream ss;
-		ss << std::put_time(std::localtime(&in_time_t), "%H:%M:%S");
-
-		const auto duration = now.time_since_epoch();
-		const auto microseconds = (std::chrono::duration_cast<std::chrono::microseconds>(duration) % 1000000).count();
-		ss << '.' << std::setfill('0') << std::setw(2) << (microseconds / 10000);
-		return ss.str();
-	}
+	void LUMI_CLEAR_LOG_MESSAGES() noexcept { funny_error_messages.clear(); }
 
 	void LUMI_REGISTER_LOG_CALLBACK(LogCallback callback) {
-		std::lock_guard<std::mutex> lock(callback_mutex);
+		std::unique_lock<std::shared_mutex> lock(callback_mutex);
 		s_callbacks.push_back(std::move(callback));
 	}
 
 	void LUMI_CLEAR_LOG_CALLBACKS() noexcept {
-		std::lock_guard<std::mutex> lock(callback_mutex);
+		std::unique_lock<std::shared_mutex> lock(callback_mutex);
 		s_callbacks.clear();
 	}
 
-	void LUMI_LOG(std::string_view message, LogCode code, LogSeverity severity, std::string_view expected,
-				  std::string_view actual, AssertType assertType) {
+	void LUMI_LOG(const std::string_view message, LogCode code, const LogSeverity severity,
+				  const std::string_view expected, const std::string_view actual, AssertType assertType) {
 		LogSeverity current_log_level;
 		LogSeverity current_error_severity;
 		LogSeverity current_fatal_severity;
 		bool is_funny_error;
 		{
-			std::lock_guard<std::mutex> config_lock(config_mutex);
+			std::shared_lock<std::shared_mutex> config_lock(config_mutex);
 			current_log_level = LUMI_LOG_LEVEL;
 			current_error_severity = LUMI_ERROR_SEVERITY;
 			current_fatal_severity = LUMI_FATAL_SEVERITY;
@@ -198,16 +172,49 @@ namespace Lumi::ErrorHandler {
 			final_severity = LUMI_MAP_LOG_SEVERITY(code);
 		}
 
-		if (static_cast<int>(final_severity) < static_cast<int>(current_log_level)) {
-			return;
+		std::string funny_message_str;
+		if (is_funny_error && final_severity >= current_fatal_severity) {
+			{
+				std::lock_guard<std::mutex> rng_lock(rng_mutex);
+				if (!funny_error_messages.empty()) {
+					std::uniform_int_distribution<> dist(0, static_cast<int>(funny_error_messages.size() - 1));
+					funny_message_str = funny_error_messages[dist(rng)];
+				} else {
+					funny_message_str = "Error: No funny messages available";
+				}
+			}
 		}
 
 		const auto logMessageCodeString = LUMI_LOG_STRING(code);
 		const auto logSeverityString = LUMI_SEVERITY_STRING(final_severity);
 
-		const unsigned long pid = get_process_id();
-		const unsigned long long tid = get_thread_id();
-		const std::string timestamp = get_current_timestamp();
+		const unsigned long pid = Info::Application::get_process_id();
+		const unsigned long long tid = Info::Application::get_thread_id();
+		const std::string timestamp = Info::Application::get_current_timestamp();
+		{
+			const LogData Data = {message, code, final_severity, std::string(expected), std::string(actual),
+								  pid,	   tid,	 timestamp,		 funny_message_str,		assertType};
+
+			std::shared_lock<std::shared_mutex> callback_lock(callback_mutex);
+			for (const auto &callback: s_callbacks) {
+				if (callback) {
+					try {
+						callback(Data);
+					} catch (const std::exception &e) {
+						std::cerr << "[Lumi::ErrorHandler] WARNING: A registered log callback threw a std::exception: "
+								  << e.what() << ". (Original log code: " << static_cast<int>(Data.code) << ")\n";
+					} catch (...) {
+						std::cerr << "[Lumi::ErrorHandler] WARNING: A registered log callback threw an unknown "
+									 "exception. "
+								  << "(Original log code: " << static_cast<int>(Data.code) << ")\n";
+					}
+				}
+			}
+		}
+
+		if (static_cast<int>(final_severity) < static_cast<int>(current_log_level) || !LUMI_LOG_ENABLED) {
+			return;
+		}
 
 		std::lock_guard<std::mutex> log_lock(log_mutex);
 
@@ -218,18 +225,7 @@ namespace Lumi::ErrorHandler {
 
 		logger << "[" << timestamp << " PID:" << pid << " TID:" << tid << " | " << logSeverityString << "] ";
 
-		std::string funny_message_str;
-
 		if (is_funny_error && final_severity >= current_fatal_severity) {
-			{
-				std::lock_guard<std::mutex> rng_lock(rng_mutex);
-				if (!LUMI_FUNNY_ERROR_MESSAGES.empty()) {
-					std::uniform_int_distribution<> dist(0, static_cast<int>(LUMI_FUNNY_ERROR_MESSAGES.size() - 1));
-					funny_message_str = LUMI_FUNNY_ERROR_MESSAGES[dist(rng)];
-				} else {
-					funny_message_str = "Error: No funny messages available";
-				}
-			}
 			logger << funny_message_str << " But seriously, ";
 		}
 
@@ -240,18 +236,6 @@ namespace Lumi::ErrorHandler {
 
 		logger << ")" << '\n';
 		logger.flush();
-
-		{
-			const LogData Data = {message, code, final_severity, std::string(expected), std::string(actual),
-								  pid,	   tid,	 timestamp,		 funny_message_str,		assertType};
-
-			std::lock_guard<std::mutex> callback_lock(callback_mutex);
-			for (const auto &cb: s_callbacks) {
-				if (cb) {
-					cb(Data);
-				}
-			}
-		}
 
 		if (final_severity >= current_fatal_severity) {
 			logger << "Fatal Error Occurred, Can not proceed. Exiting..." << '\n';
@@ -277,7 +261,7 @@ namespace Lumi::ErrorHandler {
 		}
 	}
 
-	bool LUMI_ASSERT(bool actualValue, bool expectedValue, const AssertType type) {
+	bool LUMI_ASSERT(const bool actualValue, const bool expectedValue, const AssertType type) {
 		if (actualValue == expectedValue) {
 			return false;
 		}
@@ -286,7 +270,7 @@ namespace Lumi::ErrorHandler {
 		return true;
 	}
 
-	bool LUMI_ASSERT(int actualValue, int expectedValue, const AssertType type) {
+	bool LUMI_ASSERT(const int actualValue, const int expectedValue, const AssertType type) {
 		bool assertion_met = false;
 		switch (type) {
 			case AssertType::GREATER:

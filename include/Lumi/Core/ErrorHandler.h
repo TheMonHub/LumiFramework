@@ -27,7 +27,7 @@ namespace Lumi::ErrorHandler {
 		InaccessibleReference = 301,
 	};
 
-	enum class LogSeverity { Info = 0, Unknown = 1, Warning = 2, Error = 3, Fatal = 4 };
+	enum class LogSeverity { Info = 0, Unknown = 1, Warning = 2, Error = 3, Fatal = 4, None = 5 };
 
 	enum class AssertType { EQUAL, GREATER, LOWER, GREATER_EQUAL, LOWER_EQUAL, NONE };
 
@@ -55,19 +55,22 @@ namespace Lumi::ErrorHandler {
 	void LUMI_SET_LOG_LEVEL(LogSeverity severity = LogSeverity::Unknown) noexcept;
 	LogSeverity LUMI_GET_LOG_LEVEL() noexcept;
 
+	void LUMI_SET_LOG_ENABLED(bool enabled) noexcept;
+
 	void LUMI_SET_ERROR_SEVERITY(LogSeverity severity = LogSeverity::Error) noexcept;
 	LogSeverity LUMI_GET_ERROR_SEVERITY() noexcept;
 
 	void LUMI_SET_FUNNY_ERROR_BOOL(bool funny = false) noexcept;
 	bool LUMI_GET_FUNNY_ERROR_BOOL() noexcept;
 
+	bool LUMI_GET_LOG_ENABLED() noexcept;
+
 	LogSeverity LUMI_MAP_LOG_SEVERITY(LogCode code) noexcept;
 
 	void LUMI_LOG_SET_RANDOM_SEED(unsigned int seed) noexcept;
 
-	unsigned long get_process_id() noexcept;
-	unsigned long long get_thread_id() noexcept;
-	std::string get_current_timestamp();
+	void LUMI_REGISTER_LOG_MESSAGES(std::vector<std::string_view> messages);
+	void LUMI_CLEAR_LOG_MESSAGES() noexcept;
 
 	void LUMI_REGISTER_LOG_CALLBACK(LogCallback callback);
 	void LUMI_CLEAR_LOG_CALLBACKS() noexcept;
@@ -76,7 +79,7 @@ namespace Lumi::ErrorHandler {
 				  LogSeverity severity = LogSeverity::Unknown, std::string_view expected = "",
 				  std::string_view actual = "", AssertType assertType = AssertType::NONE);
 
-	std::string LUMI_ASSERT_STRING(const AssertType type) noexcept;
+	std::string LUMI_ASSERT_STRING(AssertType type) noexcept;
 
 	bool LUMI_ASSERT(bool actualValue, bool expectedValue, AssertType type = AssertType::EQUAL);
 	bool LUMI_ASSERT(int actualValue, int expectedValue, AssertType type = AssertType::EQUAL);

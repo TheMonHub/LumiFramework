@@ -24,6 +24,11 @@ namespace Lumi::Info {
 		std::string_view GetLicenseString();
 		bool IsLicenseAvailable();
 	} // namespace License
+	namespace Application {
+		unsigned long get_process_id() noexcept;
+		unsigned long long get_thread_id() noexcept;
+		std::string get_current_timestamp();
+	} // namespace Application
 } // namespace Lumi::Info
 
 #endif // INFO_H

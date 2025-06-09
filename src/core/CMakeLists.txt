@@ -15,6 +15,7 @@ set(LUMI_CORE_SOURCES
 )
 set(LUMI_CORE_SOURCES_ERROR
         "${LUMI_SOURCE_DIR}/src/core/error_handler.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/error_funny.cpp"
 )
 
 # Define public headers
@@ -64,6 +65,7 @@ if (LUMI_BUILD_STATIC_LIBS)
     target_link_libraries(
             LumiError
             PUBLIC
+            LumiCore
             ${LUMI_CORE_DEPENDENCIES}
     )
 
