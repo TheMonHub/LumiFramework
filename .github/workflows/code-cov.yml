@@ -10,8 +10,13 @@ on:
       - main
       - develop
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   build-and-test-coverage:
+    name : Test Coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -31,15 +36,17 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
 
-      - name: Configure CMake with Coverage Preset
+      - name: Build CMake Coverage Tests
         run: cmake --workflow --preset ci-workflow-coverage
       - name: Generate LCOV Report
         run: |
-          lcov --capture --directory ./build --output-file coverage.info
-          lcov --remove coverage.info '*/_deps/*' '*/tests/*' '*/usr/*' --output-file cov.info
+          lcov --capture --directory ./build --output-file coverage.info \
+          --rc geninfo_exclude="^.*/_deps/*|^.*/tests/*|^/usr/*" \
+          --rc geninfo_unexecuted_blocks=1 \
+          --ignore-errors mismatch
       - name: Generate Cobertura XML Report
         run: |
-          gcovr --xml --output coverage.xml cov.info
+          gcovr --xml --output coverage.xml coverage.info
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
@@ -53,3 +60,21 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Artifacts (Binaries)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-binaries
+          path: |
+            build/bin/Debug/LumiTests
+            
+            build/lib/Debug/*.a
+            build/lib/Debug/*.lib
+      - name: Upload Artifacts (Reports)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-reports
+          path: |
+            coverage.xml
+            coverage.info
+            coverage-filtered.info
+            build/test-results.xml

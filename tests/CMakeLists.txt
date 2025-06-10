@@ -8,8 +8,9 @@ add_executable(LumiTests
 
 target_link_libraries(LumiTests
         PRIVATE
-        LumiStatic
+        Lumi::Lumi
         GTest::gtest_main
+        GTest::gmock_main
 )
 
 include(GoogleTest)

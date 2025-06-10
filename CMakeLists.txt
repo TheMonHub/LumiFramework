@@ -16,12 +16,19 @@
 # - ZIP
 # - TGZ
 
+# Currently supported workflows:
+# - Build and install
+# - Add as subdirectory
+# - Manual linking for non-CMake project
+
 # Build Options:
+# -DLUMI_BUILD_ALL=ON/OFF           Force build all components of Lumi (Default: OFF)
+
 # Core Options:
-# -DLUMI_BUILD_STATIC_LIBS=ON/OFF    Build static libraries (Default: ON)
+# -DLUMI_BUILD_STATIC_LIBS=ON/OFF   Build static libraries (Default: ON)
 
 # Components:
-# -DLUMI_BUILD_WINDOW=ON/OFF         Build Window component (Default: ON)
+# -DLUMI_BUILD_WINDOW=ON/OFF        Build Window component (Default: ON)
 
 # Features:
 # -DLUMI_BUILD_DOCS=ON/OFF          Build documentation (Default: ON)
@@ -33,11 +40,7 @@
 # -DLUMI_INSTALL_DOCS=ON/OFF        Install documentation (Default: ON)
 # -DLUMI_INSTALL_EXAMPLES=ON/OFF    Install examples (Default: ON)
 
-# TODO: Add CMakePresets.json
-# TODO: Add github workflows
-# TODO: Add documentation website
 # TODO: Add Window component
-
 
 cmake_minimum_required(VERSION 3.16)
 project(Lumi
@@ -55,6 +58,40 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" IS_TOP_
 # Set Lumi source directory
 set(LUMI_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 message(NOTICE "Lumi source directory: ${LUMI_SOURCE_DIR}")
+
+# Set Lumi version tag
+# alpha, beta, rc, or dev
+set(VERSION_TAG "dev")
+
+if ("${VERSION_TAG}" STREQUAL "alpha")
+    set(LUMI_VERSION_TAG "-alpha")
+elseif ("${VERSION_TAG}" STREQUAL "beta")
+    set(LUMI_VERSION_TAG "-beta")
+elseif ("${VERSION_TAG}" STREQUAL "rc")
+    set(LUMI_VERSION_TAG "-rc.")
+elseif ("${VERSION_TAG}" STREQUAL "dev")
+    set(LUMI_VERSION_TAG "-dev")
+elseif ("${VERSION_TAG}" STREQUAL "")
+    message(WARNING "VERSION_TAG is empty. Please set it to 'alpha', 'beta', 'rc', 'dev', or 'release'. Defaulting to empty tag.")
+    set(LUMI_VERSION_TAG "")
+else ()
+    message(FATAL_ERROR "Unknown VERSION_TAG '${VERSION_TAG}'. Expected 'alpha', 'beta', 'rc', 'dev', or 'release'.")
+    set(LUMI_VERSION_TAG "")
+endif ()
+
+# If this is a release candidate, set this to the appropriate version.
+# For example, if this is the first release candidate, set it to "1".
+set(LUMI_RELEASE_CANDIDATE_VERSION "")
+if ("${VERSION_TAG}" STREQUAL "rc")
+    if ("${LUMI_RELEASE_CANDIDATE_VERSION}" STREQUAL "")
+        message(FATAL_ERROR "LUMI_RELEASE_CANDIDATE_VERSION must be set when VERSION_TAG is 'rc'.")
+    endif ()
+else ()
+    set(LUMI_RELEASE_CANDIDATE_VERSION "")
+endif ()
+
+# Set Lumi version based on the project version and tag
+set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
 
 # Required CMake modules
 include(FetchContent)
@@ -161,7 +198,7 @@ if (LUMI_BUILD_WINDOW)
 endif ()
 
 #-----------------------------------------------------------------------------
-# Generate Lumi Export Header
+# Generate Lumi Header
 #-----------------------------------------------------------------------------
 set(LUMI_LICENSE_FILE "${LUMI_SOURCE_DIR}/LICENSE")
 if (EXISTS "${LUMI_LICENSE_FILE}")
@@ -177,18 +214,16 @@ else ()
 endif ()
 
 # Make sure the variable is available for configure_file.
-set(LUMI_LICENSE_TEXT_FROM_CMAKE "${LUMI_LICENSE_TEXT_CONTENT}")
+set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
 # Metadata.h.in template should be at Lumi/include/Metadata.h.in
-set(LUMI_GLOBAL_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h.in")
-set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/Lumi/Metadata.h") # Output to build/Lumi/Metadata.h
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Lumi") # Ensure the output directory exists
-
+set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h.in")
+set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h") # Output to include/Lumi/Metadata.h
 configure_file(
-        "${LUMI_GLOBAL_METADATA_TEMPLATE}"
+        "${LUMI_METADATA_TEMPLATE}"
         "${LUMI_GENERATED_METADATA_OUTPUT}"
-        @ONLY # Important: Only replace @VAR@ style variables, not ${VAR}
+        @ONLY
 )
 
 #-----------------------------------------------------------------------------
@@ -229,12 +264,12 @@ message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 # Monolithic Static Library (Lumi::LumiStatic) - As an INTERFACE library to group all static components
 # This allows linking all static components using one target.
 if (LUMI_STATIC_LIB_TARGETS_LIST)
-    add_library(LumiStatic INTERFACE)
-    target_link_libraries(LumiStatic INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
-    add_library(Lumi::LumiStatic ALIAS LumiStatic)
-    install(TARGETS LumiStatic EXPORT "${LUMI_COMMON_EXPORT_SET}" COMPONENT Lumi-dev)
+    add_library(Lumi INTERFACE)
+    target_link_libraries(Lumi INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
+    add_library(Lumi::Lumi ALIAS Lumi)
+    install(TARGETS Lumi EXPORT "${LUMI_COMMON_EXPORT_SET}" COMPONENT Lumi-dev)
 
-    message(STATUS "Created Lumi::LumiStatic interface library to group all static components.")
+    message(STATUS "Created Lumi::Lumi interface library to group all static components.")
 endif ()
 
 #-----------------------------------------------------------------------------

@@ -5,9 +5,9 @@ coverage:
         target: 0%
 
 ignore:
-  - "**/*_deps/**"
-  - "**/tests/**"
-  - "**/build/**"
+  - "**/*_deps/**/*"
+  - "tests"
+  - "build/**/*"
   - "**/*.gcno"
   - "**/*.gcda"
   - "**/*.info"

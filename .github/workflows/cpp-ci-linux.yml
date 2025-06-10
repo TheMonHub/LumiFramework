@@ -2,9 +2,7 @@ name: Lumi CI Ubuntu Test
 
 on:
   push:
-    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
 
 jobs:
   build:
@@ -25,7 +23,7 @@ jobs:
             coverage: true
             apt_packages: "gcc g++ lcov"
 
-    name: ${{ matrix.os }} / ${{ matrix.compiler }} (${{ matrix.build_type }})${{ matrix.name_suffix }}
+    name: ${{ matrix.os }} / ${{ matrix.compiler }}-${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -55,7 +53,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: lumi-binaries-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}
+          name: lumi-binaries-${{ matrix.os }}-${{ matrix.compiler }}
           path: |
             build/bin/Debug/LumiTests
             

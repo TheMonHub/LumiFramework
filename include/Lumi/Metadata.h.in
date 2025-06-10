@@ -7,55 +7,14 @@
 
 #include <string_view>
 
-/**
- * @file
- * @brief Contains metadata definitions for the Lumi Framework.
- *
- * This file defines macros that provide versioning and licensing information
- * for the Lumi Framework. These macros are used throughout the framework to
- * ensure consistency and to provide information about the framework's version
- * and licensing.
- * @warning This file should not be used directly in user code. It is highly discouraged to include this file directly.
- * @ingroup Metadata
- */
-
-/**
- * @namespace Lumi::Metadata::Information
- * @brief Constants that provide versioning, licensing information and metadata for the Lumi Framework.
- * @warning This namespace should not be used directly in user code. it is highly discouraged to use these constants directly.
- * @ingroup Metadata
- * @see use Lumi::Metadata::Version and Lumi::Metadata::License instead.
- */
-
-namespace Lumi::Metadata::Information {
-    /**
-     * @brief The full version string of the Lumi Framework.
-     * @details Format: "MAJOR.MINOR.PATCH" (e.g., "1.2.3").
-     */
-    constexpr std::string_view LUMI_VERSION_STRING = "@PROJECT_VERSION@";
-
-    /**
-     * @brief The major version number of the Lumi Framework.
-     */
+namespace Lumi::Info::Raw {
+    constexpr std::string_view LUMI_VERSION_FULL_STRING = "@PROJECT_VERSION@";
+    constexpr std::string_view LUMI_VERSION_STRING = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
+    constexpr std::string_view LUMI_VERSION_TAG = "@VERSION_TAG@";
     constexpr unsigned int LUMI_VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
-
-    /**
-     * @brief The minor version number of the Lumi Framework.
-     */
     constexpr unsigned int LUMI_VERSION_MINOR = @PROJECT_VERSION_MINOR@;
-
-    /**
-     * @brief The patch version number of the Lumi Framework.
-     */
     constexpr unsigned int LUMI_VERSION_PATCH = @PROJECT_VERSION_PATCH@;
-
-    /**
-     * @brief The full license text of the Lumi Framework.
-     * @details This macro contains the entire license information for the project.
-     *
-     * @note This string used linux/unix line endings (LF) /n
-     */
-    constexpr std::string_view LUMI_LICENSE_TEXT = "@LUMI_LICENSE_TEXT_FROM_CMAKE@";
+    constexpr std::string_view LUMI_LICENSE_TEXT = "@LUMI_LICENSE_TEXT@";
 }
 
 #endif //METADATA_H
