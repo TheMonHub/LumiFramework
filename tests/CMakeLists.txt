@@ -10,6 +10,7 @@ target_link_libraries(LumiTests
         PRIVATE
         Lumi::Lumi
         GTest::gtest_main
+        GTest::gmock_main
 )
 
 include(GoogleTest)

@@ -1,6 +1,7 @@
 // Copyright (c) 2025 TheMonHub
 // Licensed under zlib License
 
+#include <Lumi/Core/Core.h>
 #include <Lumi/Core/Info.h>
 #include <chrono>
 #include <functional>
@@ -14,6 +15,15 @@
 #include <vector>
 
 #include "Lumi/Core/ErrorHandler.h"
+
+class NullBuffer final : public std::streambuf {
+protected:
+	int overflow(const int c) override { return c; }
+};
+
+static NullBuffer nullBuffer;
+static std::ostream nullStream(&nullBuffer);
+
 
 namespace Lumi::ErrorHandler {
 	static std::mutex rng_mutex;
@@ -166,6 +176,11 @@ namespace Lumi::ErrorHandler {
 			current_fatal_severity = LUMI_FATAL_SEVERITY;
 			is_funny_error = LUMI_FUNNY_ERROR;
 		}
+		bool is_test_mode;
+		{
+			std::shared_lock<std::shared_mutex> config_lock(config_mutex);
+			is_test_mode = LUMI_GET_TEST_MODE();
+		}
 
 		LogSeverity final_severity = severity;
 		if (final_severity == LogSeverity::Unknown) {
@@ -218,10 +233,14 @@ namespace Lumi::ErrorHandler {
 
 		std::lock_guard<std::mutex> log_lock(log_mutex);
 
-		std::ostream &logger = (final_severity <= current_error_severity) ? std::cout : std::cerr;
+		std::ostream &logger = (is_test_mode && final_severity < current_fatal_severity)
+									   ? nullStream
+									   : ((final_severity <= current_error_severity) ? std::cout : std::cerr);
+
 		if (!logger) {
 			return;
 		}
+
 
 		logger << "[" << timestamp << " PID:" << pid << " TID:" << tid << " | " << logSeverityString << "] ";
 

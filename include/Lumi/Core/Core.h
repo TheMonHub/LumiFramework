@@ -8,7 +8,12 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include <functional>
+
 namespace Lumi {
+	void LUMI_SET_TEST_MODE(bool enabled) noexcept;
+	bool LUMI_GET_TEST_MODE() noexcept;
+
 	void Initialize();
 	void RegisterInitFunction(std::function<void()> &init);
 	namespace Core {
