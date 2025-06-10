@@ -46,7 +46,7 @@ jobs:
           --ignore-errors mismatch
       - name: Generate Cobertura XML Report
         run: |
-          gcovr --xml --output coverage.xml coverage-filtered.info
+          gcovr --xml --output coverage.xml coverage.info
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
