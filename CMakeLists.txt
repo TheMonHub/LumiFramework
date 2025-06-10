@@ -97,6 +97,7 @@ set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDA
 include(FetchContent)
 include(GNUInstallDirs)
 include(cmake/utils.cmake)
+include(CTest)
 
 #-----------------------------------------------------------------------------
 # Build Options
