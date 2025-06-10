@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-    format-code:
+  format-code:
     runs-on: ubuntu-latest
     permissions:
       contents: write
