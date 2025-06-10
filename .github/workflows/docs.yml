@@ -18,7 +18,7 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: wget libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev clang lld llvm make graphviz
-          version: 1.0
+          version: 1.1
           execute_install_scripts: true
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1
