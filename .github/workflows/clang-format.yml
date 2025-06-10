@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        token: ${{ secrets.PAT }}
+        with:
+          token: ${{ secrets.PAT }}
 
       - name: Install Clang-Format
         uses: awalsh128/cache-apt-pkgs-action@latest
