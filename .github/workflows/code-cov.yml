@@ -41,8 +41,9 @@ jobs:
       - name: Generate LCOV Report
         run: |
           lcov --capture --directory ./build --output-file coverage.info \
-          --rc geninfo_exclude="^.*/_deps/*|^.*/tests/*|^/usr/*"
-          lcov --remove coverage.info '*/_deps/*' '*/tests/*' '*/usr/*' --output-file coverage-filtered.info
+          --rc geninfo_exclude="^.*/_deps/*|^.*/tests/*|^/usr/*" \
+          --rc geninfo_unexecuted_blocks=1 \
+          --ignore-errors mismatch
       - name: Generate Cobertura XML Report
         run: |
           gcovr --xml --output coverage.xml coverage-filtered.info
