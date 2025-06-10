@@ -17,7 +17,7 @@ jobs:
       - name: Set up Build Environment
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: wget libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev clang lld llvm make
+          packages: wget libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev clang lld llvm make graphviz
           version: 1.0
           execute_install_scripts: true
       - name: Install Doxygen
