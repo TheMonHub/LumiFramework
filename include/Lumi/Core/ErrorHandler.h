@@ -69,7 +69,7 @@ namespace Lumi::ErrorHandler {
 
 	void LUMI_LOG_SET_RANDOM_SEED(unsigned int seed) noexcept;
 
-	void LUMI_REGISTER_LOG_MESSAGES(std::vector<std::string_view> messages);
+	void LUMI_REGISTER_LOG_MESSAGES(const std::vector<std::string_view>& messages);
 	void LUMI_CLEAR_LOG_MESSAGES() noexcept;
 
 	void LUMI_REGISTER_LOG_CALLBACK(LogCallback callback);

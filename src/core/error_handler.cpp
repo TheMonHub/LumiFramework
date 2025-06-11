@@ -30,6 +30,7 @@ namespace Lumi::ErrorHandler {
 	static std::mutex log_mutex;
 	static std::shared_mutex config_mutex;
 	static std::shared_mutex callback_mutex;
+	static std::mutex message_mutex;
 
 	static std::mt19937 rng{std::random_device{}()};
 	static auto LUMI_FATAL_SEVERITY = LogSeverity::Fatal;
@@ -38,8 +39,11 @@ namespace Lumi::ErrorHandler {
 	static auto LUMI_FUNNY_ERROR = false;
 	static auto LUMI_LOG_ENABLED = true;
 
+	static std::vector<std::string> s_message_storage;
+	static std::vector<std::string_view> s_message_views;
+
+
 	static std::vector<LogCallback> s_callbacks;
-	static std::vector<std::string_view> funny_error_messages;
 
 	std::string_view LUMI_LOG_STRING(const LogCode code) noexcept {
 		switch (code) {
@@ -147,11 +151,24 @@ namespace Lumi::ErrorHandler {
 		return LUMI_LOG_ENABLED;
 	}
 
-	void LUMI_REGISTER_LOG_MESSAGES(std::vector<std::string_view> messages) {
-		funny_error_messages = std::move(messages);
+	void LUMI_REGISTER_LOG_MESSAGES(const std::vector<std::string_view> &messages) {
+		std::lock_guard<std::mutex> lock(message_mutex);
+		s_message_storage.clear();
+		s_message_views.clear();
+
+		s_message_storage.reserve(messages.size());
+		s_message_views.reserve(messages.size());
+
+		for (const auto &msg: messages) {
+			s_message_storage.emplace_back(msg);
+			s_message_views.emplace_back(s_message_storage.back());
+		}
 	}
 
-	void LUMI_CLEAR_LOG_MESSAGES() noexcept { funny_error_messages.clear(); }
+	void LUMI_CLEAR_LOG_MESSAGES() noexcept {
+		s_message_storage.clear();
+		s_message_views.clear();
+	}
 
 	void LUMI_REGISTER_LOG_CALLBACK(LogCallback callback) {
 		std::unique_lock<std::shared_mutex> lock(callback_mutex);
@@ -164,7 +181,7 @@ namespace Lumi::ErrorHandler {
 	}
 
 	void LUMI_LOG(const std::string_view message, LogCode code, const LogSeverity severity,
-				  const std::string_view expected, const std::string_view actual, AssertType assertType) {
+				  const std::string_view expected, const std::string_view actual, const AssertType assertType) {
 		LogSeverity current_log_level;
 		LogSeverity current_error_severity;
 		LogSeverity current_fatal_severity;
@@ -191,9 +208,9 @@ namespace Lumi::ErrorHandler {
 		if (is_funny_error && final_severity >= current_fatal_severity) {
 			{
 				std::lock_guard<std::mutex> rng_lock(rng_mutex);
-				if (!funny_error_messages.empty()) {
-					std::uniform_int_distribution<> dist(0, static_cast<int>(funny_error_messages.size() - 1));
-					funny_message_str = funny_error_messages[dist(rng)];
+				if (!s_message_views.empty()) {
+					std::uniform_int_distribution<> dist(0, static_cast<int>(s_message_views.size() - 1));
+					funny_message_str = s_message_views[dist(rng)];
 				} else {
 					funny_message_str = "Error: No funny messages available";
 				}
@@ -240,7 +257,6 @@ namespace Lumi::ErrorHandler {
 		if (!logger) {
 			return;
 		}
-
 
 		logger << "[" << timestamp << " PID:" << pid << " TID:" << tid << " | " << logSeverityString << "] ";
 

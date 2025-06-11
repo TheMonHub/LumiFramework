@@ -100,7 +100,6 @@ namespace Lumi::ErrorHandler {
 			"Consider taking a rest perhaps?",
 			"Your humanoid property have no chance against mine. - Error",
 			"Lumi framework... forever with bugs and errors.",
-			"The error have hit the second tower, sir.",
 			"Think fast, chucklenuts!",
 			"Call ambulance! Call ambulance!",
 			"You have to say pretty please!",
