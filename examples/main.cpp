@@ -20,5 +20,6 @@ int main() {
 			  << "Lumi Version: " << Lumi::Info::Version::GetVersionString(true) << "\n"
 			  << std::endl;
 	std::cout << Lumi::Info::License::GetLicenseString() << "\n" << std::endl;
-	Lumi::ErrorHandler::LUMI_LOG("Oh no!", Lumi::ErrorHandler::LogCode::UnknownError, Lumi::ErrorHandler::LogSeverity::Fatal);
+	Lumi::ErrorHandler::LUMI_LOG("Oh no!", Lumi::ErrorHandler::LogCode::UnknownError,
+								 Lumi::ErrorHandler::LogSeverity::Fatal);
 }

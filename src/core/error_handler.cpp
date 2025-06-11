@@ -21,9 +21,11 @@ protected:
 	int overflow(const int c) override { return c; }
 };
 
-static NullBuffer nullBuffer;
-static std::ostream nullStream(&nullBuffer);
-
+std::ostream& getNullStream() {
+	static NullBuffer nullBuffer;
+	static std::ostream nullStream(&nullBuffer);
+	return nullStream;
+}
 
 namespace Lumi::ErrorHandler {
 	static std::mutex rng_mutex;
@@ -151,7 +153,7 @@ namespace Lumi::ErrorHandler {
 		return LUMI_LOG_ENABLED;
 	}
 
-	void LUMI_REGISTER_LOG_MESSAGES(const std::vector<std::string_view> &messages) {
+	void LUMI_REGISTER_LOG_MESSAGES(const std::vector<std::string> &messages) {
 		std::lock_guard<std::mutex> lock(message_mutex);
 		s_message_storage.clear();
 		s_message_views.clear();
@@ -224,7 +226,7 @@ namespace Lumi::ErrorHandler {
 		const unsigned long long tid = Info::Application::get_thread_id();
 		const std::string timestamp = Info::Application::get_current_timestamp();
 		{
-			const LogData Data = {message, code, final_severity, std::string(expected), std::string(actual),
+			const LogData Data = {std::string(message), code, final_severity, std::string(expected), std::string(actual),
 								  pid,	   tid,	 timestamp,		 funny_message_str,		assertType};
 
 			std::shared_lock<std::shared_mutex> callback_lock(callback_mutex);
@@ -251,7 +253,7 @@ namespace Lumi::ErrorHandler {
 		std::lock_guard<std::mutex> log_lock(log_mutex);
 
 		std::ostream &logger = (is_test_mode && final_severity < current_fatal_severity)
-									   ? nullStream
+									   ? getNullStream()
 									   : ((final_severity <= current_error_severity) ? std::cout : std::cerr);
 
 		if (!logger) {
