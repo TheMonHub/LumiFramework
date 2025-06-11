@@ -52,6 +52,9 @@ namespace Lumi::ErrorHandler {
 	void LUMI_SET_FATAL_SEVERITY(LogSeverity severity = LogSeverity::Fatal, bool allowSetInfo = false) noexcept;
 	LogSeverity LUMI_GET_FATAL_SEVERITY() noexcept;
 
+	void LUMI_SET_FATAL_CRASH(bool enabled) noexcept;
+	bool LUMI_GET_FATAL_CRASH() noexcept;
+
 	void LUMI_SET_LOG_LEVEL(LogSeverity severity = LogSeverity::Unknown) noexcept;
 	LogSeverity LUMI_GET_LOG_LEVEL() noexcept;
 
@@ -68,6 +71,8 @@ namespace Lumi::ErrorHandler {
 	LogSeverity LUMI_MAP_LOG_SEVERITY(LogCode code) noexcept;
 
 	void LUMI_LOG_SET_RANDOM_SEED(unsigned int seed) noexcept;
+
+	std::string LUMI_GET_RANDOM_MESSAGE();
 
 	void LUMI_REGISTER_LOG_MESSAGES(const std::vector<std::string> &messages);
 	void LUMI_CLEAR_LOG_MESSAGES() noexcept;

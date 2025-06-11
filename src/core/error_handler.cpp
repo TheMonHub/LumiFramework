@@ -40,6 +40,7 @@ namespace Lumi::ErrorHandler {
 	static auto LUMI_ERROR_SEVERITY = LogSeverity::Warning;
 	static auto LUMI_FUNNY_ERROR = false;
 	static auto LUMI_LOG_ENABLED = true;
+	static auto LUMI_FATAL_CRASH = true;
 
 	static std::vector<std::string> s_message_storage;
 	static std::vector<std::string_view> s_message_views;
@@ -101,6 +102,14 @@ namespace Lumi::ErrorHandler {
 		rng.seed(seed);
 	}
 
+	std::string LUMI_GET_RANDOM_MESSAGE() {
+		std::lock_guard<std::mutex> rng_lock(rng_mutex);
+		return std::string(s_message_views.empty() ? "Error: No funny messages available"
+												   : s_message_views[std::uniform_int_distribution<>(
+															 0, static_cast<int>(s_message_views.size() - 1))(rng)]);
+	}
+
+
 	void LUMI_SET_FATAL_SEVERITY(const LogSeverity severity, const bool allowSetInfo) noexcept {
 		std::unique_lock<std::shared_mutex> lock(config_mutex);
 		if (severity == LogSeverity::Info && !allowSetInfo)
@@ -116,6 +125,16 @@ namespace Lumi::ErrorHandler {
 	LogSeverity LUMI_GET_FATAL_SEVERITY() noexcept {
 		std::shared_lock<std::shared_mutex> lock(config_mutex);
 		return LUMI_FATAL_SEVERITY;
+	}
+
+	void LUMI_SET_FATAL_CRASH(const bool enabled) noexcept {
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
+		LUMI_FATAL_CRASH = enabled;
+	}
+
+	bool LUMI_GET_FATAL_CRASH() noexcept {
+		std::shared_lock<std::shared_mutex> lock(config_mutex);
+		return LUMI_FATAL_CRASH;
 	}
 
 	void LUMI_SET_LOG_LEVEL(const LogSeverity severity) noexcept {
@@ -184,39 +203,20 @@ namespace Lumi::ErrorHandler {
 
 	void LUMI_LOG(const std::string_view message, LogCode code, const LogSeverity severity,
 				  const std::string_view expected, const std::string_view actual, const AssertType assertType) {
-		LogSeverity current_log_level;
-		LogSeverity current_error_severity;
-		LogSeverity current_fatal_severity;
-		bool is_funny_error;
-		{
-			std::shared_lock<std::shared_mutex> config_lock(config_mutex);
-			current_log_level = LUMI_LOG_LEVEL;
-			current_error_severity = LUMI_ERROR_SEVERITY;
-			current_fatal_severity = LUMI_FATAL_SEVERITY;
-			is_funny_error = LUMI_FUNNY_ERROR;
-		}
-		bool is_test_mode;
-		{
-			std::shared_lock<std::shared_mutex> config_lock(config_mutex);
-			is_test_mode = LUMI_GET_TEST_MODE();
-		}
+		const LogSeverity current_log_level = LUMI_GET_LOG_LEVEL();
+		const LogSeverity current_error_severity = LUMI_GET_ERROR_SEVERITY();
+		const LogSeverity current_fatal_severity = LUMI_GET_FATAL_SEVERITY();
+		const bool is_funny_error = LUMI_GET_FUNNY_ERROR_BOOL();
+		const bool is_test_mode = LUMI_GET_TEST_MODE();
 
 		LogSeverity final_severity = severity;
-		if (final_severity == LogSeverity::Unknown) {
+		if (severity == LogSeverity::Unknown) {
 			final_severity = LUMI_MAP_LOG_SEVERITY(code);
 		}
 
 		std::string funny_message_str;
 		if (is_funny_error && final_severity >= current_fatal_severity) {
-			{
-				std::lock_guard<std::mutex> rng_lock(rng_mutex);
-				if (!s_message_views.empty()) {
-					std::uniform_int_distribution<> dist(0, static_cast<int>(s_message_views.size() - 1));
-					funny_message_str = s_message_views[dist(rng)];
-				} else {
-					funny_message_str = "Error: No funny messages available";
-				}
-			}
+			funny_message_str = LUMI_GET_RANDOM_MESSAGE();
 		}
 
 		const auto logMessageCodeString = LUMI_LOG_STRING(code);
@@ -231,7 +231,11 @@ namespace Lumi::ErrorHandler {
 								  final_severity,
 								  std::string(expected),
 								  std::string(actual),
-								  pid,	   tid,	 timestamp,		 funny_message_str,		assertType};
+								  pid,
+								  tid,
+								  timestamp,
+								  funny_message_str,
+								  assertType};
 
 			std::shared_lock<std::shared_mutex> callback_lock(callback_mutex);
 			for (const auto &callback: s_callbacks) {
@@ -250,15 +254,14 @@ namespace Lumi::ErrorHandler {
 			}
 		}
 
-		if (static_cast<int>(final_severity) < static_cast<int>(current_log_level) || !LUMI_LOG_ENABLED) {
+		if (static_cast<int>(final_severity) < static_cast<int>(current_log_level)) {
 			return;
 		}
 
 		std::lock_guard<std::mutex> log_lock(log_mutex);
 
-		std::ostream &logger = (is_test_mode && final_severity < current_fatal_severity)
-									   ? getNullStream()
-									   : ((final_severity <= current_error_severity) ? std::cout : std::cerr);
+		std::ostream &logger =
+				(is_test_mode || !LUMI_GET_LOG_ENABLED()) ? getNullStream() : ((final_severity <= current_error_severity) ? std::cout : std::cerr);
 
 		if (!logger) {
 			return;
@@ -278,9 +281,10 @@ namespace Lumi::ErrorHandler {
 		logger << ")" << '\n';
 		logger.flush();
 
-		if (final_severity >= current_fatal_severity) {
-			logger << "Fatal Error Occurred, Can not proceed. Exiting..." << '\n';
-			logger.flush();
+		if (final_severity >= current_fatal_severity && LUMI_GET_FATAL_CRASH()) {
+			std::ostream &fatalLogger = ((!LUMI_GET_LOG_ENABLED()) ? getNullStream() : std::cerr);
+			fatalLogger << "Fatal Error Occurred, Can not proceed. Exiting..." << '\n';
+			fatalLogger.flush();
 			exit(static_cast<int>(code));
 		}
 	}
