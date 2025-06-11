@@ -260,8 +260,9 @@ namespace Lumi::ErrorHandler {
 
 		std::lock_guard<std::mutex> log_lock(log_mutex);
 
-		std::ostream &logger =
-				(is_test_mode || !LUMI_GET_LOG_ENABLED()) ? getNullStream() : ((final_severity <= current_error_severity) ? std::cout : std::cerr);
+		std::ostream &logger = (is_test_mode || !LUMI_GET_LOG_ENABLED())
+									   ? getNullStream()
+									   : ((final_severity <= current_error_severity) ? std::cout : std::cerr);
 
 		if (!logger) {
 			return;
