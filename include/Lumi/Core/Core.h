@@ -14,11 +14,11 @@ namespace Lumi {
 	void LUMI_SET_TEST_MODE(bool enabled) noexcept;
 	bool LUMI_GET_TEST_MODE() noexcept;
 
-	void Initialize();
-	void RegisterInitFunction(std::function<void()> &init);
+	void lumiInitialize();
+	void lumiRegisterInitFunction(std::function<void()> &init);
 	namespace Core {
-		void Initialize();
-		void RegisterInitFunction(std::function<void()> &init);
+		void coreInitialize();
+		void coreRegisterInitFunction(const std::function<void()> &init);
 	} // namespace Core
 } // namespace Lumi
 

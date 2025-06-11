@@ -261,7 +261,7 @@ message(STATUS "Lumi headers: ${LUMI_ALL_PUBLIC_HEADERS}")
 message(STATUS "Lumi dependencies: ${LUMI_ALL_DEPENDENCIES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 
-# Monolithic Static Library (Lumi::LumiStatic) - As an INTERFACE library to group all static components
+# An INTERFACE library to group all static components
 # This allows linking all static components using one target.
 if (LUMI_STATIC_LIB_TARGETS_LIST)
     add_library(Lumi INTERFACE)
