@@ -67,7 +67,7 @@ TEST_F(ErrorHandlerTest, LogCallbacks) {
 
 // Test funny error messages
 TEST_F(ErrorHandlerTest, FunnyErrorMessages) {
-	const std::vector<std::string_view> messages = {"Funny message 1", "Funny message 2"};
+	const std::vector<std::string> messages = {"Funny message 1", "Funny message 2"};
 	Lumi::ErrorHandler::LUMI_REGISTER_LOG_MESSAGES(messages);
 	Lumi::ErrorHandler::LUMI_SET_FUNNY_ERROR_BOOL(true);
 	EXPECT_TRUE(Lumi::ErrorHandler::LUMI_GET_FUNNY_ERROR_BOOL());
