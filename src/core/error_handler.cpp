@@ -21,7 +21,7 @@ protected:
 	int overflow(const int c) override { return c; }
 };
 
-std::ostream& getNullStream() {
+std::ostream &getNullStream() {
 	static NullBuffer nullBuffer;
 	static std::ostream nullStream(&nullBuffer);
 	return nullStream;
@@ -226,7 +226,11 @@ namespace Lumi::ErrorHandler {
 		const unsigned long long tid = Info::Application::get_thread_id();
 		const std::string timestamp = Info::Application::get_current_timestamp();
 		{
-			const LogData Data = {std::string(message), code, final_severity, std::string(expected), std::string(actual),
+			const LogData Data = {std::string(message),
+								  code,
+								  final_severity,
+								  std::string(expected),
+								  std::string(actual),
 								  pid,	   tid,	 timestamp,		 funny_message_str,		assertType};
 
 			std::shared_lock<std::shared_mutex> callback_lock(callback_mutex);

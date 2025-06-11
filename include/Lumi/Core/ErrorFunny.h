@@ -12,7 +12,7 @@
 #include "Lumi/Core/ErrorHandler.h"
 
 namespace Lumi::ErrorHandler {
-	static std::vector<std::string_view> LUMI_FUNNY_ERROR_MESSAGES = {
+	static const std::vector<std::string> LUMI_FUNNY_ERROR_MESSAGES = {
 			"Lumi's brain just did a cartwheel and landed funny. Try again?",
 			"Uh oh, Lumi just got the digital hiccups. Excuse us!",
 			"Looks like Lumi tried to divide by zero and ended up in another dimension.",
