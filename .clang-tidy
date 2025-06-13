@@ -5,6 +5,7 @@ Checks: "*,
         -altera-*,
         -android-*,
         -fuchsia-*,
+        google-*,
         -llvm*,
         -modernize-use-trailing-return-type,
         -zircon-*,
@@ -15,4 +16,4 @@ Checks: "*,
         -misc-non-private-member-variables-in-classes,
 "
 WarningsAsErrors: '*'
-HeaderFilterRegex: ''
+ExcludeHeaderFilterRegex: '*/_deps/*'
