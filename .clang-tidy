@@ -12,3 +12,21 @@ Checks: "*,
 "
 WarningsAsErrors: '*'
 ExcludeHeaderFilterRegex: '*/_deps/*'
+
+CheckOptions:
+  readability-identifier-naming.NamespaceCase: lower_case
+  readability-identifier-naming.ClassCase: CamelCase
+  readability-identifier-naming.StructCase: CamelCase
+  readability-identifier-naming.EnumCase: CamelCase
+  readability-identifier-naming.TypedefCase: CamelCase
+  readability-identifier-naming.TypeAliasCase: CamelCase
+  readability-identifier-naming.FunctionCase: CamelCase
+  readability-identifier-naming.VariableCase: snake_case
+  readability-identifier-naming.LocalVariableCase: snake_case
+  readability-identifier-naming.GlobalVariableCase: snake_case
+  readability-identifier-naming.ParameterCase: snake_case
+  readability-identifier-naming.MemberCase: snake_case
+  readability-identifier-naming.MemberSuffix: '_'
+  readability-identifier-naming.ConstantCase: CamelCase
+  readability-identifier-naming.ConstantPrefix: 'k'
+  readability-identifier-naming.EnumConstantCase: UPPER_CASE
