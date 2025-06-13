@@ -6,7 +6,7 @@
 # Build & Installation Guide
 #-----------------------------------------------------------------------------
 # Basic Usage:
-# 1. Configure:  cmake -B build -S .
+# 1. Configure:  cmake -S . -B build
 # 2. Build:      cmake --build build
 # 3. Install:    cmake --install build
 # 4. Package:    cd build && cpack -G <GENERATOR>
