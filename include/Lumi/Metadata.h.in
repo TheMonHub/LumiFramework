@@ -7,14 +7,14 @@
 
 #include <string_view>
 
-namespace Lumi::Info::Raw {
-    constexpr std::string_view LUMI_VERSION_FULL_STRING = "@PROJECT_VERSION@";
-    constexpr std::string_view LUMI_VERSION_STRING = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
-    constexpr std::string_view LUMI_VERSION_TAG = "@VERSION_TAG@";
-    constexpr unsigned int LUMI_VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
-    constexpr unsigned int LUMI_VERSION_MINOR = @PROJECT_VERSION_MINOR@;
-    constexpr unsigned int LUMI_VERSION_PATCH = @PROJECT_VERSION_PATCH@;
-    constexpr std::string_view LUMI_LICENSE_TEXT = "@LUMI_LICENSE_TEXT@";
+namespace lumi::info::raw {
+    constexpr std::string_view kLumiVersionFullString = "@PROJECT_VERSION@";
+    constexpr std::string_view kLumiVersionString = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
+    constexpr std::string_view kLumiVersionTag = "@VERSION_TAG@";
+    constexpr unsigned int kLumiVersionMajor = @PROJECT_VERSION_MAJOR@;
+    constexpr unsigned int kLumiVersionMinor = @PROJECT_VERSION_MINOR@;
+    constexpr unsigned int kLumiVersionPatch = @PROJECT_VERSION_PATCH@;
+    constexpr std::string_view kLumiLicenseText = "@LUMI_LICENSE_TEXT@";
 }
 
 #endif //METADATA_H

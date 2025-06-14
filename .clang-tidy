@@ -9,12 +9,15 @@ Checks: "*,
         -llvm*,
         -zircon-*,
         google-*,
+        -readability-magic-numbers,
+        -modernize-use-using,
 "
 WarningsAsErrors: '*'
-HeaderFilterRegex: '^(?:\.\/|\.\\)?(include|src|examples|tests)(?:[\\\/]|$).*'
+HeaderFilterRegex: '.*'
 ExcludeHeaderFilterRegex: '.*[/\\]_deps[/\\]?.*'
 
 CheckOptions:
+  readability-identifier-length.MinimumVariableNameLength: 2
   readability-identifier-naming.NamespaceCase: lower_case
   readability-identifier-naming.ClassCase: CamelCase
   readability-identifier-naming.StructCase: CamelCase
