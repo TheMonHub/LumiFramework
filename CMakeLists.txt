@@ -193,7 +193,6 @@ if (LUMI_BUILD_WINDOW)
             GIT_REPOSITORY https://github.com/glfw/glfw
             GIT_TAG 3.4
     )
-    set(GLFW_BUILD_DOCS OFF CACHE BOOL "Disable GLFW's documentation build")
     FetchContent_MakeAvailable(glfw)
 endif ()
 

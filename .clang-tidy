@@ -11,7 +11,8 @@ Checks: "*,
         google-*,
 "
 WarningsAsErrors: '*'
-ExcludeHeaderFilterRegex: '*/_deps/*'
+HeaderFilterRegex: '^(?:\.\/|\.\\)?(include|src|examples|tests)(?:[\\\/]|$).*'
+ExcludeHeaderFilterRegex: '.*[/\\]_deps[/\\]?.*'
 
 CheckOptions:
   readability-identifier-naming.NamespaceCase: lower_case
@@ -21,11 +22,11 @@ CheckOptions:
   readability-identifier-naming.TypedefCase: CamelCase
   readability-identifier-naming.TypeAliasCase: CamelCase
   readability-identifier-naming.FunctionCase: CamelCase
-  readability-identifier-naming.VariableCase: snake_case
-  readability-identifier-naming.LocalVariableCase: snake_case
-  readability-identifier-naming.GlobalVariableCase: snake_case
-  readability-identifier-naming.ParameterCase: snake_case
-  readability-identifier-naming.MemberCase: snake_case
+  readability-identifier-naming.VariableCase: lower_case
+  readability-identifier-naming.LocalVariableCase: lower_case
+  readability-identifier-naming.GlobalVariableCase: lower_case
+  readability-identifier-naming.ParameterCase: lower_case
+  readability-identifier-naming.MemberCase: lower_case
   readability-identifier-naming.MemberSuffix: '_'
   readability-identifier-naming.ConstantCase: CamelCase
   readability-identifier-naming.ConstantPrefix: 'k'
