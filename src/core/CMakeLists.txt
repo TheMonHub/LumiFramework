@@ -4,7 +4,7 @@
 message(STATUS "Configuring Lumi Core...")
 
 #-----------------------------------------------------------------------------
-if (NOT EXISTS "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h")
+if (NOT EXISTS "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h")
     message(FATAL_ERROR "Metadata header file not found.")
 endif ()
 
@@ -20,13 +20,13 @@ set(LUMI_CORE_SOURCES_ERROR
 
 # Define public headers
 set(LUMI_CORE_PUBLIC_HEADERS
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/Core.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/Info.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/core.h"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/info.h"
+        "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h"
 )
 set(LUMI_CORE_PUBLIC_HEADERS_ERROR
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorHandler.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorFunny.h"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/error_handler.h"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.h"
 )
 
 # Define dependencies
@@ -42,7 +42,7 @@ source_group(TREE "${LUMI_SOURCE_DIR}/include/Lumi" FILES ${LUMI_CORE_PUBLIC_HEA
 # Build Configuration
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
-    # Core library
+    # core library
     add_library(LumiCore STATIC ${LUMI_CORE_SOURCES} ${LUMI_CORE_PUBLIC_HEADERS})
     add_library(Lumi::Core ALIAS LumiCore)
 
@@ -54,7 +54,7 @@ if (LUMI_BUILD_STATIC_LIBS)
 
     configure_lumi_target(LumiCore
             "${LUMI_CORE_PUBLIC_HEADERS}"
-            Core)
+            core)
 
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
 
@@ -74,7 +74,7 @@ if (LUMI_BUILD_STATIC_LIBS)
 
     configure_lumi_target(LumiError
             "${LUMI_CORE_PUBLIC_HEADERS_ERROR}"
-            Core)
+            core)
 
     list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_SOURCES_ERROR})
     list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS_ERROR})

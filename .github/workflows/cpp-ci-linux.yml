@@ -1,4 +1,4 @@
-name: Lumi CI Ubuntu Test
+name: lumi CI Ubuntu Test
 
 on:
   push:

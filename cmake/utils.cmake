@@ -6,7 +6,7 @@ function(set_if_undefined VAR_NAME)
     endif ()
 endfunction()
 
-# Macro to configure common properties for Lumi component targets
+# Macro to configure common properties for lumi component targets
 # target_name: The actual target name (e.g., LumiWindowStatic, LumiWindowShared, LumiFrameworkStatic)
 # is_shared_lib: TRUE if shared, FALSE if static
 # component_public_headers: List of public header files for this component
@@ -34,12 +34,12 @@ macro(configure_lumi_target target_name component_public_headers component_name)
         # 2. Installing the physical library files (ARCHIVE, LIBRARY, RUNTIME).
         # 3. Installing public headers associated with the target property.
         if ("${component_name}" STREQUAL "")
-            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Lumi/${LUMI_VERSIONED_SUBDIR}")
+            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/lumi/${LUMI_VERSIONED_SUBDIR}")
             set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/")
             message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}' folder.")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}'")
         else ()
-            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/Lumi/${component_name}")
+            set(PUBLIC_HEADER_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LUMI_VERSIONED_SUBDIR}/lumi/${component_name}")
             set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/${component_name}/")
             message(STATUS "${target_name}'s headers will be installed to ${PUBLIC_HEADER_DESTINATION} under '${component_name}' folder.")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${component_name}' folder.")

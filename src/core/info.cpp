@@ -5,16 +5,20 @@
 // Created by Mono on 7/6/2025.
 //
 
+#include "lumi/core/info.h"
+
 #include <chrono>
+#include <cstdint>
+#include <functional>
 #include <iomanip>
-
-
+#include <sstream>
+#include <string>
 #include <string_view>
 #include <thread>
+#include <unordered_map>
 
-#include "Lumi/Core/ErrorHandler.h"
-#include "Lumi/Core/Info.h"
-#include "Lumi/Metadata.h"
+#include "lumi/core/error_handler.h"
+#include "lumi/metadata.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -22,95 +26,113 @@
 #include <unistd.h>
 #endif
 
-using namespace Lumi::Info::Raw;
-using namespace Lumi::ErrorHandler;
+using lumi::error_handler::LumiAssert;
+using lumi::info::raw::kLumiLicenseText;
+using lumi::info::raw::kLumiVersionFullString;
+using lumi::info::raw::kLumiVersionMajor;
+using lumi::info::raw::kLumiVersionMinor;
+using lumi::info::raw::kLumiVersionPatch;
+using lumi::info::raw::kLumiVersionString;
+using lumi::info::raw::kLumiVersionTag;
 
-namespace Lumi::Info {
-	namespace Version {
-		std::string_view GetVersionString(const bool includeVersionTag) {
-			if (includeVersionTag) {
-				return LUMI_VERSION_FULL_STRING;
-			}
-			return LUMI_VERSION_STRING;
-		}
-		unsigned int GetVersionMajor() { return LUMI_VERSION_MAJOR; }
-		unsigned int GetVersionMinor() { return LUMI_VERSION_MINOR; }
-		unsigned int GetVersionPatch() { return LUMI_VERSION_PATCH; }
+namespace lumi::info {
+namespace version {
+std::string GetVersionString(const bool k_include_version_tag) {
+  if (k_include_version_tag) {
+    return std::string(kLumiVersionFullString);
+  }
+  return std::string(kLumiVersionString);
+}
+unsigned int GetVersionMajor() { return kLumiVersionMajor; }
+unsigned int GetVersionMinor() { return kLumiVersionMinor; }
+unsigned int GetVersionPatch() { return kLumiVersionPatch; }
 
-		VersionTag GetVersionTag() {
-			static const std::unordered_map<std::string_view, VersionTag> tagMap = {
-					{"dev", VersionTag::Dev},
-					{"alpha", VersionTag::Alpha},
-					{"beta", VersionTag::Beta},
-					{"rc", VersionTag::ReleaseCandidate},
-					{"release", VersionTag::Release}};
+VERSION_TAG GetVersionTag() {
+  static const std::unordered_map<std::string_view, VERSION_TAG> kTagMap = {
+      {"dev", VERSION_TAG::DEV},
+      {"alpha", VERSION_TAG::ALPHA},
+      {"beta", VERSION_TAG::BETA},
+      {"rc", VERSION_TAG::RELEASE_CANDIDATE},
+      {"release", VERSION_TAG::RELEASE}};
 
-			if (const auto it = tagMap.find(LUMI_VERSION_TAG); it != tagMap.end()) {
-				return it->second;
-			}
+  if (const auto k_it = kTagMap.find(kLumiVersionTag); k_it != kTagMap.end()) {
+    return k_it->second;
+  }
 
-			return VersionTag::None;
-		}
+  return VERSION_TAG::NONE;
+}
 
-		std::string_view GetVersionTagString() {
-			switch (GetVersionTag()) {
-				case VersionTag::Dev:
-					return "dev";
-				case VersionTag::Alpha:
-					return "alpha";
-				case VersionTag::Beta:
-					return "beta";
-				case VersionTag::ReleaseCandidate:
-					return "rc";
-				case VersionTag::Release:
-					return "release";
-				default:
-					return "";
-			}
-		}
+std::string GetVersionTagString() {
+  switch (GetVersionTag()) {
+    case VERSION_TAG::DEV:
+      return "dev";
+    case VERSION_TAG::ALPHA:
+      return "alpha";
+    case VERSION_TAG::BETA:
+      return "beta";
+    case VERSION_TAG::RELEASE_CANDIDATE:
+      return "rc";
+    case VERSION_TAG::RELEASE:
+      return "release";
+    default:
+      return "";
+  }
+}
 
-	} // namespace Version
-	namespace License {
-		std::string_view GetLicenseString() {
-			if (LUMI_ASSERT(IsLicenseAvailable(), true)) {
-				return "";
-			}
-			return LUMI_LICENSE_TEXT;
-		}
-		bool IsLicenseAvailable() { return !LUMI_LICENSE_TEXT.empty(); }
+}  // namespace version
+namespace license {
+std::string GetLicenseString() {
+  if (LumiAssert(IsLicenseAvailable(), true)) {
+    return "";
+  }
+  return std::string(kLumiLicenseText);
+}
+bool IsLicenseAvailable() { return !kLumiLicenseText.empty(); }
 
-	} // namespace License
-	namespace Application {
-		unsigned long get_process_id() noexcept {
+}  // namespace license
+namespace application {
+uint64_t GetProcessId() noexcept {
 #ifdef _WIN32
-			return GetCurrentProcessId();
+  return GetCurrentProcessId();
 #else
-			return static_cast<unsigned long>(getpid());
+  return static_cast<uint64_t>(getpid());
 #endif
-		}
+}
 
-		unsigned long long get_thread_id() noexcept {
-			std::ostringstream oss;
-			oss << std::this_thread::get_id();
-			try {
-				return std::stoull(oss.str());
-			} catch ([[maybe_unused]] const std::exception &e) {
-				return 0;
-			}
-		}
+uint64_t GetThreadId() noexcept {
+  // Get thread id
+  const auto thread_id = std::this_thread::get_id();
 
-		std::string get_current_timestamp() {
-			const auto now = std::chrono::system_clock::now();
-			const auto in_time_t = std::chrono::system_clock::to_time_t(now);
+  // Convert thread id to size_t using hash
+  constexpr std::hash<std::thread::id> kHasher;
+  return kHasher(thread_id);
+}
 
-			std::stringstream ss;
-			ss << std::put_time(std::localtime(&in_time_t), "%H:%M:%S");
+std::string GetCurrentTimestamp() {
+  const auto k_now = std::chrono::system_clock::now();
+  const auto k_in_time_t = std::chrono::system_clock::to_time_t(k_now);
 
-			const auto duration = now.time_since_epoch();
-			const auto microseconds =
-					(std::chrono::duration_cast<std::chrono::microseconds>(duration) % 1000000).count();
-			ss << '.' << std::setfill('0') << std::setw(2) << (microseconds / 10000);
-			return ss.str();
-		}
-	} // namespace Application
-} // namespace Lumi::Info
+  std::tm time_info{};
+#ifdef _WIN32
+  if (localtime_r(&k_in_time_t, &time_info) == nullptr) {
+    return "ERROR:TIME";
+  }
+#else
+  if (localtime_r(&k_in_time_t, &time_info) == nullptr) {
+    return "ERROR:TIME";
+  }
+#endif
+
+  std::stringstream ss;
+  ss << std::put_time(&time_info, "%H:%M:%S");
+
+  const auto k_duration = k_now.time_since_epoch();
+  const auto k_microseconds =
+      (std::chrono::duration_cast<std::chrono::microseconds>(k_duration) %
+       1000000)
+          .count();
+  ss << '.' << std::setfill('0') << std::setw(2) << (k_microseconds / 10000);
+  return ss.str();
+}
+}  // namespace application
+}  // namespace lumi::info

@@ -1,4 +1,4 @@
-# Lumi Framework - A modular C++ framework for cross-platform desktop applications
+# lumi Framework - A modular C++ framework for cross-platform desktop applications
 # Copyright (c) 2025 TheMonHub
 # Licensed under zlib License
 
@@ -22,9 +22,9 @@
 # - Manual linking for non-CMake project
 
 # Build Options:
-# -DLUMI_BUILD_ALL=ON/OFF           Force build all components of Lumi (Default: OFF)
+# -DLUMI_BUILD_ALL=ON/OFF           Force build all components of lumi (Default: OFF)
 
-# Core Options:
+# core Options:
 # -DLUMI_BUILD_STATIC_LIBS=ON/OFF   Build static libraries (Default: ON)
 
 # Components:
@@ -52,14 +52,14 @@ project(Lumi
 # License and copyright information
 set(PROJECT_COPYRIGHT_HOLDER "TheMonHub")
 
-# Determine if Lumi is being built as a standalone project
+# Determine if lumi is being built as a standalone project
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
 
-# Set Lumi source directory
+# Set lumi source directory
 set(LUMI_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 message(NOTICE "Lumi source directory: ${LUMI_SOURCE_DIR}")
 
-# Set Lumi version tag
+# Set lumi version tag
 # alpha, beta, rc, or dev
 set(VERSION_TAG "dev")
 
@@ -90,7 +90,7 @@ else ()
     set(LUMI_RELEASE_CANDIDATE_VERSION "")
 endif ()
 
-# Set Lumi version based on the project version and tag
+# Set lumi version based on the project version and tag
 set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
 
 # Required CMake modules
@@ -119,7 +119,7 @@ set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}-${PROJ
         CACHE STRING "Install path for Lumi package-related CMake files")
 set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 
-# Core configuration
+# core configuration
 set_if_undefined(CMAKE_CXX_STANDARD 17)
 set_if_undefined(CMAKE_CXX_STANDARD_REQUIRED ON)
 set_if_undefined(CMAKE_CXX_EXTENSIONS OFF)
@@ -197,7 +197,7 @@ if (LUMI_BUILD_WINDOW)
 endif ()
 
 #-----------------------------------------------------------------------------
-# Generate Lumi Header
+# Generate lumi Header
 #-----------------------------------------------------------------------------
 set(LUMI_LICENSE_FILE "${LUMI_SOURCE_DIR}/LICENSE")
 if (EXISTS "${LUMI_LICENSE_FILE}")
@@ -216,9 +216,9 @@ endif ()
 set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
-# Metadata.h.in template should be at Lumi/include/Metadata.h.in
-set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h.in")
-set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h") # Output to include/Lumi/Metadata.h
+# metadata.h.in template should be at lumi/include/metadata.h.in
+set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h.in")
+set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h") # Output to include/lumi/metadata.h
 configure_file(
         "${LUMI_METADATA_TEMPLATE}"
         "${LUMI_GENERATED_METADATA_OUTPUT}"

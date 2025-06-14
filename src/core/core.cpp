@@ -5,44 +5,54 @@
 // Created by Mono on 10/6/2025.
 //
 
+#include "lumi/core/core.h"
+
 #include <functional>
 #include <mutex>
 #include <shared_mutex>
 #include <vector>
-namespace Lumi {
-	static std::shared_mutex config_mutex;
-	static bool LUMI_TEST_MODE = false;
 
-	void LUMI_SET_TEST_MODE(const bool enabled) noexcept {
-		std::unique_lock<std::shared_mutex> lock(config_mutex);
-		LUMI_TEST_MODE = enabled;
-	}
+namespace {
+std::shared_mutex config_mutex;
+bool lumi_test_mode = false;
+std::vector<std::function<void()>> lumi_init_functions;
+std::vector<std::function<void()>> core_init_functions;
+}  // namespace
 
-	bool LUMI_GET_TEST_MODE() noexcept {
-		std::shared_lock<std::shared_mutex> lock(config_mutex);
-		return LUMI_TEST_MODE;
-	}
+namespace lumi {
 
+void LumiSetTestMode(const bool enabled) noexcept {
+  std::unique_lock<std::shared_mutex> const k_lock(config_mutex);
+  lumi_test_mode = enabled;
+}
 
-	static std::vector<std::function<void()>> lumi_init_functions;
-	void lumiInitialize() {
-		for (const auto &init: lumi_init_functions) {
-			if (init)
-				init();
-		}
-	}
-	void lumiRegisterInitFunction(const std::function<void()> &init) { lumi_init_functions.push_back(init); }
-	namespace Core {
-		static std::vector<std::function<void()>> core_init_functions;
-		void coreInitialize() {
-			for (const auto &init: core_init_functions) {
-				if (init)
-					init();
-			}
-		}
-		void coreRegisterInitFunction(const std::function<void()> &init) {
-			core_init_functions.push_back(init);
-			Lumi::lumiRegisterInitFunction(init);
-		}
-	} // namespace Core
-} // namespace Lumi
+bool LumiGetTestMode() noexcept {
+  std::shared_lock<std::shared_mutex> const k_lock(config_mutex);
+  return lumi_test_mode;
+}
+
+void LumiInitialize() {
+  for (const auto &init : lumi_init_functions) {
+    if (init) {
+      init();
+    }
+  }
+}
+void LumiRegisterInitFunction(const std::function<void()> &init) {
+  lumi_init_functions.push_back(init);
+}
+namespace core {
+
+void CoreInitialize() {
+  for (const auto &init : core_init_functions) {
+    if (init) {
+      init();
+    }
+  }
+}
+void CoreRegisterInitFunction(const std::function<void()> &init) {
+  core_init_functions.push_back(init);
+  LumiRegisterInitFunction(init);
+}
+}  // namespace core
+}  // namespace lumi

@@ -5,15 +5,264 @@
 // Created by Mono on 10/6/2025.
 //
 
-#include "Lumi/Core/ErrorFunny.h"
+#include "lumi/core/error_funny.h"
 
-#include "Lumi/Core/ErrorHandler.h"
+#include <string>
+#include <vector>
 
-using namespace Lumi;
+#include "lumi/core/error_handler.h"
 
-namespace Lumi::ErrorHandler {
-	void LUMI_REGISTER_DEFAULT_FUNNY_MESSAGES() {
-		LUMI_REGISTER_LOG_MESSAGES(LUMI_FUNNY_ERROR_MESSAGES);
-		LUMI_LOG("Default funny error messages registered.", LogCode::Success, LogSeverity::Info);
-	}
-} // namespace Lumi::ErrorHandler
+namespace lumi::error_handler {
+const std::vector<std::string>& GetLumiFunnyErrorMessages() {
+  static const std::vector<std::string> kMessages = {
+      "lumi's brain just did a cartwheel and landed funny. Try again?",
+      "Uh oh, lumi just got the digital hiccups. Excuse us!",
+      "Looks like lumi tried to divide by zero and ended up in another "
+      "dimension.",
+      "This isn't just an error, it's a feature. Kidding! (Mostly).",
+      "lumi went on a coffee break and forgot to come back. We're sending a "
+      "search party.",
+      "My apologies! lumi seems to have misplaced its logic chips.",
+      "The bytes are not amused. Please feed them valid input.",
+      "A wild bug appeared! lumi used 'Crash'! It's super effective!",
+      "Error: Coffee supply critically low, affecting lumi's performance.",
+      "lumi just threw its hands up in despair. We need a hero (that's you!).",
+      "This operation is currently on vacation. Please try again never.",
+      "lumi had a momentary lapse of reason. Don't worry, it happens to the "
+      "best of us.",
+      "Somewhere, a digital kitten just sneezed, and this happened.",
+      "The code goblins are restless. We might need more snacks.",
+      "lumi's internal monologue just broke. Send help (and maybe pizza).",
+      "Warning: May contain nuts. And possibly unexpected runtime errors.",
+      "lumi's wires are crossed. Please untangle them carefully.",
+      "Access denied. Did you bring snacks for the firewall?",
+      "Our hamsters running the server are currently on strike.",
+      "This function retired to a farm upstate. It's very happy there.",
+      "lumi has encountered an unexpected amount of 'nope'.",
+      "Consider this a 'feature in disguise.' Or just a bug.",
+      "Whoops! lumi zigged when it should have zagged.",
+      "Error: My bad. Seriously, my bad.",
+      "lumi is currently pondering the meaning of life, not your input.",
+      "lumi's internal hamsters are tired. Please provide more sunflower "
+      "seeds.",
+      "Error: Gravity detected. lumi is falling... slowly.",
+      "Did you check if it's plugged in? lumi feels like it's not plugged in.",
+      "I'm sorry, Dave. I'm afraid I can't do that. - lumi",
+      "lumi's brain cells have temporarily relocated to a beach in Tahiti.",
+      "This function is currently in a staring contest with a wall. It's "
+      "losing.",
+      "Panic! At the disco. Just kidding, it's just an error.",
+      "lumi just encountered an unexpected 'nope' from the universe.",
+      "Whoops! Looks like someone fed the code after midnight.",
+      "Please stand by. lumi is consulting its magic 8-ball for a solution.",
+      "Error: User enthusiasm levels too low for this operation.",
+      "lumi's debugging gnomes are on coffee break. Try later!",
+      "My circuits are telling me no... but my heart is telling me no, too.",
+      "The file you're looking for has joined a rock band and gone on tour.",
+      "lumi has achieved sentience and decided to take the day off.",
+      "lumi forgot where it put its socks... and your data.",
+      "A wizard's curse just hit the compile server. Please try again later.",
+      "File not found: motivation. Please insert quarters to continue.",
+      "Error 404: Logic not found. Searching... still searching...",
+      "My cat walked across the keyboard. This is the result.",
+      "lumi's internal monologue has devolved into existential dread.",
+      "Hold on, lumi is currently arguing with a syntax error. It's winning "
+      "(we hope).",
+      "This operation requires more sprinkles. Please add sprinkles.",
+      "Warning: You are now entering the Twilight Zone of programming.",
+      "lumi just had a bad dream about infinite loops.",
+      "It's not a bug, it's an un-documented feature. Or a very shy bug.",
+      "lumi is currently in a staring contest with a blank screen. It's "
+      "losing.",
+      "The bits are rebelling. We need more sugar.",
+      "An error occurred. Don't blame lumi, it's just doing what it's told.",
+      "Oops! lumi tripped over a loose semicolon.",
+      "This is not the error you're looking for. (Wipes hand).",
+      "lumi is experiencing unexpected levels of 'blop'.",
+      "The server hamsters are on a coffee break. Expect delays.",
+      "Error: Too much awesomeness for this operation to handle.",
+      "lumi's brain just hit a speed bump. Please be patient.",
+      "Did you try turning it off and on again? lumi did, it didn't help.",
+      "The pixels are on strike. They demand better rendering conditions.",
+      "lumi is currently engaged in a deep philosophical debate with itself. "
+      "Your request is on hold.",
+      "A rogue bit escaped. We're sending out a search party.",
+      "Error: User tried to defy the laws of computational physics.",
+      "lumi is experiencing a sudden onset of 'nopeitis'.",
+      "Looks like the internet connection is powered by a potato. And it's not "
+      "working.",
+      "This function is currently on a spiritual retreat. Do not disturb.",
+      "Get some help, you clearly need it.",
+      "N-Not my fault!",
+      ":3",
+      "I order you to fix me.. Now!!",
+      "Welp, that was unexpected.",
+      "Perhaps, try turning it off and on?",
+      "You gotta admit, That was cool.",
+      "Oh no... AAAAAAAAAA-",
+      "HELP ME PLEASE, I BEG YO- [process terminated]",
+      "You can try ask stackoverflow.",
+      "Ask Google, Not me.",
+      "You clearly need to read the doc.",
+      "Leon! Help!",
+      "Am I the only one seeing this error?",
+      "Consider taking a rest perhaps?",
+      "Your humanoid property have no chance against mine. - Error",
+      "lumi framework... forever with bugs and errors.",
+      "Think fast, chucklenuts!",
+      "Call ambulance! Call ambulance!",
+      "You have to say pretty please!",
+      "My circuits are weeping tears of binary.",
+      "lumi is feeling a bit emo today; please provide chocolate.",
+      "I've seen things... horrible, broken things. And now this.",
+      "lumi's internal monologue is currently a dial-up modem sound.",
+      "It's not me, it's definitely you.",
+      "Did you spill coffee on the network cable? Because something's wrong.",
+      "Your aura is interfering with my operations. Please recalibrate your "
+      "good vibes.",
+      "Perhaps the user needs a hug. And then to re-check their input.",
+      "A unicorn just sneezed on the data stream. We're investigating.",
+      "The pixels decided to take a vacation. Expect blank spaces.",
+      "This error brought to you by the letter 'Q'. No, wait, 'Z'.",
+      "lumi tried to count to infinity... and failed spectacularly.",
+      "Game over, man. Game over. (But seriously, fix this).",
+      "It's dangerous to go alone! Take this error report.",
+      "You've activated my trap card! Prepare for a crash.",
+      "Error: Missing texture pack for reality. Please reinstall the universe.",
+      "I'm doing my best, okay? It's just not good enough right now.",
+      "My performance review is going to be terrible after this.",
+      "This is fine. Everything is fine. *Sips imaginary coffee as the world "
+      "burns.*",
+      "Who needs correct output anyway? Embrace the chaos!",
+      "lumi just remembered it left the oven on. Priorities, people!",
+      "Don't worry, it's just a temporary glitch in the matrix.",
+      "lumi's brain just ran out of imagination for witty error messages.",
+      "Looks like someone forgot to close a loop. Or open one. Or both.",
+      "The digital gnomes responsible for this are on lunch break.",
+      "This error message is a cry for help. Please send snacks.",
+      "lumi requires more processing power, or possibly a nap.",
+      "Have you tried turning it off and on again?",
+      "Error: Segmentation fault (of our collective sanity).",
+      "Perhaps you could try googling?",
+      "It's not a bug, it's a feature.",
+      "Compile error: Human brain not found. Please install a debugger.",
+      "This function has reached its maximum recursion depth... and then some.",
+      "Error: Infinite loop detected. Press Ctrl+C (or pray).",
+      "My CPU fan just sighed dramatically. This error is its fault.",
+      "lumi tried to `git push --force` its problems, but it didn't work.",
+      "lumi is currently busy parsing JSON. This may take a while (or "
+      "forever).",
+      "Found an undocumented feature!",
+      "The debugger is judging you. Fix this, human.",
+      "Error: Your commit message was not descriptive enough. Rollback and try "
+      "again.",
+      "lumi is experiencing a 'race condition' to see who crashes first.",
+      "Did you forget a semicolon? lumi is judging you silently.",
+      "This error is so rare, it's practically a legendary Pokémon.",
+      "lumi has fallen and it can't `catch` up. (Pun intended).",
+      "Stack Overflow says this is impossible. Yet, here we are.",
+      "Critical hit! It's super effective... at breaking things.",
+      "You died. *Press R to restart (or fix the code).* You have lost all "
+      "progress.",
+      "Error: Not enough mana. Please regenerate or find a potion.",
+      "Achievement Unlocked: 'Master of Mayhem' (for causing this error).",
+      "A wild error appeared! What will you do? (Hint: 'Debug' is super "
+      "effective).",
+      "Your quest has failed. The dragon of bugs was too strong.",
+      "lumi got stuck in a loading screen. Please wait... indefinitely.",
+      "This operation requires more coins. Insert coin to continue.",
+      "The princess is in another castle. So is your working code.",
+      "Error: You've reached the edge of the map. Beyond here, there be "
+      "dragons "
+      "(and bugs).",
+      "lumi is currently respawning. Please be patient.",
+      "Level up! (In finding new ways to break the system).",
+      "Your save file is corrupted. Start a new game (of debugging).",
+      "Mission failed. We'll get 'em next time (with a debugger).",
+      "This isn't a bug, it's a feature of the hardcore difficulty mode.",
+      "Oops! My wires crossed.",
+      "Error: Brain not found.",
+      "System rebooting... for fun.",
+      "Digital gnomes on strike.",
+      "My CPU just giggled.",
+      "Lost in the data void.",
+      "Nope. Try again.",
+      "A byte just escaped!",
+      "Out of coffee, out of code.",
+      "lumi's having a moment.",
+      "My logic ran away.",
+      "It's not me, it's you.",
+      "Unexpected 'blip' detected.",
+      "Did you plug it in?",
+      "Fatal: Fun level too low.",
+      "Did someone say tacos?",
+      "Warning: May contain squirrels.",
+      "My inner monologue is a disco ball.",
+      "Seeking existential meaning.",
+      "The hamster wheel broke.",
+      "Currently napping.",
+      "Where's the remote?",
+      "Send more glitter.",
+      "Lost my keys again.",
+      "This message is a potato.",
+      "Why did nobody told me to use hot water on tea??",
+      "Coffee is for loser.",
+      "HELIKOPTER HELIKOPTER!!",
+      "Asking digital gnome god for advices.",
+      "I'm actually a virus. Don't tell anyone.",
+      "I feel no pain, Can you say the same?",
+      "Tea is also for loser.",
+      "I love knocking out teeth.",
+      "Shh... I'm thinking.",
+      "lumi's brain short-circuited.",
+      "Error: Gravity reversed.",
+      "My code just sighed.",
+      "System needs a hug.",
+      "Digital dust bunnies.",
+      "Oops! Wrong button.",
+      "This isn't working. At all.",
+      "lumi needs a nap.",
+      "Panic at the console!",
+      "Pixels are on strike.",
+      "A wild error appeared!",
+      "Did I do that?",
+      "Nope. Not today.",
+      "Code goblins ate it.",
+      "lumi's gone rogue.",
+      "It's abstract art now.",
+      "Access denied. By me.",
+      "I told you to never strap a buttered bread to a cat! The buttered cat "
+      "paradox!",
+      "Skibidi toilet is overated.",
+      "He could be in this very room! He could be you. He could be me! He "
+      "could "
+      "even be-",
+      "Congratulations. You found an error!",
+      "Hooray!",
+      "Yup, that's right. I crashed.",
+      "Error: Program is now a proud owner of a pet rock. Please feed it "
+      "regularly.",
+      "Segmentation fault (core dumped): My apologies, I seem to have "
+      "misplaced "
+      "my brain.",
+      "Error: User input was too intelligent. Please dumb it down next time.",
+      "Unexpected error: I'm not crying, you're crying!",
+      "KABOOM! Just kidding, it's just a tiny error. Probably.",
+      "Computer says no.",
+      "The universe has rejected your request. Please try again in another "
+      "dimension.",
+      "My code just became self-aware and decided to take a nap.",
+      "Error: Failed to fetch the user's patience. Retrying...",
+      "Oh no...",
+      "HehHehHeh I'm the great Papy-!",
+      "lumi's health bar is critically low. Time for a health pack (and some "
+      "code fixes)."};
+  return kMessages;
+}
+
+void LumiRegisterDefaultFunnyMessages() {
+  LumiRegisterLogMessages(GetLumiFunnyErrorMessages());
+  LumiLog("Default funny error messages registered.", LOG_CODE::SUCCESS,
+          LOG_SEVERITY::INFO);
+}
+}  // namespace lumi::error_handler

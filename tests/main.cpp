@@ -4,187 +4,224 @@
 // error_handler_test.cpp
 #include <Lumi/Core/Core.h>
 #include <Lumi/Core/ErrorHandler.h>
-#include <algorithm>
 #include <gtest/gtest.h>
+
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
+#include <streambuf>
 #include <string>
 #include <vector>
 
 class ErrorHandlerTest : public ::testing::Test {
-protected:
-	void SetUp() override {
-		Lumi::LUMI_SET_TEST_MODE(true);
-		Lumi::ErrorHandler::LUMI_SET_LOG_ENABLED(true);
-		Lumi::ErrorHandler::LUMI_SET_LOG_LEVEL(Lumi::ErrorHandler::LogSeverity::Info);
-		Lumi::ErrorHandler::LUMI_SET_FUNNY_ERROR_BOOL(false);
-		Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Fatal);
-		Lumi::ErrorHandler::LUMI_CLEAR_LOG_CALLBACKS();
-		Lumi::ErrorHandler::LUMI_CLEAR_LOG_MESSAGES();
-		captured_logs.clear();
-	}
+ protected:
+  void SetUp() override {
+    lumi::LumiSetTestMode(true);
+    lumi::error_handler::LumiSetLogEnabled(true);
+    lumi::error_handler::LumiSetLogLevel(
+        lumi::error_handler::LOG_SEVERITY::INFO);
+    lumi::error_handler::LumiSetFunnyErrorBool(false);
+    lumi::error_handler::LumiSetFatalSeverity(
+        lumi::error_handler::LOG_SEVERITY::FATAL);
+    lumi::error_handler::LumiClearLogCallbacks();
+    lumi::error_handler::LumiClearLogMessages();
+    captured_logs_.clear();
+  }
 
-	void TearDown() override { Lumi::ErrorHandler::LUMI_CLEAR_LOG_CALLBACKS(); }
+  void TearDown() override { lumi::error_handler::LumiClearLogCallbacks(); }
 
-	std::vector<Lumi::ErrorHandler::LogData> captured_logs;
+  std::vector<lumi::error_handler::LogData> captured_logs_;
 
-	void RegisterCaptureCallback() {
-		Lumi::ErrorHandler::LUMI_REGISTER_LOG_CALLBACK(
-				[this](const Lumi::ErrorHandler::LogData &data) { captured_logs.push_back(data); });
-	}
+  void RegisterCaptureCallback() {
+    lumi::error_handler::LumiRegisterLogCallback(
+        [this](const lumi::error_handler::LogData &data) {
+          captured_logs_.push_back(data);
+        });
+  }
 };
 
 TEST_F(ErrorHandlerTest, BasicLogging) {
-	RegisterCaptureCallback();
+  RegisterCaptureCallback();
 
-	Lumi::ErrorHandler::LUMI_LOG("Test message", Lumi::ErrorHandler::LogCode::Success,
-								 Lumi::ErrorHandler::LogSeverity::Info);
+  lumi::error_handler::LumiLog("Test message",
+                               lumi::error_handler::LOG_CODE::SUCCESS,
+                               lumi::error_handler::LOG_SEVERITY::INFO);
 
-	ASSERT_EQ(captured_logs.size(), 1);
-	EXPECT_EQ(captured_logs[0].message, "Test message");
-	EXPECT_EQ(captured_logs[0].code, Lumi::ErrorHandler::LogCode::Success);
-	EXPECT_EQ(captured_logs[0].severity, Lumi::ErrorHandler::LogSeverity::Info);
+  ASSERT_EQ(captured_logs_.size(), 1);
+  EXPECT_EQ(captured_logs_[0].message_, "Test message");
+  EXPECT_EQ(captured_logs_[0].code_, lumi::error_handler::LOG_CODE::SUCCESS);
+  EXPECT_EQ(captured_logs_[0].severity_,
+            lumi::error_handler::LOG_SEVERITY::INFO);
 }
 
 TEST_F(ErrorHandlerTest, LogLevelFiltering) {
-	RegisterCaptureCallback();
+  RegisterCaptureCallback();
 
-	Lumi::ErrorHandler::LUMI_SET_LOG_LEVEL(Lumi::ErrorHandler::LogSeverity::Error);
+  lumi::error_handler::LumiSetLogLevel(lumi::error_handler::LOG_SEVERITY::ERROR);
 
-	// This should not be logged
-	Lumi::ErrorHandler::LUMI_LOG("Info message", Lumi::ErrorHandler::LogCode::Success,
-								 Lumi::ErrorHandler::LogSeverity::Info);
+  // This should not be logged
+  lumi::error_handler::LumiLog("Info message",
+                               lumi::error_handler::LOG_CODE::SUCCESS,
+                               lumi::error_handler::LOG_SEVERITY::INFO);
 
-	// This should be logged
-	Lumi::ErrorHandler::LUMI_LOG("Error message", Lumi::ErrorHandler::LogCode::InternalError,
-								 Lumi::ErrorHandler::LogSeverity::Error);
+  // This should be logged
+  lumi::error_handler::LumiLog("Error message",
+                               lumi::error_handler::LOG_CODE::kINTERNAL_ERROR,
+                               lumi::error_handler::LOG_SEVERITY::kERROR);
 
-	ASSERT_EQ(captured_logs.size(), 2);
-	EXPECT_EQ(captured_logs[1].message, "Error message");
+  ASSERT_EQ(captured_logs_.size(), 2);
+  EXPECT_EQ(captured_logs_[1].message_, "Error message");
 }
 
 TEST_F(ErrorHandlerTest, FunnyErrorMessages) {
-	RegisterCaptureCallback();
-	Lumi::ErrorHandler::LUMI_SET_FUNNY_ERROR_BOOL(true);
-	const std::vector<std::string> funny_messages = {"Oops!", "Oh no!", "What happened?"};
-	Lumi::ErrorHandler::LUMI_REGISTER_LOG_MESSAGES(funny_messages);
+  RegisterCaptureCallback();
+  lumi::error_handler::LumiSetFunnyErrorBool(true);
+  const std::vector<std::string> k_funny_messages = {"Oops!", "Oh no!",
+                                                   "What happened?"};
+  lumi::error_handler::LumiRegisterLogMessages(k_funny_messages);
 
-	Lumi::LUMI_SET_TEST_MODE(true);
-	Lumi::ErrorHandler::LUMI_SET_FATAL_CRASH(false);
-	Lumi::ErrorHandler::LUMI_LOG("Fatal error", Lumi::ErrorHandler::LogCode::InternalError,
-								 Lumi::ErrorHandler::LogSeverity::Fatal);
+  lumi::LumiSetTestMode(true);
+  lumi::error_handler::LumiSetFatalCrash(false);
+  lumi::error_handler::LumiLog("Fatal error",
+                               lumi::error_handler::LogCode::kINTERNAL_ERROR,
+                               lumi::error_handler::LogSeverity::kFATAL);
 
-	ASSERT_EQ(captured_logs.size(), 1);
-	EXPECT_FALSE(captured_logs[0].funnyMessage.empty());
+  ASSERT_EQ(captured_logs_.size(), 1);
+  EXPECT_FALSE(captured_logs_[0].funny_message_.empty());
 
-	bool found_message = false;
-	for (const auto &msg: funny_messages) {
-		if (msg == captured_logs[0].funnyMessage) {
-			found_message = true;
-			break;
-		}
-	}
-	EXPECT_TRUE(found_message);
+  bool const found_message = false;
+  for (const auto &msg : k_funny_messages) {
+    if (msg == captured_logs_[0].funny_message_) {
+      found_message = true;
+      break;
+    }
+  }
+  EXPECT_TRUE(found_message);
 }
 
 TEST_F(ErrorHandlerTest, AssertionTests) {
-	RegisterCaptureCallback();
+  RegisterCaptureCallback();
 
-	// Test equal assertion
-	EXPECT_TRUE(Lumi::ErrorHandler::LUMI_ASSERT(5, 10, Lumi::ErrorHandler::AssertType::EQUAL));
+  // Test equal assertion
+  EXPECT_TRUE(lumi::error_handler::LumiAssert(
+      5, 10, lumi::error_handler::AssertType::kEQUAL));
 
-	EXPECT_TRUE(Lumi::ErrorHandler::LUMI_ASSERT(10, 11, Lumi::ErrorHandler::AssertType::GREATER_EQUAL));
-	EXPECT_FALSE(Lumi::ErrorHandler::LUMI_ASSERT(10, 11, Lumi::ErrorHandler::AssertType::LOWER_EQUAL));
+  EXPECT_TRUE(lumi::error_handler::LumiAssert(
+      10, 11, lumi::error_handler::AssertType::kGREATER_EQUAL));
+  EXPECT_FALSE(lumi::error_handler::LumiAssert(
+      10, 11, lumi::error_handler::AssertType::kLOWER_EQUAL));
 
-	// Test greater than assertion
-	EXPECT_TRUE(Lumi::ErrorHandler::LUMI_ASSERT(5, 10, Lumi::ErrorHandler::AssertType::GREATER));
+  // Test greater than assertion
+  EXPECT_TRUE(lumi::error_handler::LumiAssert(
+      5, 10, lumi::error_handler::AssertType::kGREATER));
 
-	// Test less than assertion
-	EXPECT_FALSE(Lumi::ErrorHandler::LUMI_ASSERT(5, 10, Lumi::ErrorHandler::AssertType::LOWER));
+  // Test less than assertion
+  EXPECT_FALSE(lumi::error_handler::LumiAssert(
+      5, 10, lumi::error_handler::AssertType::kLOWER));
 
-	ASSERT_EQ(captured_logs.size(), 3);
-	EXPECT_EQ(captured_logs[0].code, Lumi::ErrorHandler::LogCode::AssertionFailed);
-	EXPECT_EQ(captured_logs[1].code, Lumi::ErrorHandler::LogCode::AssertionFailed);
+  ASSERT_EQ(captured_logs_.size(), 3);
+  EXPECT_EQ(captured_logs_[0].code_,
+            lumi::error_handler::LogCode::kASSERTION_FAILED);
+  EXPECT_EQ(captured_logs_[1].code_,
+            lumi::error_handler::LogCode::kASSERTION_FAILED);
 }
 
 TEST_F(ErrorHandlerTest, MultipleLogs) {
-	RegisterCaptureCallback();
+  RegisterCaptureCallback();
 
-	constexpr int num_logs = 100;
+  constexpr int kNumLogs = 100;
 
-	for (int i = 0; i < num_logs; ++i) {
-		Lumi::ErrorHandler::LUMI_LOG("Message " + std::to_string(i), Lumi::ErrorHandler::LogCode::Success,
-									 Lumi::ErrorHandler::LogSeverity::Info);
-	}
+  for (int i = 0; i < kNumLogs; ++i) {
+    lumi::error_handler::LumiLog("Message " + std::to_string(i),
+                                 lumi::error_handler::LogCode::kSUCCESS,
+                                 lumi::error_handler::LogSeverity::kINFO);
+  }
 
-	EXPECT_EQ(captured_logs.size(), num_logs);
+  EXPECT_EQ(captured_logs_.size(), kNumLogs);
 }
 
 TEST_F(ErrorHandlerTest, CallbackExceptionHandling) {
-	// Redirect cerr to capture the warning message
-	const std::stringstream cerr_buffer;
-	std::streambuf *old_cerr = std::cerr.rdbuf(cerr_buffer.rdbuf());
+  // Redirect cerr to capture the warning message
+  const std::stringstream k_cerr_buffer;
+  std::streambuf *old_cerr = std::cerr.rdbuf(k_cerr_buffer.rdbuf());
 
-	// Register a callback that throws
-	Lumi::ErrorHandler::LUMI_REGISTER_LOG_CALLBACK(
-			[](const Lumi::ErrorHandler::LogData &) { throw std::runtime_error("Test exception"); });
+  // Register a callback that throws
+  lumi::error_handler::LumiRegisterLogCallback(
+      [](const lumi::error_handler::LogData &) {
+        throw std::runtime_error("Test exception");
+      });
 
-	// This should not crash
-	EXPECT_NO_THROW(Lumi::ErrorHandler::LUMI_LOG("Test message", Lumi::ErrorHandler::LogCode::Success,
-												 Lumi::ErrorHandler::LogSeverity::Info));
+  // This should not crash
+  EXPECT_NO_THROW(lumi::error_handler::LumiLog(
+      "Test message", lumi::error_handler::LogCode::kSUCCESS,
+      lumi::error_handler::LogSeverity::kINFO));
 
-	// Verify that the warning message was printed
-	const std::string error_output = cerr_buffer.str();
-	EXPECT_TRUE(error_output.find("WARNING: A registered log callback threw a std::exception") != std::string::npos);
-	EXPECT_TRUE(error_output.find("Test exception") != std::string::npos);
+  // Verify that the warning message was printed
+  const std::string k_error_output = k_cerr_buffer.str();
+  EXPECT_TRUE(
+      k_error_output.find(
+          "WARNING: A registered log callback threw a std::exception") !=
+      std::string::npos);
+  EXPECT_TRUE(k_error_output.find("Test exception") != std::string::npos);
 
-	// Restore cerr
-	std::cerr.rdbuf(old_cerr);
+  // Restore cerr
+  std::cerr.rdbuf(old_cerr);
 }
 
 TEST_F(ErrorHandlerTest, FatalErrorDeathTest) {
-	Lumi::ErrorHandler::LUMI_SET_FATAL_CRASH(true); // Enable fatal crash
-	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Fatal);
+  lumi::error_handler::LumiSetFatalCrash(true);  // Enable fatal crash
+  lumi::error_handler::LumiSetFatalSeverity(
+      lumi::error_handler::LogSeverity::kFATAL);
 
-	// Test that the program terminates with fatal error
-	ASSERT_DEATH(
-			{
-				Lumi::ErrorHandler::LUMI_LOG("Fatal error test", Lumi::ErrorHandler::LogCode::InternalError,
-											 Lumi::ErrorHandler::LogSeverity::Fatal);
-			},
-			"Fatal Error Occurred, Can not proceed. Exiting...");
+  // Test that the program terminates with fatal error
+  ASSERT_DEATH(
+      {
+        lumi::error_handler::LumiLog(
+            "Fatal error test", lumi::error_handler::LogCode::kINTERNAL_ERROR,
+            lumi::error_handler::LogSeverity::kFATAL);
+      },
+      "Fatal Error Occurred, Can not proceed. Exiting...");
 }
 
 TEST_F(ErrorHandlerTest, NonFatalSeverityDoesNotDie) {
-	Lumi::ErrorHandler::LUMI_SET_FATAL_CRASH(true);
-	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Fatal);
+  lumi::error_handler::LumiSetFatalCrash(true);
+  lumi::error_handler::LumiSetFatalSeverity(
+      lumi::error_handler::LogSeverity::kFATAL);
 
-	// This should not crash
-	ASSERT_NO_FATAL_FAILURE({
-		Lumi::ErrorHandler::LUMI_LOG("Non-fatal error", Lumi::ErrorHandler::LogCode::InternalError,
-									 Lumi::ErrorHandler::LogSeverity::Error);
-	});
+  // This should not crash
+  ASSERT_NO_FATAL_FAILURE({
+    lumi::error_handler::LumiLog("Non-fatal error",
+                                 lumi::error_handler::LogCode::kINTERNAL_ERROR,
+                                 lumi::error_handler::LogSeverity::kERROR);
+  });
 }
 
 TEST_F(ErrorHandlerTest, FatalErrorWithCrashDisabledDoesNotDie) {
-	Lumi::ErrorHandler::LUMI_SET_FATAL_CRASH(false); // Disable fatal crash
-	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Fatal);
+  lumi::error_handler::LumiSetFatalCrash(false);  // Disable fatal crash
+  lumi::error_handler::LumiSetFatalSeverity(
+      lumi::error_handler::LogSeverity::kFATAL);
 
-	// This should not crash when fatal crash is disabled
-	ASSERT_NO_FATAL_FAILURE({
-		Lumi::ErrorHandler::LUMI_LOG("Fatal error with crash disabled", Lumi::ErrorHandler::LogCode::InternalError,
-									 Lumi::ErrorHandler::LogSeverity::Fatal);
-	});
+  // This should not crash when fatal crash is disabled
+  ASSERT_NO_FATAL_FAILURE({
+    lumi::error_handler::LumiLog("Fatal error with crash disabled",
+                                 lumi::error_handler::LogCode::kINTERNAL_ERROR,
+                                 lumi::error_handler::LogSeverity::kFATAL);
+  });
 }
 
 // Test fatal severity threshold
 TEST_F(ErrorHandlerTest, CustomFatalSeverityDeathTest) {
-	Lumi::ErrorHandler::LUMI_SET_FATAL_CRASH(true);
-	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Warning);
+  lumi::error_handler::LumiSetFatalCrash(true);
+  lumi::error_handler::LumiSetFatalSeverity(
+      lumi::error_handler::LogSeverity::kWARNING);
 
-	// Should die because Warning is now considered fatal
-	ASSERT_DEATH(
-			{
-				Lumi::ErrorHandler::LUMI_LOG("Warning becomes fatal", Lumi::ErrorHandler::LogCode::InternalError,
-											 Lumi::ErrorHandler::LogSeverity::Warning);
-			},
-			"Fatal Error Occurred, Can not proceed. Exiting...");
+  // Should die because Warning is now considered fatal
+  ASSERT_DEATH(
+      {
+        lumi::error_handler::LumiLog(
+            "Warning becomes fatal",
+            lumi::error_handler::LogCode::kINTERNAL_ERROR,
+            lumi::error_handler::LogSeverity::kWARNING);
+      },
+      "Fatal Error Occurred, Can not proceed. Exiting...");
 }

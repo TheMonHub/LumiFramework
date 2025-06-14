@@ -1,25 +1,28 @@
 // Copyright (c) 2025 TheMonHub
 // Licensed under zlib License
 
-//
-// Created by Mono on 31/5/2025.
-//
-
 #include "main.h"
 
-#include <Lumi/Core/ErrorFunny.h>
-#include <Lumi/Core/ErrorHandler.h>
-#include <Lumi/Core/Info.h>
 #include <iostream>
 
+#include "Lumi/Core/error_funny.h"
+#include "Lumi/Core/error_handler.h"
+#include "Lumi/Core/info.h"
+
 int main() {
-	Lumi::ErrorHandler::LUMI_SET_FUNNY_ERROR_BOOL(true);
-	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Warning);
-	Lumi::ErrorHandler::LUMI_REGISTER_DEFAULT_FUNNY_MESSAGES();
-	std::cout << "\n"
-			  << "Lumi Version: " << Lumi::Info::Version::GetVersionString(true) << "\n"
-			  << std::endl;
-	std::cout << Lumi::Info::License::GetLicenseString() << "\n" << std::endl;
-	Lumi::ErrorHandler::LUMI_LOG("Oh no!", Lumi::ErrorHandler::LogCode::UnknownError,
-								 Lumi::ErrorHandler::LogSeverity::Fatal);
+  lumi::error_handler::LumiSetFunnyErrorBool(true);
+  lumi::error_handler::LumiSetFatalSeverity(
+      lumi::error_handler::LOG_SEVERITY::WARNING);
+  lumi::error_handler::LumiRegisterDefaultFunnyMessages();
+
+  std::cout << "\n"
+            << "lumi Version: " << lumi::info::version::GetVersionString(true)
+            << "\n"
+            << '\n';
+  std::cout << lumi::info::license::GetLicenseString() << "\n" << '\n';
+
+  lumi::error_handler::LumiLog("Oh no!",
+                               lumi::error_handler::LOG_CODE::UNKNOWN_ERROR,
+                               lumi::error_handler::LOG_SEVERITY::FATAL);
+  std::flush(std::cout);
 }
