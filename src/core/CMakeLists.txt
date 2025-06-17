@@ -4,7 +4,7 @@
 message(STATUS "Configuring Lumi Core...")
 
 #-----------------------------------------------------------------------------
-if (NOT EXISTS "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h")
+if (NOT EXISTS "${LUMI_SOURCE_DIR}/include/lumi/metadata.h")
     message(FATAL_ERROR "Metadata header file not found.")
 endif ()
 
@@ -22,21 +22,16 @@ set(LUMI_CORE_SOURCES_ERROR
 set(LUMI_CORE_PUBLIC_HEADERS
         "${LUMI_SOURCE_DIR}/include/lumi/core/core.h"
         "${LUMI_SOURCE_DIR}/include/lumi/core/info.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h"
+        "${LUMI_SOURCE_DIR}/include/lumi/metadata.h"
 )
 set(LUMI_CORE_PUBLIC_HEADERS_ERROR
         "${LUMI_SOURCE_DIR}/include/lumi/core/error_handler.h"
         "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.h"
 )
 
-# Define dependencies
-set(LUMI_CORE_DEPENDENCIES
-        # Empty for now
-)
-
 # IDE source organization
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
-source_group(TREE "${LUMI_SOURCE_DIR}/include/Lumi" FILES ${LUMI_CORE_PUBLIC_HEADERS})
+source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_CORE_PUBLIC_HEADERS})
 
 #-----------------------------------------------------------------------------
 # Build Configuration
@@ -93,7 +88,5 @@ if (LUMI_BUILD_STATIC_LIBS)
 endif ()
 
 # Push the data to the global scope
-list(APPEND LUMI_ALL_DEPENDENCIES ${LUMI_CORE_DEPENDENCIES})
 set(LUMI_ALL_SOURCES ${LUMI_ALL_SOURCES} PARENT_SCOPE)
 set(LUMI_ALL_PUBLIC_HEADERS ${LUMI_ALL_PUBLIC_HEADERS} PARENT_SCOPE)
-set(LUMI_ALL_DEPENDENCIES ${LUMI_ALL_DEPENDENCIES} PARENT_SCOPE)

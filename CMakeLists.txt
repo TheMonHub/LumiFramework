@@ -120,7 +120,7 @@ set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}-${PROJ
 set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 
 # core configuration
-set_if_undefined(CMAKE_CXX_STANDARD 17)
+set_if_undefined(CMAKE_CXX_STANDARD 20)
 set_if_undefined(CMAKE_CXX_STANDARD_REQUIRED ON)
 set_if_undefined(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -217,8 +217,8 @@ set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
 # metadata.h.in template should be at lumi/include/metadata.h.in
-set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h.in")
-set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/include/Lumi/metadata.h") # Output to include/lumi/metadata.h
+set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/lumi/metadata.h.in")
+set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/include/lumi/metadata.h") # Output to include/lumi/metadata.h
 configure_file(
         "${LUMI_METADATA_TEMPLATE}"
         "${LUMI_GENERATED_METADATA_OUTPUT}"
@@ -230,10 +230,9 @@ configure_file(
 #-----------------------------------------------------------------------------
 set(LUMI_COMMON_EXPORT_SET "LumiFrameworkTargets")
 
-# Collect all source files, public headers and dependencies
+# Collect all source files and public headers
 set(LUMI_ALL_SOURCES "")
 set(LUMI_ALL_PUBLIC_HEADERS "")
-set(LUMI_ALL_DEPENDENCIES "")
 
 # Global property to accumulate static library targets
 set_property(GLOBAL PROPERTY LUMI_STATIC_LIB_TARGETS "")
@@ -257,7 +256,6 @@ get_property(LUMI_STATIC_LIB_TARGETS_LIST GLOBAL PROPERTY LUMI_STATIC_LIB_TARGET
 # Print accumulated sources, headers, and dependencies
 message(STATUS "Lumi sources: ${LUMI_ALL_SOURCES}")
 message(STATUS "Lumi headers: ${LUMI_ALL_PUBLIC_HEADERS}")
-message(STATUS "Lumi dependencies: ${LUMI_ALL_DEPENDENCIES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 
 # An INTERFACE library to group all static components
