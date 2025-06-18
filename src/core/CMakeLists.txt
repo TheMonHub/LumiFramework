@@ -13,10 +13,6 @@ set(LUMI_CORE_SOURCES
         "${LUMI_SOURCE_DIR}/src/core/core.cpp"
         "${LUMI_SOURCE_DIR}/src/core/info.cpp"
 )
-set(LUMI_CORE_SOURCES_ERROR
-        "${LUMI_SOURCE_DIR}/src/core/error_handler.cpp"
-        "${LUMI_SOURCE_DIR}/src/core/error_funny.cpp"
-)
 
 # Define public headers
 set(LUMI_CORE_PUBLIC_HEADERS
@@ -24,11 +20,6 @@ set(LUMI_CORE_PUBLIC_HEADERS
         "${LUMI_SOURCE_DIR}/include/lumi/core/info.h"
         "${LUMI_SOURCE_DIR}/include/lumi/metadata.h"
 )
-set(LUMI_CORE_PUBLIC_HEADERS_ERROR
-        "${LUMI_SOURCE_DIR}/include/lumi/core/error_handler.h"
-        "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.h"
-)
-
 # IDE source organization
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
 source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_CORE_PUBLIC_HEADERS})
@@ -56,29 +47,10 @@ if (LUMI_BUILD_STATIC_LIBS)
     list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_SOURCES})
     list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS})
 
-    # Error handling
-    add_library(LumiError STATIC ${LUMI_CORE_SOURCES_ERROR} ${LUMI_CORE_PUBLIC_HEADERS_ERROR})
-    add_library(Lumi::Error ALIAS LumiError)
-
-    target_link_libraries(
-            LumiError
-            PUBLIC
-            LumiCore
-            ${LUMI_CORE_DEPENDENCIES}
-    )
-
-    configure_lumi_target(LumiError
-            "${LUMI_CORE_PUBLIC_HEADERS_ERROR}"
-            core)
-
-    list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_SOURCES_ERROR})
-    list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS_ERROR})
-
     # Interface
     add_library(ILumiCore INTERFACE)
     target_link_libraries(ILumiCore INTERFACE
             LumiCore
-            LumiError
     )
     add_library(Lumi::ILumiCore ALIAS ILumiCore)
     install(TARGETS ILumiCore EXPORT "${LUMI_COMMON_EXPORT_SET}" COMPONENT Lumi-dev)
