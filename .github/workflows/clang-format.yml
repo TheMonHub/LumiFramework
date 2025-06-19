@@ -1,0 +1,31 @@
+name: clang-format
+
+on:
+  workflow_dispatch:
+
+jobs:
+  format-code:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Install Clang-Format
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: clang-format
+
+      - name: Run Clang-Format Script
+        run: |
+          chmod +x ./clang-format.sh
+          ./clang-format.sh
+
+      - name: Commit Formatted Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Automated: Run clang-format script"

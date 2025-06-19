@@ -1,0 +1,29 @@
+//
+// Created by Mono on 1/6/2025.
+//
+
+import <string_view>;
+
+export module lumi.core:metadata;
+
+export namespace lumi::info {
+// Version information
+inline constexpr std::string_view kVersionFull = "@PROJECT_VERSION@";
+inline constexpr std::string_view kVersion = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
+inline constexpr std::string_view kVersionTa = "@VERSION_TAG@";
+
+inline constexpr struct {
+  unsigned int major_ = @PROJECT_VERSION_MAJOR@;
+  unsigned int minor_ = @PROJECT_VERSION_MINOR@;
+  unsigned int patch_ = @PROJECT_VERSION_PATCH@;
+} kVersionNumbers;
+
+// Project information
+inline constexpr std::string_view kProjectName = "@PROJECT_NAME@";
+inline constexpr std::string_view kProjectDescription = "@PROJECT_DESCRIPTION@";
+inline constexpr std::string_view kProjectHomepage = "@PROJECT_HOMEPAGE_URL@";
+inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@";
+
+// License information
+inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@";
+}
