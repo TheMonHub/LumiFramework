@@ -1,9 +1,0 @@
-Lumi Framework is a modular C++ framework for cross-platform desktop applications.
-
-It provides a comprehensive set of tools and utilities designed to streamline
-application development, reduce boilerplate, and give developers fine-grained
-control over their projects.
-
-Lumi aims to simplify common tasks like window management, event handling,
-graphics rendering, and more, enabling developers to build robust and
-performant desktop applications efficiently.
