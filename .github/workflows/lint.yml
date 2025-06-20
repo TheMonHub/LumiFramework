@@ -34,17 +34,14 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
 
-      - name: Generate compilation database
+      - name: Setup Clang Environment
         run: |
           export CC=$(which clang)
           export CXX=$(which clang++)
-          cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -DLUMI_BUILD_DOCS=OFF -G Ninja
-
       - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
         with:
           clang_format: true
-
       - name: Run Clang-tidy
         uses: HorstBaerbel/action-clang-tidy@1.2
         with:
