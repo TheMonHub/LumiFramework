@@ -6,7 +6,7 @@
 //
 module;
 # include <string_view>
-# include <sys/types.h>
+# include <cstdint>
 
 export module lumi.core:metadata;
 
@@ -15,11 +15,12 @@ export namespace lumi::info {
 inline constexpr std::string_view kVersionFull = "@PROJECT_VERSION@";
 inline constexpr std::string_view kVersion = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
 inline constexpr std::string_view kVersionTag = "@VERSION_TAG@";
+inline constexpr uint8_t kVersionReleaseCandidate = @LUMI_RELEASE_CANDIDATE_VERSION@;
 
 inline constexpr struct KVersionNumbers {
-  uint major_ = @PROJECT_VERSION_MAJOR@;
-  uint minor_ = @PROJECT_VERSION_MINOR@;
-  uint patch_ = @PROJECT_VERSION_PATCH@;
+  uint8_t major_ = @PROJECT_VERSION_MAJOR@;
+  uint8_t minor_ = @PROJECT_VERSION_MINOR@;
+  uint8_t patch_ = @PROJECT_VERSION_PATCH@;
 } kVersionNumbers;
 
 // Project information

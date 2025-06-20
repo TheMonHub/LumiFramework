@@ -11,7 +11,7 @@ endfunction()
 # Macro to configure common properties for lumi component targets
 # target_name: The actual target name (e.g., LumiCore, LumiWindow)
 # component_name: The name of the component (e.g., core, window)
-macro(configure_lumi_target target_name component_name sub_component_name)
+macro(configure_lumi_target target_name component_name)
     set_target_properties(${target_name} PROPERTIES
             VERSION ${PROJECT_VERSION}
             OUTPUT_NAME "${target_name}"
@@ -24,12 +24,9 @@ macro(configure_lumi_target target_name component_name sub_component_name)
         if ("${component_name}" STREQUAL "")
             set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${LUMI_VERSIONED_SUBDIR}'")
-        elseif ("${sub_component_name}" STREQUAL "")
+        else ()
             set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/${component_name}/")
             message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${component_name}' folder.")
-        else ()
-            set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/${component_name}/${sub_component_name}/")
-            message(STATUS "${target_name} will be installed to ${INSTALL_DESTINATION} under '${component_name}/${sub_component_name}' folder.")
         endif ()
 
         install(TARGETS ${target_name}

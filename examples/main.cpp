@@ -14,5 +14,5 @@ int main() {
   << "Description: " << lumi::info::GetFrameworkDescription() << "\n"
   << "Homepage: " << lumi::info::GetFrameworkHomepage() << "\n";
         std::cout << "\n" << "Copyright holder: " << lumi::info::GetFrameworkCopyrightHolder() << "\n"
-                << "License: " << "\n" << lumi::info::GetFrameworkLicenseText() << std::endl;
+                << "License: " << lumi::info::GetFrameworkLicense() << "\n" << lumi::info::GetFrameworkLicenseText() << std::endl;
 }

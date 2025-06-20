@@ -10,6 +10,7 @@
       "name": "ci-base",
       "hidden": true,
       "description": "Base preset for CI builds",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",

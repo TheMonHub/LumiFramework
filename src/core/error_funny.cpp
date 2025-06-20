@@ -23,7 +23,7 @@ std::vector<std::string_view> GetLumiFunnyErrorMessages() {
       "The bytes are not amused. Please feed them valid input.",
       "A wild bug appeared! lumi used 'Crash'! It's super effective!",
       "Error: Coffee supply critically low, affecting lumi's performance.",
-      "lumi just threw its hands up in despair. We need a hero (that's you!).",
+      "lumi just threw its hands up in despair. We need a hero.",
       "This operation is currently on vacation. Please try again never.",
       "lumi had a momentary lapse of reason. Don't worry, it happens to the "
       "best of us.",

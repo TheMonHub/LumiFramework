@@ -7,4 +7,3 @@
 export module lumi.core;
 export import :metadata;
 export import :info;
-export import :error_funny;

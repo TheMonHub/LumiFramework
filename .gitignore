@@ -35,7 +35,7 @@
 .idea/
 
 # CMake generated files
-metadata.ixx
+metadata.cppm
 
 # Build directories
 build/

@@ -46,13 +46,7 @@ jobs:
           clang_format: true
 
       - name: Run Clang-Tidy
-        run: |
-          LATEST_CLANG_TIDY=$(ls /usr/bin/ | grep -oP 'clang-tidy-\K\d+' | sort -V | tail -n 1)
-          if [ -z "$LATEST_CLANG_TIDY" ]; then
-              echo "Could not find a clang-tidy installation. Exiting."
-              exit 1
-          fi
-          /usr/bin/clang-tidy-$LATEST_CLANG_TIDY '^(?!.*[\\/]_deps[\\/])' -p build
+        run: run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
         continue-on-error: true
 
       - name: Publish Clang-Tidy report

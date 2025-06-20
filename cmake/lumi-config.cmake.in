@@ -1,82 +1,85 @@
 # This file is a template used by CMake for other projects to find Lumi.
 
-# Prevent multiple inclusions
 if (Lumi_FOUND)
-  return()
+    return()
 endif()
 
-set(Lumi_FOUND FALSE) # Assume not found until confirmed
+set(Lumi_FOUND FALSE)
 
-# Set Lumi version variables
+# Version information
 set(Lumi_VERSION @PROJECT_VERSION@)
 set(Lumi_MAJOR_VERSION @PROJECT_VERSION_MAJOR@)
 set(Lumi_MINOR_VERSION @PROJECT_VERSION_MINOR@)
 set(Lumi_PATCH_VERSION @PROJECT_VERSION_PATCH@)
 
-# Determine installation prefix
+# Installation paths
 get_filename_component(Lumi_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" DIRECTORY)
 get_filename_component(Lumi_INSTALL_PREFIX "${Lumi_CMAKE_DIR}/../../.." ABSOLUTE)
 
-# Initialize variables for consumers
+# Initialize variables
 set(Lumi_LIBRARIES "")
-
-# Set the base modules directory
+set(Lumi_INCLUDE_DIRS "${Lumi_INSTALL_PREFIX}/include")
+set(Lumi_MODULE_DIR "${Lumi_INSTALL_PREFIX}/include/@LUMI_VERSIONED_SUBDIR@")
 set(Lumi_MODULES_DIR "${Lumi_INSTALL_PREFIX}/@CMAKE_INSTALL_LIBDIR@/cmake/@LUMI_VERSIONED_SUBDIR@/modules")
-
 set(Lumi_DEFINITIONS "")
+set(Lumi_FOUND_COMPONENTS "")
 
-# --- Main logic to find and configure Lumi ---
-
-# Include the generated targets file
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
-
     set(Lumi_FOUND TRUE)
 
-    # Helper variable to store the chosen default target
-    set(_lumi_chosen_default_target "")
+    # Check for aggregate target first
+    if (TARGET Lumi::Lumi)
+        set(Lumi_LIBRARIES Lumi::Lumi)
+        get_target_property(Lumi_DEFINITIONS Lumi::Lumi INTERFACE_COMPILE_DEFINITIONS)
+        get_target_property(_lumi_module_files Lumi::Lumi INTERFACE_SOURCES)
 
-    # Priority for setting Lumi_LIBRARIES:
-    # 1. Monolithic Static (Lumi::LumiStatic) - if it exists
-    # 2. No aggregate target, user must link individual components
-
-    if (TARGET Lumi::LumiStatic)
-        set(_lumi_chosen_default_target Lumi::LumiStatic)
-    endif()
-
-    if (_lumi_chosen_default_target)
-        set(Lumi_LIBRARIES "${_lumi_chosen_default_target}")
-        get_target_property(Lumi_DEFINITIONS "${_lumi_chosen_default_target}" INTERFACE_COMPILE_DEFINITIONS)
-        message(STATUS "-- Found Lumi framework (version ${Lumi_VERSION}). Default target: ${_lumi_chosen_default_target}")
-
-        # Set up module path for consuming projects
-        get_target_property(_lumi_module_files "${_lumi_chosen_default_target}" INTERFACE_SOURCES)
-        if(_lumi_module_files)
-            list(APPEND CMAKE_MODULE_PATH "${Lumi_MODULES_DIR}")
-        endif()
+        message(STATUS "Found Lumi framework (version ${Lumi_VERSION})")
+        message(STATUS "  - Using aggregate target: Lumi::Lumi")
     else()
-        message(STATUS [[Found Lumi framework targets (version ${Lumi_VERSION}). No aggregate Lumi target (Lumi::LumiStatic) found.
-Please link specific components (e.g., Lumi::LumiStaticCore, Lumi::LumiStaticWindow).]])
+        # Get all available components from installed targets
+        get_property(_lumi_components GLOBAL PROPERTY LUMI_STATIC_LIB_TARGETS)
 
-        # Fallback for definitions from a common component if no aggregate target is available
-        if (TARGET Lumi::LumiStaticCore)
-            get_target_property(Lumi_DEFINITIONS Lumi::LumiStaticCore INTERFACE_COMPILE_DEFINITIONS)
-            get_target_property(_lumi_module_files Lumi::LumiStaticCore INTERFACE_SOURCES)
-            if(_lumi_module_files)
-                list(APPEND CMAKE_MODULE_PATH "${Lumi_MODULES_DIR}")
+        foreach(component ${_lumi_components})
+            if(TARGET Lumi::${component})
+                list(APPEND Lumi_FOUND_COMPONENTS ${component})
+                if(NOT _lumi_module_files)
+                    get_target_property(_lumi_module_files Lumi::${component} INTERFACE_SOURCES)
+                endif()
             endif()
+        endforeach()
+
+        if(Lumi_FOUND_COMPONENTS)
+            message(STATUS "Found Lumi framework (version ${Lumi_VERSION})")
+            message(STATUS "  - Available components: ${Lumi_FOUND_COMPONENTS}")
+        else()
+            set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+                    "No Lumi components found. The library may not have been installed correctly.")
+            set(Lumi_FOUND FALSE)
         endif()
     endif()
 
+    # Set up module paths if modules are found
+    if(_lumi_module_files)
+        list(APPEND CMAKE_MODULE_PATH "${Lumi_MODULES_DIR}")
+    endif()
+
+    if(Lumi_FOUND)
+        message(STATUS "  - Include dir: ${Lumi_INCLUDE_DIRS}")
+        message(STATUS "  - Module dir: ${Lumi_MODULE_DIR}")
+    endif()
 else()
-    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "lumi-targets.cmake not found. Lumi may not have been installed or built correctly.")
+    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+            "lumi-targets.cmake not found. Lumi may not have been installed correctly.")
     set(Lumi_FOUND FALSE)
 endif()
 
-# Mark variables as advanced
 mark_as_advanced(
-    Lumi_FOUND
-    Lumi_LIBRARIES
-    Lumi_DEFINITIONS
-    Lumi_MODULES_DIR
+        Lumi_FOUND
+        Lumi_LIBRARIES
+        Lumi_INCLUDE_DIRS
+        Lumi_MODULE_DIR
+        Lumi_MODULES_DIR
+        Lumi_DEFINITIONS
+        Lumi_FOUND_COMPONENTS
 )

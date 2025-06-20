@@ -8,13 +8,11 @@ accordingly.
 
 ---
 
-## Version 0.1.0 (2025-06-01)
+## Version 0.1.0 (2025-06-20)
+
+### initial release of Lumi Framework
 
 ### Added
-
-* Initial experimental release.
-* `Lumi::Core::GetVersion()`: Get the current version of the Lumi Core library.
-* `Lumi::Core::GetLicense()`: Get the license text for the Lumi Core library.
 
 ### Removed
 

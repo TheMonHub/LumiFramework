@@ -6,7 +6,7 @@
 # Build & Installation Guide
 #-----------------------------------------------------------------------------
 # Basic Usage:
-# 1. Configure:  cmake -S . -B build
+# 1. Configure:  cmake -S . -B build -G Ninja (Ninja is preferred, Unix makefiles didn't support C++20 modules)
 # 2. Build:      cmake --build build
 # 3. Install:    cmake --install build
 # 4. Package:    cd build && cpack -G <GENERATOR>
@@ -60,7 +60,7 @@ set(LUMI_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 message(NOTICE "Lumi source directory: ${LUMI_SOURCE_DIR}")
 
 # Set lumi version tag
-# alpha, beta, rc, or dev
+# alpha, beta, rc, dev or release
 set(VERSION_TAG "dev")
 
 if ("${VERSION_TAG}" STREQUAL "alpha")
@@ -71,8 +71,7 @@ elseif ("${VERSION_TAG}" STREQUAL "rc")
     set(LUMI_VERSION_TAG "-rc.")
 elseif ("${VERSION_TAG}" STREQUAL "dev")
     set(LUMI_VERSION_TAG "-dev")
-elseif ("${VERSION_TAG}" STREQUAL "")
-    message(WARNING "VERSION_TAG is empty. Please set it to 'alpha', 'beta', 'rc', 'dev', or 'release'. Defaulting to empty tag.")
+elseif ("${VERSION_TAG}" STREQUAL "release")
     set(LUMI_VERSION_TAG "")
 else ()
     message(WARNING "Unknown VERSION_TAG '${VERSION_TAG}'. Expected 'alpha', 'beta', 'rc', 'dev', or 'release'.")
@@ -81,13 +80,14 @@ endif ()
 
 # If this is a release candidate, set this to the appropriate version.
 # For example, if this is the first release candidate, set it to "1".
-set(LUMI_RELEASE_CANDIDATE_VERSION "")
+set(LUMI_RELEASE_CANDIDATE_VERSION 0)
+
 if ("${VERSION_TAG}" STREQUAL "rc")
-    if ("${LUMI_RELEASE_CANDIDATE_VERSION}" STREQUAL "")
-        message(FATAL_ERROR "LUMI_RELEASE_CANDIDATE_VERSION must be set when VERSION_TAG is 'rc'.")
+    if (${LUMI_RELEASE_CANDIDATE_VERSION} LESS_EQUAL 0)
+        message(FATAL_ERROR "LUMI_RELEASE_CANDIDATE_VERSION must be unsigned int when VERSION_TAG is 'rc'.")
     endif ()
 else ()
-    set(LUMI_RELEASE_CANDIDATE_VERSION "")
+    set(LUMI_RELEASE_CANDIDATE_VERSION 0)
 endif ()
 
 # Set lumi version based on the project version and tag
@@ -115,9 +115,14 @@ option(LUMI_BUILD_TESTS "Build Lumi tests" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 
 # Define installation paths
-set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER_CASE)
+set(PROJECT_NAME_LOWER_CASE "${PROJECT_NAME_LOWER_CASE}" CACHE STRING "Lowercase project name for installation paths")
+
+set(LUMI_INSTALL_DOCDIR "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+        CACHE STRING "Install path for Lumi documentation")
+set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME_LOWER_CASE}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
         CACHE STRING "Install path for Lumi package-related CMake files")
-set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME_LOWER_CASE}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 
 # core configuration
 set(CMAKE_CXX_STANDARD 20)
@@ -211,9 +216,9 @@ endif ()
 set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
-# metadata.ixx.in template should be at lumi/src/core/metadata.ixx.in
-set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/src/core/metadata.ixx.in")
-set(LUMI_GENERATED_METADATA_OUTPUT "${LUMI_SOURCE_DIR}/src/core/metadata.ixx") # Output to include/lumi/metadata.h
+# metadata.cppm.in template should be at lumi/src/core/metadata.cppm.in
+set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/lumi/metadata.cppm.in")
+set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm") # Output to include/lumi/metadata.h
 configure_file(
         "${LUMI_METADATA_TEMPLATE}"
         "${LUMI_GENERATED_METADATA_OUTPUT}"
@@ -292,9 +297,9 @@ if (LUMI_BUILD_DOCS)
             VERBATIM)
     if (LUMI_INSTALL_DOCS)
         install(DIRECTORY "${DOXY_OUTPUT_DIR}/"
-                DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+                DESTINATION "${LUMI_INSTALL_DOCDIR}")
         install(FILES "${LUMI_SOURCE_DIR}/docs/doxygen-awesome-css-LICENSE.txt"
-                DESTINATION "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+                DESTINATION "${LUMI_INSTALL_DOCDIR}")
     endif ()
 endif ()
 
@@ -338,14 +343,14 @@ endif ()
 # CPack General Configuration
 #-----------------------------------------------------------------------------
 # TODO: Add res/icon.png
-set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME_LOWER_CASE}")
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGE_VENDOR "${PROJECT_COPYRIGHT_HOLDER}")
 set(CPACK_PACKAGE_HOMEPAGE_URL "${PROJECT_HOMEPAGE_URL}")
 set(CPACK_RESOURCE_FILE_LICENSE "${LUMI_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${LUMI_SOURCE_DIR}/res/DESCRIPTION")
-set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME_LOWER_CASE}-${PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_ICON "${LUMI_SOURCE_DIR}/res/icon.png")
 set(CPACK_SET_DESTDIR ON)
 

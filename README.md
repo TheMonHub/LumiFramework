@@ -23,7 +23,7 @@ We want LumiFramework to become the **go-to foundation for C++ desktop developme
 
 ### License Information
 
-LumiFramework is distributed under the terms of the **zlib license**. This permissive open-source license allows you to use, modify, and distribute the software freely, even for commercial projects, with minimal restrictions.
+LumiFramework is distributed under the terms of the **BSL license**. This permissive open-source license allows you to use, modify, and distribute the software freely, even for commercial projects, with minimal restrictions.
 
 ---
 

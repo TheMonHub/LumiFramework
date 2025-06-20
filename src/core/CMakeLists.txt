@@ -4,40 +4,48 @@
 message(STATUS "Configuring Lumi Core...")
 
 #-----------------------------------------------------------------------------
-if (NOT EXISTS "${LUMI_SOURCE_DIR}/src/core/metadata.ixx")
+if (NOT EXISTS "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm")
     message(FATAL_ERROR "Metadata interface file not found.")
 endif ()
-
-# Define sources
+#-----------------------------------------------------------------------------
 set(LUMI_CORE_IMPLEMENTATION_SOURCES
         "${LUMI_SOURCE_DIR}/src/core/info.cpp"
         "${LUMI_SOURCE_DIR}/src/core/error_funny.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/stacktrace.cpp"
 )
 
-# Define public interfaces
 set(LUMI_CORE_PUBLIC_INTERFACES
-        "${LUMI_SOURCE_DIR}/src/core/core.ixx"
-        "${LUMI_SOURCE_DIR}/src/core/metadata.ixx"
-        "${LUMI_SOURCE_DIR}/src/core/info.ixx"
-        "${LUMI_SOURCE_DIR}/src/core/error_funny.ixx"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/core.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/info.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/stacktrace.cppm"
 )
 
+set(LUMI_CORE_DEPENDENCIES
+
+)
 # IDE source organization
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES} ${LUMI_CORE_PUBLIC_INTERFACES})
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
+source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_CORE_PUBLIC_INTERFACES})
 
 #-----------------------------------------------------------------------------
 # Build Configuration
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
-    # core library
+    # core
     add_library(LumiCore)
 
     target_sources(LumiCore
             PUBLIC
-            FILE_SET CXX_MODULES FILES
-            ${LUMI_CORE_PUBLIC_INTERFACES}
+            FILE_SET CXX_MODULES
+            BASE_DIRS
+                "${LUMI_SOURCE_DIR}/include/lumi/core"
+                "${CMAKE_BINARY_DIR}/include/lumi"
+            FILES
+                ${LUMI_GENERATED_METADATA_OUTPUT}
+                ${LUMI_CORE_PUBLIC_INTERFACES}
             PRIVATE
-            ${LUMI_CORE_IMPLEMENTATION_SOURCES}
+                ${LUMI_CORE_IMPLEMENTATION_SOURCES}
     )
 
     add_library(Lumi::Core ALIAS LumiCore)
@@ -47,24 +55,14 @@ if (LUMI_BUILD_STATIC_LIBS)
             PUBLIC
             ${LUMI_CORE_DEPENDENCIES}
     )
-
     configure_lumi_target(
             LumiCore
-            core
-    "")
+            core)
 
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
 
-    list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_SOURCES})
+    list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_IMPLEMENTATION_SOURCES})
     list(APPEND LUMI_ALL_PUBLIC_INTERFACES ${LUMI_CORE_PUBLIC_INTERFACES})
-    # Interface
-    add_library(ILumiCore INTERFACE)
-    target_link_libraries(ILumiCore INTERFACE
-            LumiCore
-    )
-    add_library(Lumi::ILumiCore ALIAS ILumiCore)
-    install(TARGETS ILumiCore EXPORT "${LUMI_COMMON_EXPORT_SET}")
-    message(STATUS "Created Lumi::ILumiCore interface library to group CORE static components.")
 endif ()
 
 # Push the data to the global scope
