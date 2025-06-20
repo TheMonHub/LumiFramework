@@ -47,6 +47,6 @@ jobs:
 
       - name: Run Clang-Tidy
         run: |
-          clang-tidy --version
+          run-clang-tidy --version
           run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
         continue-on-error: true
