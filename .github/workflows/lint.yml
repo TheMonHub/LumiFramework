@@ -45,7 +45,7 @@ jobs:
         with:
           clang_format: true
 
-      - name: Run clang-tidy
+      - name: Run Clang-tidy
         uses: HorstBaerbel/action-clang-tidy@1.2
         with:
           scandir: '.'
