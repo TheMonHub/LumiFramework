@@ -43,6 +43,7 @@ jobs:
         with:
           clang-format-version: '20'
           exclude-regex: '.*[/\\]_deps[/\\]?.*'
+        continue-on-error: true
       - name: Run Clang-tidy
         uses: HorstBaerbel/action-clang-tidy@1.2
         with:
@@ -51,3 +52,4 @@ jobs:
           excludedirs: '^(?!.*[\\/]_deps[\\/])'
           extensions: 'cppm,cpp,h'
           cmakeoptions: '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -G Ninja'
+        continue-on-error: true

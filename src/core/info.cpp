@@ -7,8 +7,8 @@
 
 module;
 
-# include <string_view>
-# include <cstdint>
+#include <cstdint>
+#include <string_view>
 
 module lumi.core;
 
@@ -67,6 +67,8 @@ std::string_view GetFrameworkHomepage() noexcept { return kProjectHomepage; }
 std::string_view GetFrameworkCopyrightHolder() noexcept {
   return kCopyrightHolder;
 }
-std::string_view GetFrameworkLicense() noexcept { return "Boost Software License - Version 1.0"; }
+std::string_view GetFrameworkLicense() noexcept {
+  return "Boost Software License - Version 1.0";
+}
 std::string_view GetFrameworkLicenseText() noexcept { return kLicenseText; }
 }  // namespace lumi::info

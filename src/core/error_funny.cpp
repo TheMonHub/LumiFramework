@@ -5,8 +5,8 @@
 // Created by Mono on 10/6/2025.
 //
 module;
-#include <vector>
 #include <string_view>
+#include <vector>
 module lumi.core;
 
 namespace lumi::error_handler {
