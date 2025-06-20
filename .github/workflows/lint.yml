@@ -46,11 +46,7 @@ jobs:
           clang_format: true
 
       - name: Run Clang-Tidy
-        run: run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
+        run: |
+          clang-tidy --version
+          run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
         continue-on-error: true
-
-      - name: Publish Clang-Tidy report
-        uses: actions/upload-artifact@v4
-        with:
-          name: clang-tidy-report
-          path: clang_tidy_report.txt
