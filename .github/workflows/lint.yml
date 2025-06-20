@@ -45,8 +45,11 @@ jobs:
         with:
           clang_format: true
 
-      - name: Run Clang-Tidy
-        run: |
-          run-clang-tidy --version
-          run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
-        continue-on-error: true
+      - name: Run clang-tidy
+        uses: HorstBaerbel/action-clang-tidy@1.2
+        with:
+          scandir: '.'
+          builddir: 'build'
+          excludedirs: '^(?!.*[\\/]_deps[\\/])'
+          extensions: 'cppm,cpp,h'
+          cmakeoptions: '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -G Ninja'
