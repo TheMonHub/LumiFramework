@@ -47,12 +47,18 @@ jobs:
           export CC=$(which clang)
           export CXX=$(which clang++)
           cmake --workflow --preset ci-workflow-coverage
-      - name: Generate LCOV Report
+      - name: Run Tests and Generate Raw Profile Data
+        run: ./build/bin/Debug/LumiTests
+
+      - name: Generate LCOV Report using LLVM tools
         run: |
-          lcov --capture --directory ./build --output-file coverage.info \
-          --rc geninfo_exclude="^.*/_deps/*|^.*/tests/*|^/usr/*" \
-          --rc geninfo_unexecuted_blocks=1 \
-          --ignore-errors mismatch
+          llvm-profdata merge -sparse default.profraw -o default.profdata
+
+          llvm-cov export -format=lcov \
+            -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*" \
+            ./build/bin/Debug/LumiTests \
+            -instr-profile=default.profdata \
+            > coverage.info
       - name: Generate Cobertura XML Report
         run: |
           gcovr --xml --output coverage.xml coverage.info
