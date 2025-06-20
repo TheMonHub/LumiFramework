@@ -32,7 +32,7 @@ jobs:
 
       - name: Generate compilation database
         run: |
-          cmake -S . -B build /
+          cmake -S . -B build \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DLUMI_BUILD_TESTS=ON \
           -DLUMI_BUILD_EXAMPLES=ON \
