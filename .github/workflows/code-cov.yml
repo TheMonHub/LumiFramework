@@ -36,11 +36,6 @@ jobs:
           version: 1.0
           execute_install_scripts: true
 
-      - name: Setup Clang Environment
-        run: |
-          export CC=$(which clang)
-          export CXX=$(which clang++)
-
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
         with:
@@ -48,7 +43,10 @@ jobs:
           ninjaVersion: latest
 
       - name: Build CMake Coverage Tests
-        run: cmake --workflow --preset ci-workflow-coverage
+        run: |
+          export CC=$(which clang)
+          export CXX=$(which clang++)
+          cmake --workflow --preset ci-workflow-coverage
       - name: Generate LCOV Report
         run: |
           lcov --capture --directory ./build --output-file coverage.info \
