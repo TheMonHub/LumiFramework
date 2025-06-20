@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format clang-tidy
+          packages: clang-format clang-tidy build-essential
 
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
