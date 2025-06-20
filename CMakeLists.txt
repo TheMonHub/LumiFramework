@@ -1,6 +1,6 @@
 # lumi Framework - A modular C++ framework for cross-platform desktop applications
-# Copyright (c) 2025 TheMonHub
-# Licensed under zlib License
+# Copyright (c) 2025.
+# Distributed under the Boost Software License, Version 1.0
 
 #-----------------------------------------------------------------------------
 # Build & Installation Guide
@@ -75,7 +75,7 @@ elseif ("${VERSION_TAG}" STREQUAL "")
     message(WARNING "VERSION_TAG is empty. Please set it to 'alpha', 'beta', 'rc', 'dev', or 'release'. Defaulting to empty tag.")
     set(LUMI_VERSION_TAG "")
 else ()
-    message(FATAL_ERROR "Unknown VERSION_TAG '${VERSION_TAG}'. Expected 'alpha', 'beta', 'rc', 'dev', or 'release'.")
+    message(WARNING "Unknown VERSION_TAG '${VERSION_TAG}'. Expected 'alpha', 'beta', 'rc', 'dev', or 'release'.")
     set(LUMI_VERSION_TAG "")
 endif ()
 
@@ -122,11 +122,15 @@ set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME}/${PROJECT_VERSION_MAJOR}.${PROJECT_VE
 # core configuration
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set_if_undefined(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Configure symbol visibility
-set_if_undefined(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
+# scan for C++20 modules
+set(CXX_SCAN_FOR_MODULES ON)
+cmake_policy(SET CMP0155 NEW)
 
 #-----------------------------------------------------------------------------
 # Developer Build Output Configuration

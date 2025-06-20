@@ -17,28 +17,28 @@ set(Lumi_PATCH_VERSION @PROJECT_VERSION_PATCH@)
 get_filename_component(Lumi_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" DIRECTORY)
 get_filename_component(Lumi_INSTALL_PREFIX "${Lumi_CMAKE_DIR}/../../.." ABSOLUTE)
 
-# Initialize variables for consumers.
-set(Lumi_LIBRARIES "") # Holds the default target alias (e.g., Lumi::LumiShared, Lumi::LumiStatic)
+# Initialize variables for consumers
+set(Lumi_LIBRARIES "")
 
-# Set the base include directory for all Lumi headers.
-set(Lumi_INCLUDE_DIRS "${Lumi_INSTALL_PREFIX}/@CMAKE_INSTALL_INCLUDEDIR@/@LUMI_VERSIONED_SUBDIR@")
+# Set the base modules directory
+set(Lumi_MODULES_DIR "${Lumi_INSTALL_PREFIX}/@CMAKE_INSTALL_LIBDIR@/cmake/@LUMI_VERSIONED_SUBDIR@/modules")
 
-set(Lumi_DEFINITIONS "") # Initialize compile definitions
+set(Lumi_DEFINITIONS "")
 
 # --- Main logic to find and configure Lumi ---
 
-# Include the generated targets file. This makes Lumi::LumiShared, Lumi::LumiStatic, Lumi::LumiStaticCore etc. available.
+# Include the generated targets file
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
 
-    set(Lumi_FOUND TRUE) # At least the targets file was found
+    set(Lumi_FOUND TRUE)
 
     # Helper variable to store the chosen default target
     set(_lumi_chosen_default_target "")
 
-    # Priority for setting Lumi_LIBRARIES and Lumi_DEFINITIONS:
-    # 1. Monolithic Static (Lumi::LumiStatic) - if it exists.
-    # 2. No aggregate target, user must link individual components.
+    # Priority for setting Lumi_LIBRARIES:
+    # 1. Monolithic Static (Lumi::LumiStatic) - if it exists
+    # 2. No aggregate target, user must link individual components
 
     if (TARGET Lumi::LumiStatic)
         set(_lumi_chosen_default_target Lumi::LumiStatic)
@@ -48,22 +48,35 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/lumi-targets.cmake")
         set(Lumi_LIBRARIES "${_lumi_chosen_default_target}")
         get_target_property(Lumi_DEFINITIONS "${_lumi_chosen_default_target}" INTERFACE_COMPILE_DEFINITIONS)
         message(STATUS "-- Found Lumi framework (version ${Lumi_VERSION}). Default target: ${_lumi_chosen_default_target}")
+
+        # Set up module path for consuming projects
+        get_target_property(_lumi_module_files "${_lumi_chosen_default_target}" INTERFACE_SOURCES)
+        if(_lumi_module_files)
+            list(APPEND CMAKE_MODULE_PATH "${Lumi_MODULES_DIR}")
+        endif()
     else()
-        # No aggregate target found (e.g., only individual component targets like Lumi::LumiStaticCore were built/installed)
-        message(STATUS [[Found Lumi framework targets (version ${Lumi_VERSION}). No aggregate Lumi target (Lumi::LumiStatic and etc.) found.
+        message(STATUS [[Found Lumi framework targets (version ${Lumi_VERSION}). No aggregate Lumi target (Lumi::LumiStatic) found.
 Please link specific components (e.g., Lumi::LumiStaticCore, Lumi::LumiStaticWindow).]])
 
         # Fallback for definitions from a common component if no aggregate target is available
         if (TARGET Lumi::LumiStaticCore)
             get_target_property(Lumi_DEFINITIONS Lumi::LumiStaticCore INTERFACE_COMPILE_DEFINITIONS)
+            get_target_property(_lumi_module_files Lumi::LumiStaticCore INTERFACE_SOURCES)
+            if(_lumi_module_files)
+                list(APPEND CMAKE_MODULE_PATH "${Lumi_MODULES_DIR}")
+            endif()
         endif()
     endif()
 
 else()
-    # If lumi-targets.cmake isn't found at all, then Lumi truly isn't installed.
     set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "lumi-targets.cmake not found. Lumi may not have been installed or built correctly.")
     set(Lumi_FOUND FALSE)
 endif()
 
-# Mark variables as advanced so they don't clutter the CMake GUI by default
-mark_as_advanced(Lumi_FOUND Lumi_INCLUDE_DIRS Lumi_LIBRARIES Lumi_DEFINITIONS)
+# Mark variables as advanced
+mark_as_advanced(
+    Lumi_FOUND
+    Lumi_LIBRARIES
+    Lumi_DEFINITIONS
+    Lumi_MODULES_DIR
+)

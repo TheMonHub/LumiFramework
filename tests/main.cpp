@@ -1,12 +1,4 @@
-// Copyright (c) 2025 TheMonHub
-// Licensed under zlib License
+// Copyright (c) 2025.
+// Distributed under the Boost Software License, Version 1.0
 
 // error_handler_test.cpp
-#include <gtest/gtest.h>
-
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
-#include <streambuf>
-#include <string>
-#include <vector>

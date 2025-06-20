@@ -1,8 +1,12 @@
+// Copyright (c) 2025.
+// Distributed under the Boost Software License, Version 1.0
+
 //
 // Created by Mono on 1/6/2025.
 //
-
-import <string_view>;
+module;
+# include <string_view>
+# include <sys/types.h>
 
 export module lumi.core:metadata;
 
@@ -10,12 +14,12 @@ export namespace lumi::info {
 // Version information
 inline constexpr std::string_view kVersionFull = "@PROJECT_VERSION@";
 inline constexpr std::string_view kVersion = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
-inline constexpr std::string_view kVersionTa = "@VERSION_TAG@";
+inline constexpr std::string_view kVersionTag = "@VERSION_TAG@";
 
-inline constexpr struct {
-  unsigned int major_ = @PROJECT_VERSION_MAJOR@;
-  unsigned int minor_ = @PROJECT_VERSION_MINOR@;
-  unsigned int patch_ = @PROJECT_VERSION_PATCH@;
+inline constexpr struct KVersionNumbers {
+  uint major_ = @PROJECT_VERSION_MAJOR@;
+  uint minor_ = @PROJECT_VERSION_MINOR@;
+  uint patch_ = @PROJECT_VERSION_PATCH@;
 } kVersionNumbers;
 
 // Project information
@@ -26,4 +30,6 @@ inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@
 
 // License information
 inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@";
+
+inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@";
 }

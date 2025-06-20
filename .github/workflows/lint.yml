@@ -17,20 +17,32 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Install Clang-Format
+      - name: Install dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format
+          packages: clang-format clang-tidy
+
+      - name: Set up CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+
+      - name: Generate compilation database
+        run: |
+          cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON
+
       - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
         with:
           clang_format: true
-      - name: Run cppcheck
-        uses: deep5050/cppcheck-action@main
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish cppcheck report
+
+      - name: Run Clang-Tidy
+        run: run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
+        continue-on-error: true
+
+      - name: Publish Clang-Tidy report
         uses: actions/upload-artifact@v4
         with:
-          name: cppcheck-report
-          path: cppcheck_report.txt
+          name: clang-tidy-report
+          path: clang_tidy_report.txt

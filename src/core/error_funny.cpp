@@ -1,18 +1,17 @@
-// Copyright (c) 2025 TheMonHub
-// Licensed under zlib License
+// Copyright (c) 2025.
+// Distributed under the Boost Software License, Version 1.0
 
 //
 // Created by Mono on 10/6/2025.
 //
-
-#include "lumi/core/error_funny.h"
-
-
-#include "lumi/core/error_handler.h"
+module;
+#include <vector>
+#include <string_view>
+module lumi.core;
 
 namespace lumi::error_handler {
-const std::vector<std::string>& GetLumiFunnyErrorMessages() {
-  static const std::vector<std::string> kMessages = {
+std::vector<std::string_view> GetLumiFunnyErrorMessages() {
+  static std::vector<std::string_view> const kMessages = {
       "lumi's brain just did a cartwheel and landed funny. Try again?",
       "Uh oh, lumi just got the digital hiccups. Excuse us!",
       "Looks like lumi tried to divide by zero and ended up in another "
@@ -205,7 +204,7 @@ const std::vector<std::string>& GetLumiFunnyErrorMessages() {
       "This message is a potato.",
       "Why did nobody told me to use hot water on tea??",
       "Coffee is for loser.",
-      "HELIKOPTER HELIKOPTER!!",
+      "KABOOM! There goes my sanity.",
       "Asking digital gnome god for advices.",
       "I'm actually a virus. Don't tell anyone.",
       "I feel no pain, Can you say the same?",
@@ -231,7 +230,6 @@ const std::vector<std::string>& GetLumiFunnyErrorMessages() {
       "Access denied. By me.",
       "I told you to never strap a buttered bread to a cat! The buttered cat "
       "paradox!",
-      "Skibidi toilet is overated.",
       "He could be in this very room! He could be you. He could be me! He "
       "could "
       "even be-",
@@ -253,14 +251,13 @@ const std::vector<std::string>& GetLumiFunnyErrorMessages() {
       "Error: Failed to fetch the user's patience. Retrying...",
       "Oh no...",
       "HehHehHeh I'm the great Papy-!",
+      "Stackoverflow could help you, but it won't.",
       "lumi's health bar is critically low. Time for a health pack (and some "
       "code fixes)."};
   return kMessages;
 }
 
 void LumiRegisterDefaultFunnyMessages() {
-  LumiRegisterLogMessages(GetLumiFunnyErrorMessages());
-  LumiLog("Default funny error messages registered.", LOG_CODE::SUCCESS,
-          LOG_SEVERITY::INFO);
+  // placeholder, wait for the error handler to be implemented.
 }
 }  // namespace lumi::error_handler
