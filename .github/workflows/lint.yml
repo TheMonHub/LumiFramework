@@ -1,4 +1,4 @@
-name: Lint
+Name: Lint
 
 on:
   push:
@@ -17,12 +17,16 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install latest Clang/LLVM
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh all
+
+      - name: Install build essentials and other dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format clang-tidy build-essential software-properties-common
-      - name: Install GCC
-        uses: egor-tensin/setup-gcc@v1.3
+          packages: build-essential software-properties-common
 
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
@@ -32,15 +36,9 @@ jobs:
 
       - name: Generate compilation database
         run: |
-          cmake -S . -B build \
-          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-          -DLUMI_BUILD_TESTS=ON \
-          -DLUMI_BUILD_EXAMPLES=ON \
-          -DLUMI_BUILD_ALL=ON \
-          -DLUMI_BUILD_DOCS=OFF \
-          -G Ninja \
-          -DCMAKE_C_COMPILER=/usr/bin/gcc-14 \
-          -DCMAKE_CXX_COMPILER=/usr/bin/g++-14
+          export CC=$(which clang)
+          export CXX=$(which clang++)
+          cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -DLUMI_BUILD_DOCS=OFF -G Ninja
 
       - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
@@ -48,7 +46,13 @@ jobs:
           clang_format: true
 
       - name: Run Clang-Tidy
-        run: run-clang-tidy '^(?!.*[\\/]_deps[\\/])' -p build
+        run: |
+          LATEST_CLANG_TIDY=$(ls /usr/bin/ | grep -oP 'clang-tidy-\K\d+' | sort -V | tail -n 1)
+          if [ -z "$LATEST_CLANG_TIDY" ]; then
+              echo "Could not find a clang-tidy installation. Exiting."
+              exit 1
+          fi
+          /usr/bin/clang-tidy-$LATEST_CLANG_TIDY '^(?!.*[\\/]_deps[\\/])' -p build --extra-arg='-Wno-unknown-warning-option'
         continue-on-error: true
 
       - name: Publish Clang-Tidy report
