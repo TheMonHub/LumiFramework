@@ -129,8 +129,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 # scan for C++20 modules
-set(CXX_SCAN_FOR_MODULES ON)
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 cmake_policy(SET CMP0155 NEW)
 
 #-----------------------------------------------------------------------------
