@@ -16,40 +16,17 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-
-      - name: Install latest Clang/LLVM
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh all
-
-      - name: Install build essentials and other dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
+      - uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          packages: build-essential software-properties-common
-
-      - name: Set up CMake and Ninja
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: latest
-          ninjaVersion: latest
-
-      - name: Setup Clang Environment
-        run: |
-          export CC=$(which clang)
-          export CXX=$(which clang++)
-      - name: Run Clang-Format
-        uses: jidicula/clang-format-action@v4.15.0
-        with:
-          clang-format-version: '20'
-          exclude-regex: '.*[/\\]_deps[/\\]?.*'
-        continue-on-error: true
-      - name: Run Clang-tidy
-        uses: HorstBaerbel/action-clang-tidy@1.2
-        with:
-          scandir: '.'
-          builddir: 'build'
-          excludedirs: '^(?!.*[\\/]_deps[\\/])'
-          extensions: 'cppm,cpp,h'
-          cmakeoptions: '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -G Ninja'
-        continue-on-error: true
+          style: 'file'
+          tidy-checks: ''
+          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,cppm'
+          version: '20'
+          ignore: '*/_deps/*'
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+      - name: Fail fast?!
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1
