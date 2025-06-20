@@ -52,7 +52,7 @@ jobs:
               echo "Could not find a clang-tidy installation. Exiting."
               exit 1
           fi
-          /usr/bin/clang-tidy-$LATEST_CLANG_TIDY '^(?!.*[\\/]_deps[\\/])' -p build --extra-arg='-Wno-unknown-warning-option'
+          /usr/bin/clang-tidy-$LATEST_CLANG_TIDY '^(?!.*[\\/]_deps[\\/])' -p build
         continue-on-error: true
 
       - name: Publish Clang-Tidy report
