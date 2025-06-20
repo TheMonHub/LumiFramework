@@ -30,7 +30,7 @@ jobs:
 
       - name: Generate compilation database
         run: |
-          cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -DLUMI_BUILD_DOC=OFF
+          cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLUMI_BUILD_TESTS=ON -DLUMI_BUILD_EXAMPLES=ON -DLUMI_BUILD_ALL=ON -DLUMI_BUILD_DOCS=OFF
 
       - name: Run Clang-Format
         uses: wearerequired/lint-action@v2
