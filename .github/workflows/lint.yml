@@ -18,9 +18,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
+        run: sudo add-apt-repository universe
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: clang-format clang-tidy build-essential
+          packages: clang-format clang-tidy build-essential software-properties-common gcc-14
 
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
