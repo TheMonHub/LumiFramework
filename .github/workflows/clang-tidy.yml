@@ -35,7 +35,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Automated: Run clang-tidy fixes"
-          file_pattern: '*.cpp *.hpp *.h *.cc *.cxx'
+          file_pattern: '*.cpp *.h *.cppm'
 
       - name: Upload Clang-Tidy Report
         if: always()
