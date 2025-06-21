@@ -3,6 +3,4 @@
 
 #include "gtest/gtest.h"
 
-TEST(PlaceholderTest, MinimalPass) {
-    ASSERT_TRUE(true);
-}
+TEST(PlaceholderTest, MinimalPass) { ASSERT_TRUE(true); }
