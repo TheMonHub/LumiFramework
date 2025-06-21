@@ -57,20 +57,19 @@ jobs:
       - name: Generate LCOV Report using LLVM tools (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          llvm-profdata merge -sparse build/tests/default.profraw -o build/default.profdata
+          cd build
+          llvm-profdata merge -sparse tests/default.profraw -o default.profdata
           llvm-cov export -format=lcov \
             -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" \
-            ./build/bin/Debug/LumiTests \
-            -instr-profile=build/default.profdata \
+            ./bin/Debug/LumiTests \
+            -instr-profile=default.profdata \
             > coverage.info
 
       - name: Generate LCOV Report using LLVM tools (Windows)
         if: runner.os == 'Windows'
         run: |
           cd build
-          Get-ChildItem -Path tests -Recurse
           llvm-profdata merge -sparse tests\default.profraw -o default.profdata
-          ls
           llvm-cov export -format=lcov `
             -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" `
             "./bin/Debug/LumiTests.exe" `
@@ -81,7 +80,7 @@ jobs:
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ${{ github.workspace }}/coverage.info
+          files: ${{ github.workspace }}/build/coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
@@ -89,7 +88,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
-          files: ./build/test-results.xml
+          files: ${{ github.workspace }}/build/test-results.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           
       - name: Upload Artifacts (Binaries)
@@ -107,5 +106,5 @@ jobs:
         with:
           name: lumi-reports-${{ matrix.os }}
           path: |
-            coverage.info
+            build/coverage.info
             build/test-results.xml
