@@ -11,28 +11,34 @@ on:
       - develop
 
 permissions:
-  pull-requests: write
   contents: read
 
 jobs:
   build-and-test-coverage:
-    name : Test Coverage
+    name: Test Coverage
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install latest Clang/LLVM
+      - name: Install latest Clang/LLVM and set PATH
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh all
+          LLVM_BIN_PATH=$(find /usr/lib/llvm -maxdepth 2 -name "bin" | sort -r | head -n 1)
+          if [ -z "$LLVM_BIN_PATH" ]; then
+              echo "Error: LLVM bin directory not found!"
+              exit 1
+          fi
+          echo "Found LLVM binaries at: $LLVM_BIN_PATH"
+          echo "::add-path::$LLVM_BIN_PATH"
 
       - name: Install Build Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: build-essential software-properties-common lcov gcovr
+          packages: build-essential software-properties-common lcov
           version: 1.0
           execute_install_scripts: true
 
@@ -42,54 +48,48 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
 
-      - name: Build CMake Coverage Tests
+      - name: Run CMake Workflow for Coverage
         run: |
-          export CC=$(which clang)
-          export CXX=$(which clang++)
+          export CC=clang
+          export CXX=clang++
           cmake --workflow --preset ci-workflow-coverage
-      - name: Run Tests and Generate Raw Profile Data
-        run: ./build/bin/Debug/LumiTests
 
       - name: Generate LCOV Report using LLVM tools
         run: |
           llvm-profdata merge -sparse default.profraw -o default.profdata
-
           llvm-cov export -format=lcov \
             -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*" \
             ./build/bin/Debug/LumiTests \
             -instr-profile=default.profdata \
             > coverage.info
-      - name: Generate Cobertura XML Report
-        run: |
-          gcovr --xml --output coverage.xml coverage.info
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ${{github.workspace}}/coverage.xml
+          files: ${{ github.workspace }}/coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
-          plugins: noop
-      - name: Upload test results to Codecov
+
+      - name: Upload Test Results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
+          files: ./build/test-results.xml
           token: ${{ secrets.CODECOV_TOKEN }}
+          
       - name: Upload Artifacts (Binaries)
         uses: actions/upload-artifact@v4
         with:
           name: lumi-binaries
           path: |
             build/bin/Debug/LumiTests
-            
             build/lib/Debug/*.a
             build/lib/Debug/*.lib
+
       - name: Upload Artifacts (Reports)
         uses: actions/upload-artifact@v4
         with:
           name: lumi-reports
           path: |
-            coverage.xml
             coverage.info
-            coverage-filtered.info
             build/test-results.xml
