@@ -46,6 +46,7 @@ jobs:
         if: matrix.compiler == 'gcc'
         run: sudo add-apt-repository universe
       - name: Set up Build Environment
+        if: matrix.apt_packages != ''
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: ${{ matrix.apt_packages }}
@@ -57,7 +58,14 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
       - name: Run Tests
+        if: matrix.compiler == 'clang'
         run: |
+          cmake --workflow --preset=ci-workflow-tests
+      - name: Run Tests (GCC)
+        if: matrix.compiler == 'gcc'
+        run: |
+          export CC=$(which gcc-14)
+          export CXX=$(which g++-15)
           cmake --workflow --preset=ci-workflow-tests
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
