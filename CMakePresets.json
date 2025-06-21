@@ -40,6 +40,8 @@
       "description": "Configures for building and testing Lumi with coverage instrumentation.",
       "inherits": "ci-tests",
       "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_CXX_FLAGS": "-fprofile-instr-generate -fcoverage-mapping",
         "CMAKE_C_FLAGS": "-fprofile-instr-generate -fcoverage-mapping"
       }
