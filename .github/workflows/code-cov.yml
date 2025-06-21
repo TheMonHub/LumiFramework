@@ -68,7 +68,9 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           cd build
+          Get-ChildItem -Path tests -Recurse
           llvm-profdata merge -sparse tests\default.profraw -o default.profdata
+          ls
           llvm-cov export -format=lcov -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" ./bin/Debug/LumiTests.exe -instr-profile=./default.profdata > coverage.info
         shell: pwsh
 
