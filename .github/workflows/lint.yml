@@ -23,7 +23,6 @@ jobs:
         with:
           style: 'file'
           tidy-checks: ''
-          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,cppm'
           version: '20'
           ignore: '*/_deps/*'
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
