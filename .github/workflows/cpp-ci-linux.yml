@@ -66,7 +66,7 @@ jobs:
         run: |
           echo "Configuring build"
           which gcc-14
-          which g++-15
+          which g++-14
           cmake -D CMAKE_C_COMPILER=$(which gcc-14) \
             -D CMAKE_CXX_COMPILER=$(which g++-15) \
             --preset=ci-tests
