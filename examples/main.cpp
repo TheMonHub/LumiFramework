@@ -4,6 +4,7 @@
 #include "main.h"
 
 #include <iostream>
+
 import lumi.core;
 
 int main() {
@@ -17,5 +18,5 @@ int main() {
             << "Copyright holder: " << lumi::info::GetFrameworkCopyrightHolder()
             << "\n"
             << "License: " << lumi::info::GetFrameworkLicense() << "\n"
-            << lumi::info::GetFrameworkLicenseText() << std::endl;
+            << lumi::info::GetFrameworkLicenseText() << "\n";
 }

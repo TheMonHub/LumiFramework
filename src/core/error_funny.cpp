@@ -11,7 +11,7 @@ module lumi.core;
 
 namespace lumi::error_handler {
 std::vector<std::string_view> GetLumiFunnyErrorMessages() {
-  static std::vector<std::string_view> const kMessages = {
+  static const std::vector<std::string_view> kMessages = {
       "lumi's brain just did a cartwheel and landed funny. Try again?",
       "Uh oh, lumi just got the digital hiccups. Excuse us!",
       "Looks like lumi tried to divide by zero and ended up in another "
