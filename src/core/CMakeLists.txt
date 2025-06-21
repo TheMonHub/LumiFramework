@@ -4,8 +4,8 @@
 message(STATUS "Configuring Lumi Core...")
 
 #-----------------------------------------------------------------------------
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/include/lumi/metadata.h")
-    message(FATAL_ERROR "Metadata header file not found.")
+if (NOT EXISTS "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm")
+    message(FATAL_ERROR "Metadata interface file not found.")
 endif ()
 #-----------------------------------------------------------------------------
 set(LUMI_CORE_IMPLEMENTATION_SOURCES
