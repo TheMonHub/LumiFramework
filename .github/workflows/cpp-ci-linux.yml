@@ -21,7 +21,7 @@ jobs:
             build_type: Debug
             compiler: gcc
             coverage: true
-            apt_packages: "gcc-14 g++-15"
+            apt_packages: "gcc-14"
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}-${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}
@@ -52,6 +52,11 @@ jobs:
           packages: ${{ matrix.apt_packages }}
           version: 1.0
           execute_install_scripts: true
+      - name: Install G++
+        if: matrix.compiler == 'gcc'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-15
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
         with:
