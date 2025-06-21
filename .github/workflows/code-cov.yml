@@ -57,7 +57,7 @@ jobs:
       - name: Generate LCOV Report using LLVM tools (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          llvm-profdata merge -sparse build/default.profraw -o build/default.profdata
+          llvm-profdata merge -sparse build/tests/default.profraw -o build/default.profdata
           llvm-cov export -format=lcov \
             -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" \
             ./build/bin/Debug/LumiTests \
@@ -68,8 +68,8 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           Get-ChildItem -Path build -Recurse
-          llvm-profdata merge -sparse build/default.profraw -o build/default.profdata
-          llvm-cov export -format=lcov -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" ./build/bin/Debug/LumiTests -instr-profile=build/default.profdata > coverage.info
+          llvm-profdata merge -sparse build\test\default.profraw -o build\default.profdata
+          llvm-cov export -format=lcov -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" ./build/bin/Debug/LumiTests.exe -instr-profile=build/default.profdata > coverage.info
         shell: pwsh
 
       - name: Upload Coverage Report to Codecov
