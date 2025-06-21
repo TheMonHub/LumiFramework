@@ -16,16 +16,19 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-      - uses: cpp-linter/cpp-linter-action@v2
-        id: linter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v2
         with:
-          style: 'file'
-          tidy-checks: ''
-          version: '20'
-          ignore: '*/_deps/*'
-          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
-      - name: Fail fast?!
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1
+         version: "19"
+         env: true
+      - name: Set up CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+      - name: Run Linters
+        run: |
+          echo "Running clang-format..."
+          ./clang-format.sh
+          echo "Running clang-tidy..."
+          ./clang-tidy.sh
