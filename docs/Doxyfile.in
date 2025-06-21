@@ -34,8 +34,9 @@ SORT_MEMBER_DOCS       = NO
 #---------------------------------------------------------------------------
 # Input
 #---------------------------------------------------------------------------
-INPUT                  = "@LUMI_SOURCE_DIR@/src"
-FILE_PATTERNS          = *.ixx \
+INPUT                  = "@LUMI_SOURCE_DIR@/src" \
+                        "@LUMI_SOURCE_DIR@/include"
+FILE_PATTERNS          = *.cpp \
                         *.cppm
 RECURSIVE              = YES
 EXCLUDE_PATTERNS       =

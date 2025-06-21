@@ -4,15 +4,14 @@
 //
 // Created by Mono on 18/6/2025.
 //
-
 module;
 
 #include <cstdint>
 #include <string_view>
 
 module lumi.core;
-
 import :metadata;
+
 namespace lumi::info {
 std::string_view GetVersion(const bool include_tag) noexcept {
   return include_tag ? kVersionFull : kVersion;
@@ -45,28 +44,22 @@ uint8_t GetVersionReleaseCandidate() noexcept {
   return kVersionReleaseCandidate;
 }
 
-// ReSharper disable once CppDFAConstantFunctionResult
 BUILD_TYPE GetBuildType() noexcept {
   if constexpr (kBuildType == "Debug") {
-    // ReSharper disable once CppDFAUnreachableCode
     return BUILD_TYPE::K_DEBUG;
   } else if constexpr (kBuildType == "Release") {
-    // ReSharper disable once CppDFAUnreachableCode
     return BUILD_TYPE::K_RELEASE;
   } else if constexpr (kBuildType == "RelWithDebInfo") {
     return BUILD_TYPE::K_REL_WITH_DEB_INFO;
-    // ReSharper disable once CppDFAUnreachableCode
   } else if constexpr (kBuildType == "MinSizeRel") {
     return BUILD_TYPE::K_MINSIZEREL;
   }
   return BUILD_TYPE::K_UNKNOWN;
 }
-// ReSharper disable once CppDFAConstantFunctionResult
+
 bool IsDebugMode() noexcept {
-  // ReSharper disable once CppDFAConstantConditions
   if (const auto k_build_type_enum = GetBuildType();
       k_build_type_enum == BUILD_TYPE::K_DEBUG ||
-      // ReSharper disable once CppDFAConstantConditions
       k_build_type_enum == BUILD_TYPE::K_REL_WITH_DEB_INFO) {
     return true;
   }

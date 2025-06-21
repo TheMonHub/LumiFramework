@@ -91,7 +91,11 @@ else ()
 endif ()
 
 # Set lumi version based on the project version and tag
-set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
+if (${LUMI_RELEASE_CANDIDATE_VERSION} EQUAL 0)
+    set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}")
+else ()
+    set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
+endif ()
 
 # Required CMake modules
 include(FetchContent)
@@ -189,7 +193,6 @@ endif ()
 
 if (LUMI_BUILD_DOCS)
     find_package(Doxygen REQUIRED)
-    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}, version ${DOXYGEN_VERSION}")
     if (${DOXYGEN_VERSION} VERSION_LESS "1.10.0")
         message(WARNING "Doxygen version 1.10.0 or higher is required for Lumi documentation. Skipping documentation generation.")
         set(LUMI_BUILD_DOCS OFF CACHE BOOL "Disable Lumi documentation build" FORCE)
@@ -216,7 +219,7 @@ endif ()
 set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
 # --- GLOBAL METADATA HEADER GENERATION ---
-# metadata.cppm.in template should be at lumi/src/core/metadata.cppm.in
+# metadata.h.in template should be at lumi/src/core/metadata.h.in
 set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/lumi/metadata.cppm.in")
 set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm") # Output to include/lumi/metadata.h
 configure_file(
@@ -232,6 +235,7 @@ set(LUMI_COMMON_EXPORT_SET "LumiFrameworkTargets")
 
 # Collect all source files and public interfaces
 set(LUMI_ALL_SOURCES "")
+set(LUMI_ALL_PUBLIC_HEADERS "")
 set(LUMI_ALL_PUBLIC_INTERFACES "")
 
 # Global property to accumulate static library targets
@@ -255,6 +259,7 @@ get_property(LUMI_STATIC_LIB_TARGETS_LIST GLOBAL PROPERTY LUMI_STATIC_LIB_TARGET
 
 # Print accumulated sources, interfaces, and dependencies
 message(STATUS "Lumi sources: ${LUMI_ALL_SOURCES}")
+message(STATUS "Lumi public headers: ${LUMI_ALL_PUBLIC_HEADERS}")
 message(STATUS "Lumi interfaces: ${LUMI_ALL_PUBLIC_INTERFACES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 

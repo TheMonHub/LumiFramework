@@ -14,7 +14,7 @@ export namespace lumi::info {
 // Version information
 inline constexpr std::string_view kVersionFull = "@PROJECT_VERSION@";
 inline constexpr std::string_view kVersion = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
-inline constexpr std::string_view kVersionTag = "@VERSION_TAG@";
+inline constexpr std::string_view kVersionTag = "@VERSION_TAG@"; // NOLINT
 inline constexpr uint8_t kVersionReleaseCandidate = @LUMI_RELEASE_CANDIDATE_VERSION@;
 
 inline constexpr struct KVersionNumbers {
@@ -25,12 +25,12 @@ inline constexpr struct KVersionNumbers {
 
 // Project information
 inline constexpr std::string_view kProjectName = "@PROJECT_NAME@";
-inline constexpr std::string_view kProjectDescription = "@PROJECT_DESCRIPTION@";
-inline constexpr std::string_view kProjectHomepage = "@PROJECT_HOMEPAGE_URL@";
-inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@";
+inline constexpr std::string_view kProjectDescription = "@PROJECT_DESCRIPTION@"; // NOLINT
+inline constexpr std::string_view kProjectHomepage = "@PROJECT_HOMEPAGE_URL@"; // NOLINT
+inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@"; // NOLINT
 
 // License information
-inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@";
+inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@"; // NOLINT
 
-inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@";
-}
+inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@"; // NOLINT
+}  // namespace lumi::info

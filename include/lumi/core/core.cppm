@@ -4,6 +4,7 @@
 //
 // Created by Mono on 18/6/2025.
 //
+module;
 export module lumi.core;
-export import :metadata;
 export import :info;
+export import :metadata;
