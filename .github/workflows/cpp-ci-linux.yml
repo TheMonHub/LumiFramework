@@ -64,9 +64,14 @@ jobs:
       - name: Run Tests (GCC)
         if: matrix.compiler == 'gcc'
         run: |
+          echo "Configuring build"
           cmake -D CMAKE_C_COMPILER=$(which gcc-14) \
             -D CMAKE_CXX_COMPILER=$(which g++-15) \
-            --workflow --preset=ci-workflow-tests
+            --preset=ci-tests
+          echo "Building tests"
+          cmake --build build --config Debug
+          echo "Running tests"
+          ctest --test-dir build --output-on-failure --timeout 60 --verbose
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
