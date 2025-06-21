@@ -124,7 +124,8 @@
         "verbosity": "verbose"
       },
       "environment": {
-        "GTEST_OUTPUT": "xml:${sourceDir}/build/test-results.xml"
+        "GTEST_OUTPUT": "xml:${sourceDir}/build/test-results.xml",
+        "LLVM_PROFILE_FILE": "${sourceDir}/build/default.profraw"
       }
     }
   ],
