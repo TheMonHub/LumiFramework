@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 project(
         LumiExamples
         LANGUAGES CXX
@@ -10,7 +10,6 @@ add_executable(LumiExamples
 target_include_directories(LumiExamples
         PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "${LUMI_SOURCE_DIR}/include"
 )
 target_link_libraries(LumiExamples
         PRIVATE

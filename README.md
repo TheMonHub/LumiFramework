@@ -9,7 +9,7 @@ LumiFramework is a C++ library designed to make building cross-platform desktop 
 
 * **Flexible Control:** Lumi gives you the best of both worlds. You can dive deep and control low-level details, or use its built-in features like the **application loop** and **event handling** for quicker development.
 * **A Library That Acts Like a Framework:** While it's a library, Lumi provides many components you'd expect from a full framework. You're free to use as much or as little of it as your project needs, fitting seamlessly into your existing C++ setup.
-* **Ready-Made Foundation:** It handles the tricky parts of cross-platform development, like **window management, input, and graphics**, by integrating reliable libraries like GLFW. This means you don't have to research and set these up yourself.
+* **Ready-Made Foundation:** It handles the tricky parts of cross-platform development, like **window management, input, and graphics**. 
 * **Highly Modular:** Lumi is built for flexibility. It is provided as a **static library**, and you can easily swap out its default parts, or integrate your own custom code and other third-party libraries. It adapts to **your application's architecture**, not the other way around.
 * **Built for C++ Developers:** Lumi understands what C++ developers need. It provides the essential scaffolding while keeping you in charge of your application's unique logic and features.
 
@@ -23,7 +23,7 @@ We want LumiFramework to become the **go-to foundation for C++ desktop developme
 
 ### License Information
 
-LumiFramework is distributed under the terms of the **zlib license**. This permissive open-source license allows you to use, modify, and distribute the software freely, even for commercial projects, with minimal restrictions.
+LumiFramework is distributed under the terms of the **BSL license**. This permissive open-source license allows you to use, modify, and distribute the software freely, even for commercial projects, with minimal restrictions.
 
 ---
 

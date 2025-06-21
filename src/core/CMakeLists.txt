@@ -4,46 +4,50 @@
 message(STATUS "Configuring Lumi Core...")
 
 #-----------------------------------------------------------------------------
-if (NOT EXISTS "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h")
-    message(FATAL_ERROR "Metadata header file not found.")
+if (NOT EXISTS "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm")
+    message(FATAL_ERROR "Metadata interface file not found.")
 endif ()
-
-# Define sources
-set(LUMI_CORE_SOURCES
-        "${LUMI_SOURCE_DIR}/src/core/core.cpp"
+#-----------------------------------------------------------------------------
+set(LUMI_CORE_IMPLEMENTATION_SOURCES
         "${LUMI_SOURCE_DIR}/src/core/info.cpp"
-)
-set(LUMI_CORE_SOURCES_ERROR
-        "${LUMI_SOURCE_DIR}/src/core/error_handler.cpp"
         "${LUMI_SOURCE_DIR}/src/core/error_funny.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/stacktrace.cpp"
 )
 
-# Define public headers
-set(LUMI_CORE_PUBLIC_HEADERS
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/Core.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/Info.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Metadata.h"
-)
-set(LUMI_CORE_PUBLIC_HEADERS_ERROR
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorHandler.h"
-        "${LUMI_SOURCE_DIR}/include/Lumi/Core/ErrorFunny.h"
+set(LUMI_CORE_PUBLIC_INTERFACES
+        "${LUMI_SOURCE_DIR}/include/lumi/core/core.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/info.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/stacktrace.cppm"
 )
 
-# Define dependencies
 set(LUMI_CORE_DEPENDENCIES
-        # Empty for now
-)
 
+)
 # IDE source organization
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
-source_group(TREE "${LUMI_SOURCE_DIR}/include/Lumi" FILES ${LUMI_CORE_PUBLIC_HEADERS})
+source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_CORE_PUBLIC_INTERFACES})
 
 #-----------------------------------------------------------------------------
 # Build Configuration
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
-    # Core library
-    add_library(LumiCore STATIC ${LUMI_CORE_SOURCES} ${LUMI_CORE_PUBLIC_HEADERS})
+    # core
+    add_library(LumiCore)
+
+    target_sources(LumiCore
+            PUBLIC
+            FILE_SET CXX_MODULES
+            BASE_DIRS
+                "${LUMI_SOURCE_DIR}/include/lumi/core"
+                "${CMAKE_BINARY_DIR}/include/lumi"
+            FILES
+                ${LUMI_GENERATED_METADATA_OUTPUT}
+                ${LUMI_CORE_PUBLIC_INTERFACES}
+            PRIVATE
+                ${LUMI_CORE_IMPLEMENTATION_SOURCES}
+    )
+
     add_library(Lumi::Core ALIAS LumiCore)
 
     target_link_libraries(
@@ -51,37 +55,16 @@ if (LUMI_BUILD_STATIC_LIBS)
             PUBLIC
             ${LUMI_CORE_DEPENDENCIES}
     )
-
-    configure_lumi_target(LumiCore
-            "${LUMI_CORE_PUBLIC_HEADERS}"
-            Core)
+    configure_lumi_target(
+            LumiCore
+            core)
 
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
 
-    # Error handling
-    add_library(LumiError STATIC ${LUMI_CORE_SOURCES_ERROR} ${LUMI_CORE_PUBLIC_HEADERS_ERROR})
-    add_library(Lumi::Error ALIAS LumiError)
-
-    target_link_libraries(
-            LumiError
-            PUBLIC
-            LumiCore
-            ${LUMI_CORE_DEPENDENCIES}
-    )
-
-    configure_lumi_target(LumiError
-            "${LUMI_CORE_PUBLIC_HEADERS_ERROR}"
-            Core)
-
-    set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiError)
+    list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_IMPLEMENTATION_SOURCES})
+    list(APPEND LUMI_ALL_PUBLIC_INTERFACES ${LUMI_CORE_PUBLIC_INTERFACES})
 endif ()
 
 # Push the data to the global scope
-list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_SOURCES_ERROR})
-list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_SOURCES})
 set(LUMI_ALL_SOURCES ${LUMI_ALL_SOURCES} PARENT_SCOPE)
-list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS_ERROR})
-list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS})
-set(LUMI_ALL_PUBLIC_HEADERS ${LUMI_ALL_PUBLIC_HEADERS} PARENT_SCOPE)
-list(APPEND LUMI_ALL_DEPENDENCIES ${LUMI_CORE_DEPENDENCIES})
-set(LUMI_ALL_DEPENDENCIES ${LUMI_ALL_DEPENDENCIES} PARENT_SCOPE)
+set(LUMI_ALL_PUBLIC_INTERFACES ${LUMI_ALL_PUBLIC_INTERFACES} PARENT_SCOPE)

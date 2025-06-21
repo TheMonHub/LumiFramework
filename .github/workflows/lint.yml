@@ -16,21 +16,17 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-
-      - name: Install Clang-Format
-        uses: awalsh128/cache-apt-pkgs-action@latest
+      - uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          packages: clang-format
-      - name: Run Clang-Format
-        uses: wearerequired/lint-action@v2
-        with:
-          clang_format: true
-      - name: Run cppcheck
-        uses: deep5050/cppcheck-action@main
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish cppcheck report
-        uses: actions/upload-artifact@v4
-        with:
-          name: cppcheck-report
-          path: cppcheck_report.txt
+          style: 'file'
+          tidy-checks: ''
+          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,cppm'
+          version: '20'
+          ignore: '*/_deps/*'
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+      - name: Fail fast?!
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1

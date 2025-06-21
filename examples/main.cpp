@@ -1,23 +1,21 @@
-// Copyright (c) 2025 TheMonHub
-// Licensed under zlib License
-
-//
-// Created by Mono on 31/5/2025.
-//
+// Copyright (c) 2025.
+// Distributed under the Boost Software License, Version 1.0
 
 #include "main.h"
 
-#include <Lumi/Core/ErrorFunny.h>
-#include <Lumi/Core/ErrorHandler.h>
-#include <Lumi/Core/Info.h>
 #include <iostream>
+import lumi.core;
 
 int main() {
-	Lumi::ErrorHandler::LUMI_SET_FUNNY_ERROR_BOOL(true);
-	Lumi::ErrorHandler::LUMI_SET_FATAL_SEVERITY(Lumi::ErrorHandler::LogSeverity::Warning);
-	Lumi::ErrorHandler::LUMI_REGISTER_DEFAULT_FUNNY_MESSAGES();
-	std::cout << "\n"
-			  << "Lumi Version: " << Lumi::Info::Version::GetVersionString(true) << "\n"
-			  << std::endl;
-	std::cout << Lumi::Info::License::GetLicenseString() << "\n" << std::endl;
+  lumi::info::GetVersion(true);
+  std::cout << "Lumi Framework Version: " << lumi::info::GetVersion(true)
+            << "\n"
+            << "Build Type: " << lumi::info::kBuildType << "\n"
+            << "Description: " << lumi::info::GetFrameworkDescription() << "\n"
+            << "Homepage: " << lumi::info::GetFrameworkHomepage() << "\n";
+  std::cout << "\n"
+            << "Copyright holder: " << lumi::info::GetFrameworkCopyrightHolder()
+            << "\n"
+            << "License: " << lumi::info::GetFrameworkLicense() << "\n"
+            << lumi::info::GetFrameworkLicenseText() << std::endl;
 }

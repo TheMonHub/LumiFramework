@@ -1,4 +1,4 @@
-name: Lumi CI Ubuntu Test
+name: lumi CI Ubuntu Test
 
 on:
   push:
@@ -16,12 +16,12 @@ jobs:
           - os: ubuntu-latest
             build_type: Debug
             compiler: clang
-            apt_packages: "clang lld llvm"
+            apt_packages: ""
           - os: ubuntu-latest
             build_type: Debug
             compiler: gcc
             coverage: true
-            apt_packages: "gcc g++ lcov"
+            apt_packages: "gcc-14 g++-14"
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}-${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}
@@ -36,10 +36,20 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: "Hello @{{ contributor }}! Thanks for opening your first issue in this repository. We appreciate your contribution!"
           pr-message: "Welcome, @{{ contributor }}! We're excited to see your first pull request. We'll review it shortly!"
+      - name: Install LLVM
+        if: matrix.compiler == 'clang'
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "19"
+          env: true
+      - name: Add universe repo
+        if: matrix.compiler == 'gcc'
+        run: sudo add-apt-repository universe
       - name: Set up Build Environment
+        if: matrix.apt_packages != ''
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: ${{ matrix.apt_packages }} libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          packages: ${{ matrix.apt_packages }}
           version: 1.0
           execute_install_scripts: true
       - name: Set up CMake and Ninja
@@ -48,8 +58,20 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
       - name: Run Tests
+        if: matrix.compiler == 'clang'
         run: |
           cmake --workflow --preset=ci-workflow-tests
+      - name: Run Tests (GCC)
+        if: matrix.compiler == 'gcc'
+        run: |
+          echo "Configuring build"
+          cmake -D CMAKE_C_COMPILER=$(which gcc-14) \
+            -D CMAKE_CXX_COMPILER=$(which g++-14) \
+            --preset=ci-tests
+          echo "Building tests"
+          cmake --build build --config Debug
+          echo "Running tests"
+          ctest --test-dir build --output-on-failure --timeout 60 --verbose
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:

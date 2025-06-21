@@ -1,0 +1,36 @@
+// Copyright (c) 2025.
+// Distributed under the Boost Software License, Version 1.0
+
+//
+// Created by Mono on 1/6/2025.
+//
+module;
+# include <string_view>
+# include <cstdint>
+
+export module lumi.core:metadata;
+
+export namespace lumi::info {
+// Version information
+inline constexpr std::string_view kVersionFull = "@PROJECT_VERSION@";
+inline constexpr std::string_view kVersion = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
+inline constexpr std::string_view kVersionTag = "@VERSION_TAG@";
+inline constexpr uint8_t kVersionReleaseCandidate = @LUMI_RELEASE_CANDIDATE_VERSION@;
+
+inline constexpr struct KVersionNumbers {
+  uint8_t major_ = @PROJECT_VERSION_MAJOR@;
+  uint8_t minor_ = @PROJECT_VERSION_MINOR@;
+  uint8_t patch_ = @PROJECT_VERSION_PATCH@;
+} kVersionNumbers;
+
+// Project information
+inline constexpr std::string_view kProjectName = "@PROJECT_NAME@";
+inline constexpr std::string_view kProjectDescription = "@PROJECT_DESCRIPTION@";
+inline constexpr std::string_view kProjectHomepage = "@PROJECT_HOMEPAGE_URL@";
+inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@";
+
+// License information
+inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@";
+
+inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@";
+}

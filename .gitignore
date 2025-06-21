@@ -35,4 +35,23 @@
 .idea/
 
 # CMake generated files
-Metadata.h
+metadata.cppm
+
+# Build directories
+build/
+cmake-build-*/
+
+# Compile commands
+compile_commands.json
+
+# VS Code settings
+.vscode/
+
+# macOS files
+.DS_Store
+
+# Generated files
+Testing/
+
+# Dependencies folder
+*/_deps/*

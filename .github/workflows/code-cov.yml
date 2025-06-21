@@ -11,24 +11,38 @@ on:
       - develop
 
 permissions:
-  pull-requests: write
   contents: read
 
 jobs:
   build-and-test-coverage:
-    name : Test Coverage
-    runs-on: ubuntu-latest
+    name: Test Coverage on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Build Environment
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "19"
+          env: true
+
+      - name: Install Build Dependencies (Linux)
+        if: runner.os == 'Linux'
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: lcov gcovr libwayland-dev wayland-protocols libxkbcommon-dev xorg-dev
+          packages: build-essential software-properties-common lcov
           version: 1.0
           execute_install_scripts: true
+
+      - name: Install Build Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install lcov
 
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
@@ -36,45 +50,61 @@ jobs:
           cmakeVersion: latest
           ninjaVersion: latest
 
-      - name: Build CMake Coverage Tests
-        run: cmake --workflow --preset ci-workflow-coverage
-      - name: Generate LCOV Report
+      - name: Run CMake Workflow for Coverage
         run: |
-          lcov --capture --directory ./build --output-file coverage.info \
-          --rc geninfo_exclude="^.*/_deps/*|^.*/tests/*|^/usr/*" \
-          --rc geninfo_unexecuted_blocks=1 \
-          --ignore-errors mismatch
-      - name: Generate Cobertura XML Report
+          cmake --workflow --preset ci-workflow-coverage
+
+      - name: Generate LCOV Report using LLVM tools (Linux/macOS)
+        if: runner.os != 'Windows'
         run: |
-          gcovr --xml --output coverage.xml coverage.info
+          cd build
+          llvm-profdata merge -sparse tests/default.profraw -o default.profdata
+          llvm-cov export -format=lcov \
+            -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" \
+            ./bin/Debug/LumiTests \
+            -instr-profile=default.profdata \
+            > coverage.info
+
+      - name: Generate LCOV Report using LLVM tools (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd build
+          llvm-profdata merge -sparse tests\default.profraw -o default.profdata
+          llvm-cov export -format=lcov `
+            -ignore-filename-regex=".*/_deps/.*|.*/tests/.*|/usr/.*|/opt/.*" `
+            "./bin/Debug/LumiTests.exe" `
+            -instr-profile="./default.profdata" `
+            > coverage.info
+        shell: pwsh
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ${{github.workspace}}/coverage.xml
+          files: ${{ github.workspace }}/build/coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
-          plugins: noop
-      - name: Upload test results to Codecov
+
+      - name: Upload Test Results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
+          files: ${{ github.workspace }}/build/test-results.xml
           token: ${{ secrets.CODECOV_TOKEN }}
+          
       - name: Upload Artifacts (Binaries)
         uses: actions/upload-artifact@v4
         with:
-          name: lumi-binaries
+          name: lumi-binaries-${{ matrix.os }}
           path: |
-            build/bin/Debug/LumiTests
-            
+            build/bin/Debug/LumiTests*
             build/lib/Debug/*.a
             build/lib/Debug/*.lib
+            build/include/lumi/metadata.cppm
+
       - name: Upload Artifacts (Reports)
         uses: actions/upload-artifact@v4
         with:
-          name: lumi-reports
+          name: lumi-reports-${{ matrix.os }}
           path: |
-            coverage.xml
-            coverage.info
-            coverage-filtered.info
+            build/coverage.info
             build/test-results.xml
