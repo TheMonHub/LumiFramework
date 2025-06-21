@@ -65,10 +65,8 @@ jobs:
         if: matrix.compiler == 'gcc'
         run: |
           echo "Configuring build"
-          which gcc-14
-          which g++-14
           cmake -D CMAKE_C_COMPILER=$(which gcc-14) \
-            -D CMAKE_CXX_COMPILER=$(which g++-15) \
+            -D CMAKE_CXX_COMPILER=$(which g++-14) \
             --preset=ci-tests
           echo "Building tests"
           cmake --build build --config Debug
