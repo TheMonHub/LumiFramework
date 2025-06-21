@@ -64,9 +64,9 @@ jobs:
       - name: Run Tests (GCC)
         if: matrix.compiler == 'gcc'
         run: |
-          export CC=$(which gcc-14)
-          export CXX=$(which g++-15)
-          cmake --workflow --preset=ci-workflow-tests
+          cmake -D CMAKE_C_COMPILER=$(which gcc-14) \
+            -D CMAKE_CXX_COMPILER=$(which g++-15) \
+            --workflow --preset=ci-workflow-tests
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
