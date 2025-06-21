@@ -16,12 +16,12 @@ jobs:
           - os: ubuntu-latest
             build_type: Debug
             compiler: clang
-            apt_packages: "clang lld llvm"
+            apt_packages: ""
           - os: ubuntu-latest
             build_type: Debug
             compiler: gcc
             coverage: true
-            apt_packages: "gcc g++ lcov"
+            apt_packages: "gcc-14 g++-15"
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}-${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}
@@ -36,18 +36,21 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: "Hello @{{ contributor }}! Thanks for opening your first issue in this repository. We appreciate your contribution!"
           pr-message: "Welcome, @{{ contributor }}! We're excited to see your first pull request. We'll review it shortly!"
-      - name: Set up Build Environment
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: ${{ matrix.apt_packages }}
-          version: 1.0
-          execute_install_scripts: true
       - name: Install LLVM
         if: matrix.compiler == 'clang'
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "19"
           env: true
+      - name: Add universe repo
+        if: matrix.compiler == 'gcc'
+        run: sudo add-apt-repository universe
+      - name: Set up Build Environment
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: ${{ matrix.apt_packages }}
+          version: 1.0
+          execute_install_scripts: true
       - name: Install GGC
         if: matrix.compiler == 'gcc'
         uses: egor-tensin/setup-gcc@v1
