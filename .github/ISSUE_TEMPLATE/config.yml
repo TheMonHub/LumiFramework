@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question on Discord
+    url: https://discord.gg/2jJaC3yFEH
+    about: Ask questions and get help from the community on our Discord server.
+  - name: Security Vulnerability Report
+    url: mailto:mono15.parnthakote@gmail.com
+    about: Report a security vulnerability to the project maintainers confidentially.
