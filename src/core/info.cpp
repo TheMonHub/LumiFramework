@@ -20,13 +20,10 @@ uint8_t GetVersionMajor() noexcept { return kVersionNumbers.major_; }
 uint8_t GetVersionMinor() noexcept { return kVersionNumbers.minor_; }
 uint8_t GetVersionPatch() noexcept { return kVersionNumbers.patch_; }
 
-// ReSharper disable once CppDFAConstantFunctionResult
 VERSION_TAG GetVersionTag() noexcept {
-  // ReSharper disable once CppDFAUnreachableCode
   if constexpr (kVersionTag.empty()) {
     return VERSION_TAG::K_NONE;
   }
-  // ReSharper disable once CppDFAUnreachableCode
   if constexpr (kVersionTag == "dev") {
     return VERSION_TAG::K_DEV;
   } else if constexpr (kVersionTag == "alpha") {
@@ -63,8 +60,6 @@ bool IsDebugMode() noexcept {
       k_build_type_enum == BUILD_TYPE::K_REL_WITH_DEB_INFO) {
     return true;
   }
-
-  // ReSharper disable once CppDFAUnreachableCode
   return false;
 }
 

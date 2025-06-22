@@ -65,8 +65,7 @@ if (LUMI_BUILD_STATIC_LIBS)
             ${LUMI_CORE_DEPENDENCIES}
     )
     configure_lumi_target(
-            LumiCore
-            core)
+            LumiCore)
 
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
 

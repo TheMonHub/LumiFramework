@@ -33,4 +33,5 @@ inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@
 inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@"; // NOLINT
 
 inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@"; // NOLINT
+inline constexpr std::string_view kArchitecture = "@CMAKE_SYSTEM_PROCESSOR";
 }  // namespace lumi::info
