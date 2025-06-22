@@ -100,7 +100,7 @@ LumiFramework uses the **Gitflow Workflow**. This means we primarily work with f
     ```
     If you haven't set up the `upstream` remote yet, you can do so with:
     ```bash
-    git remote add upstreamhttps://github.com/TheMonHub/LumiFramework.git
+    git remote add upstream https://github.com/TheMonHub/LumiFramework.git
     ```
 2.  **Create a Feature Branch:** Based on `develop`, create a new feature branch for your changes. Use a descriptive name (e.g., `feature/add-new-widget`, `bugfix/fix-memory-leak`).
     ```bash
