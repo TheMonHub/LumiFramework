@@ -14,9 +14,14 @@ set(LUMI_CORE_IMPLEMENTATION_SOURCES
         "${LUMI_SOURCE_DIR}/src/core/stacktrace.cpp"
 )
 
+set(LUMI_CORE_PUBLIC_HEADERS
+
+)
+
 set(LUMI_CORE_PUBLIC_INTERFACES
         "${LUMI_SOURCE_DIR}/include/lumi/core/core.cppm"
         "${LUMI_SOURCE_DIR}/include/lumi/core/info.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/error_handler.cppm"
         "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.cppm"
         "${LUMI_SOURCE_DIR}/include/lumi/core/stacktrace.cppm"
 )
@@ -33,17 +38,22 @@ source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_CORE_PUBLIC_INT
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
     # core
-    add_library(LumiCore)
+    add_library(LumiCore STATIC)
 
     target_sources(LumiCore
             PUBLIC
+            FILE_SET HEADERS
+            BASE_DIRS
+                "${LUMI_SOURCE_DIR}/include/lumi"
+            FILES
+                ${LUMI_CORE_PUBLIC_HEADERS}
             FILE_SET CXX_MODULES
             BASE_DIRS
-                "${LUMI_SOURCE_DIR}/include/lumi/core"
+                "${LUMI_SOURCE_DIR}/include/lumi"
                 "${CMAKE_BINARY_DIR}/include/lumi"
             FILES
-                ${LUMI_GENERATED_METADATA_OUTPUT}
                 ${LUMI_CORE_PUBLIC_INTERFACES}
+                ${LUMI_GENERATED_METADATA_OUTPUT}
             PRIVATE
                 ${LUMI_CORE_IMPLEMENTATION_SOURCES}
     )
@@ -56,15 +66,16 @@ if (LUMI_BUILD_STATIC_LIBS)
             ${LUMI_CORE_DEPENDENCIES}
     )
     configure_lumi_target(
-            LumiCore
-            core)
+            LumiCore)
 
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
 
     list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_IMPLEMENTATION_SOURCES})
-    list(APPEND LUMI_ALL_PUBLIC_INTERFACES ${LUMI_CORE_PUBLIC_INTERFACES})
+    list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS})
+    list(APPEND LUMI_ALL_PUBLIC_INTERFACES ${LUMI_CORE_PUBLIC_INTERFACES} ${LUMI_GENERATED_METADATA_OUTPUT})
 endif ()
 
 # Push the data to the global scope
 set(LUMI_ALL_SOURCES ${LUMI_ALL_SOURCES} PARENT_SCOPE)
+set(LUMI_ALL_PUBLIC_HEADERS ${LUMI_ALL_PUBLIC_HEADERS} PARENT_SCOPE)
 set(LUMI_ALL_PUBLIC_INTERFACES ${LUMI_ALL_PUBLIC_INTERFACES} PARENT_SCOPE)

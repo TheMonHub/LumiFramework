@@ -22,7 +22,9 @@ Checks: "*,
         -bugprone-branch-clone,
         -modernize-use-trailing-return-type,
         -bugprone-suspicious-string-compare,
-        -bugprone-suspicious-missing-comma
+        -bugprone-suspicious-missing-comma,
+        -*-include-cleaner,
+        -readability-redundant-declaration
 "
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'

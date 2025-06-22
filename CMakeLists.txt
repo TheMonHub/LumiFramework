@@ -91,7 +91,11 @@ else ()
 endif ()
 
 # Set lumi version based on the project version and tag
-set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
+if (${LUMI_RELEASE_CANDIDATE_VERSION} EQUAL 0)
+    set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}")
+else ()
+    set(PROJECT_VERSION "${PROJECT_VERSION}${LUMI_VERSION_TAG}${LUMI_RELEASE_CANDIDATE_VERSION}")
+endif ()
 
 # Required CMake modules
 include(FetchContent)
@@ -188,8 +192,11 @@ if (LUMI_BUILD_TESTS)
 endif ()
 
 if (LUMI_BUILD_DOCS)
-    find_package(Doxygen REQUIRED)
-    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}, version ${DOXYGEN_VERSION}")
+    find_package(Doxygen)
+    if (NOT DOXYGEN_FOUND)
+        message(WARNING "Doxygen not found. Documentation generation will be skipped.")
+        set(LUMI_BUILD_DOCS OFF CACHE BOOL "Disable Lumi documentation build" FORCE)
+    endif ()
     if (${DOXYGEN_VERSION} VERSION_LESS "1.10.0")
         message(WARNING "Doxygen version 1.10.0 or higher is required for Lumi documentation. Skipping documentation generation.")
         set(LUMI_BUILD_DOCS OFF CACHE BOOL "Disable Lumi documentation build" FORCE)
@@ -215,8 +222,23 @@ endif ()
 # Make sure the variable is available for configure_file.
 set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
+# Other metadata
+find_package(Git)
+# Get the current git commit hash
+if (GIT_FOUND)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+            WORKING_DIRECTORY "${LUMI_SOURCE_DIR}"
+            OUTPUT_VARIABLE LUMI_GIT_COMMIT_HASH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+else ()
+    message(WARNING "Git executable not found. Please make sure to install Git.")
+endif ()
+math(EXPR LUMI_BITNESS "${CMAKE_SIZEOF_VOID_P} * 8" OUTPUT_FORMAT DECIMAL)
+
 # --- GLOBAL METADATA HEADER GENERATION ---
-# metadata.cppm.in template should be at lumi/src/core/metadata.cppm.in
+# metadata.h.in template should be at lumi/src/core/metadata.h.in
 set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/lumi/metadata.cppm.in")
 set(LUMI_GENERATED_METADATA_OUTPUT "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm") # Output to include/lumi/metadata.h
 configure_file(
@@ -224,6 +246,13 @@ configure_file(
         "${LUMI_GENERATED_METADATA_OUTPUT}"
         @ONLY
 )
+message(STATUS "Lumi git commit hash: ${LUMI_GIT_COMMIT_HASH}")
+message(STATUS "Lumi version: ${PROJECT_VERSION}")
+message(STATUS "Lumi target platform: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "Lumi target architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "Lumi target bitness: ${LUMI_BITNESS} bits")
+message(STATUS "Lumi compiler: ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "Lumi compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
 
 #-----------------------------------------------------------------------------
 # Library Targets
@@ -232,6 +261,7 @@ set(LUMI_COMMON_EXPORT_SET "LumiFrameworkTargets")
 
 # Collect all source files and public interfaces
 set(LUMI_ALL_SOURCES "")
+set(LUMI_ALL_PUBLIC_HEADERS "")
 set(LUMI_ALL_PUBLIC_INTERFACES "")
 
 # Global property to accumulate static library targets
@@ -255,6 +285,7 @@ get_property(LUMI_STATIC_LIB_TARGETS_LIST GLOBAL PROPERTY LUMI_STATIC_LIB_TARGET
 
 # Print accumulated sources, interfaces, and dependencies
 message(STATUS "Lumi sources: ${LUMI_ALL_SOURCES}")
+message(STATUS "Lumi public headers: ${LUMI_ALL_PUBLIC_HEADERS}")
 message(STATUS "Lumi interfaces: ${LUMI_ALL_PUBLIC_INTERFACES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 
