@@ -66,6 +66,10 @@ LumiFramework uses the **Gitflow Workflow**. This means we primarily work with f
     ```
 3.  **Make Your Changes:** Implement your bug fix or feature.
 
+**IMPORTANT:** It is recommended to use gitflow extensions for Git to manage your branches and releases more easily. If you haven't set up gitflow yet, you can do so by following the instructions in the [gitflow documentation](https://github.com/nvie/gitflow)
+
+**NOTE:** For more details on the Gitflow Workflow, refer to the [Gitflow](https://nvie.com/posts/a-successful-git-branching-model/).
+
 ### 5\. Build the Project
 
 LumiFramework uses CMake for its build system. The primary build instructions are detailed directly within the [CMakeLists.txt](CMakeLists.txt) file at the root of the project.
