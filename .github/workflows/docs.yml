@@ -8,7 +8,9 @@ jobs:
   docs:
     name: Deploy Documentation
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      pages: write
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
