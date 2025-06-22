@@ -4,5 +4,6 @@
 //
 // Created by Mono on 20/6/2025.
 //
+
 module;
-export module lumi.core:stacktrace;
+export module lumi.error_handler:stacktrace;

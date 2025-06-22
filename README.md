@@ -1,6 +1,9 @@
 ## LumiFramework: A C++ Framework Library for Desktop Applications
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![codecov](https://codecov.io/gh/TheMonHub/LumiFramework/graph/badge.svg?token=2YN92BA4JE)](https://codecov.io/gh/TheMonHub/LumiFramework)
+[![Discord](https://img.shields.io/discord/1386311411705315368?label=Discord)](https://discord.gg/2jJaC3yFEH)
+[![GitHub license](https://img.shields.io/github/license/TheMonHub/LumiFramework.svg)](LICENSE)
 
 LumiFramework is your C++ companion for crafting robust **cross-platform desktop applications**. We cut through the complexities, letting you build powerful, interactive apps for **Windows, Linux, and macOS** with unprecedented ease and speed. Say goodbye to complex setup and endless boilerplate.
 

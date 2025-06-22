@@ -4,6 +4,7 @@
 //
 // Created by Mono on 1/6/2025.
 //
+
 module;
 # include <string_view>
 # include <cstdint>
@@ -33,5 +34,10 @@ inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@
 inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@"; // NOLINT
 
 inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@"; // NOLINT
+inline constexpr std::string_view kCommitHash = "@LUMI_GIT_COMMIT_HASH@"; // NOLINT
+inline constexpr std::string_view kPlatform = "@CMAKE_SYSTEM_NAME@";
 inline constexpr std::string_view kArchitecture = "@CMAKE_SYSTEM_PROCESSOR";
+inline constexpr uint8_t kBitness = @LUMI_BITNESS@;
+inline constexpr std::string_view kCompiler = "@CMAKE_CXX_COMPILER_ID@";
+inline constexpr std::string_view kCompilerVersion = "@CMAKE_CXX_COMPILER_VERSION@";
 }  // namespace lumi::info

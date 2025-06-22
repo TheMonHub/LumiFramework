@@ -222,6 +222,21 @@ endif ()
 # Make sure the variable is available for configure_file.
 set(LUMI_LICENSE_TEXT "${LUMI_LICENSE_TEXT_CONTENT}")
 
+# Other metadata
+find_package(Git)
+# Get the current git commit hash
+if (GIT_FOUND)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+            WORKING_DIRECTORY "${LUMI_SOURCE_DIR}"
+            OUTPUT_VARIABLE LUMI_GIT_COMMIT_HASH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+else ()
+    message(WARNING "Git executable not found. Please make sure to install Git.")
+endif ()
+math(EXPR LUMI_BITNESS "${CMAKE_SIZEOF_VOID_P} * 8" OUTPUT_FORMAT DECIMAL)
+
 # --- GLOBAL METADATA HEADER GENERATION ---
 # metadata.h.in template should be at lumi/src/core/metadata.h.in
 set(LUMI_METADATA_TEMPLATE "${LUMI_SOURCE_DIR}/include/lumi/metadata.cppm.in")
@@ -231,16 +246,6 @@ configure_file(
         "${LUMI_GENERATED_METADATA_OUTPUT}"
         @ONLY
 )
-
-find_package(Git REQUIRED)
-# Get the current git commit hash
-execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
-        WORKING_DIRECTORY "${LUMI_SOURCE_DIR}"
-        OUTPUT_VARIABLE LUMI_GIT_COMMIT_HASH
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-math(EXPR LUMI_BITNESS "${CMAKE_SIZEOF_VOID_P} * 8" OUTPUT_FORMAT DECIMAL)
 message(STATUS "Lumi git commit hash: ${LUMI_GIT_COMMIT_HASH}")
 message(STATUS "Lumi version: ${PROJECT_VERSION}")
 message(STATUS "Lumi target platform: ${CMAKE_SYSTEM_NAME}")

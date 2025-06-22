@@ -4,14 +4,12 @@
 //
 // Created by Mono on 20/6/2025.
 //
+
 module;
-#include <string_view>
-#include <vector>
 
-export module lumi.core:error_funny;
-
+export module lumi.error_handler:error_funny;
 
 export namespace lumi::error_handler {
-std::vector<std::string_view> GetLumiFunnyErrorMessages();
+auto GetLumiFunnyErrorMessages();
 void LumiRegisterDefaultFunnyMessages();
 }

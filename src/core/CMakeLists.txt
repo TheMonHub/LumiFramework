@@ -21,6 +21,7 @@ set(LUMI_CORE_PUBLIC_HEADERS
 set(LUMI_CORE_PUBLIC_INTERFACES
         "${LUMI_SOURCE_DIR}/include/lumi/core/core.cppm"
         "${LUMI_SOURCE_DIR}/include/lumi/core/info.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/error_handler.cppm"
         "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.cppm"
         "${LUMI_SOURCE_DIR}/include/lumi/core/stacktrace.cppm"
 )

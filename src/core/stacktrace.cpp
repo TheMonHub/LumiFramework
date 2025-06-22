@@ -4,3 +4,11 @@
 //
 // Created by Mono on 20/6/2025.
 //
+
+module;
+
+module lumi.error_handler;
+
+namespace lumi::stacktrace {
+
+}

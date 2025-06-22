@@ -4,14 +4,15 @@
 //
 // Created by Mono on 10/6/2025.
 //
+
 module;
+#include <array>
 #include <string_view>
-#include <vector>
-module lumi.core;
+module lumi.error_handler;
 
 namespace lumi::error_handler {
-std::vector<std::string_view> GetLumiFunnyErrorMessages() {
-  static const std::vector<std::string_view> kMessages = {
+auto GetLumiFunnyErrorMessages() {
+  static constexpr std::array<std::string_view, 217> kMessages = {
       "lumi's brain just did a cartwheel and landed funny. Try again?",
       "Uh oh, lumi just got the digital hiccups. Excuse us!",
       "Looks like lumi tried to divide by zero and ended up in another "
