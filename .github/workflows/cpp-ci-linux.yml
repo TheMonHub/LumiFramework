@@ -25,6 +25,10 @@ jobs:
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}-${{ matrix.name_suffix }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout Code
