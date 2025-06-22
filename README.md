@@ -45,5 +45,3 @@ LumiFramework is distributed under the highly permissive **Boost Software Licens
 ### Quick Start / Getting Started
 
 Please refer to the wiki page, [Getting Started](https://github.com/TheMonHub/LumiFramework/wiki/Getting-Started)
-
----
