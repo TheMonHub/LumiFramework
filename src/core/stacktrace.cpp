@@ -9,6 +9,4 @@ module;
 
 module lumi.error_handler;
 
-namespace lumi::stacktrace {
-
-}
+namespace lumi::stacktrace {}
