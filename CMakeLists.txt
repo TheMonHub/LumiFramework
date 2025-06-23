@@ -356,8 +356,7 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     endif ()
 
     install(FILES "${LUMI_SOURCE_DIR}/LICENSE"
-            DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-            COMPONENT Lumi)
+            DESTINATION "${CMAKE_INSTALL_DOCDIR}")
 
     # Install CMake configuration files
     install(FILES
