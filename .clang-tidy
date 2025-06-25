@@ -53,7 +53,3 @@ CheckOptions:
   readability-identifier-naming.MacroCase: ALL_CAPS
   readability-identifier-naming.FileCase: lower_case
   readability-identifier-naming.TemplateParameterCase: CamelCase
-
-Key Additions in this version:
- * readability-identifier-naming.StaticVariableCase: lower_case
- * readability-identifier-naming.StaticVariablePrefix: 's_'
