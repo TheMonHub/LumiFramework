@@ -37,5 +37,5 @@ jobs:
           cd build
       - name: Finish installation tests
         run: |
-          ls
+          cd tests/install/build
           ./LumiInstallTests
