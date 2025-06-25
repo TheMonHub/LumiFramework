@@ -30,7 +30,7 @@ jobs:
         run: |
           cmake -S . -B build -G Ninja -DLUMI_BUILD_ALL=ON -DLUMI_BUILD_DOCS=OFF
           cmake --build build
-          cmake --install build
+          sudo cmake --install build
           cd tests/install
           cmake -S . -B build -G Ninja
           cmake --build build
