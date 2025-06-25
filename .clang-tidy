@@ -36,7 +36,7 @@ CheckOptions:
   readability-identifier-naming.NamespaceCase: lower_case
   readability-identifier-naming.ClassCase: CamelCase
   readability-identifier-naming.StructCase: CamelCase
-  readability-identifier-naming.EnumCase: UPPER_CASE
+  readability-identifier-naming.EnumCase: CamelCase
   readability-identifier-naming.TypedefCase: CamelCase
   readability-identifier-naming.TypeAliasCase: CamelCase
   readability-identifier-naming.FunctionCase: CamelCase
@@ -54,3 +54,7 @@ CheckOptions:
   readability-identifier-naming.EnumConstantPrefix: ''
   readability-identifier-naming.ConstexprVariableCase: CamelCase
   readability-identifier-naming.ConstexprVariablePrefix: 'k'
+  readability-identifier-naming.MacroCase: ALL_CAPS
+  readability-identifier-naming.FileCase: lower_case
+  readability-identifier-naming.TemplateParameterCase: CamelCase
+
