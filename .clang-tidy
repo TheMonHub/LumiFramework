@@ -15,7 +15,9 @@ Checks: "*,
         -modernize-use-trailing-return-type,
         -bugprone-suspicious-string-compare,
         -bugprone-suspicious-missing-comma,
-        -readability-redundant-declaration
+        -readability-redundant-declaration,
+        -*-include-cleaner,
+        -misc-use-internal-linkage
 "
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
