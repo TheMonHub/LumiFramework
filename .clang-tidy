@@ -36,6 +36,7 @@ CheckOptions:
   readability-identifier-naming.VariableCase: lower_case
   readability-identifier-naming.LocalVariableCase: lower_case
   readability-identifier-naming.GlobalVariableCase: lower_case
+  readability-identifier-naming.GlobalVariablePrefix: 'g_'
   readability-identifier-naming.ParameterCase: lower_case
   readability-identifier-naming.MemberCase: lower_case
   readability-identifier-naming.MemberSuffix: '_'
@@ -43,6 +44,8 @@ CheckOptions:
   readability-identifier-naming.GlobalConstantPrefix: 'k'
   readability-identifier-naming.StaticConstantCase: CamelCase
   readability-identifier-naming.StaticConstantPrefix: 'k'
+  readability-identifier-naming.StaticVariableCase: lower_case
+  readability-identifier-naming.StaticVariablePrefix: 's_'
   readability-identifier-naming.EnumConstantCase: UPPER_CASE
   readability-identifier-naming.EnumConstantPrefix: ''
   readability-identifier-naming.ConstexprVariableCase: CamelCase
@@ -51,3 +54,6 @@ CheckOptions:
   readability-identifier-naming.FileCase: lower_case
   readability-identifier-naming.TemplateParameterCase: CamelCase
 
+Key Additions in this version:
+ * readability-identifier-naming.StaticVariableCase: lower_case
+ * readability-identifier-naming.StaticVariablePrefix: 's_'
