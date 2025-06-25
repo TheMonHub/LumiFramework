@@ -1,11 +1,5 @@
-cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
-project(
-        LumiExamples
-        LANGUAGES CXX
-)
-
 add_executable(LumiExamples
-        "main.cpp"
+        main.cpp
 )
 target_include_directories(LumiExamples
         PRIVATE

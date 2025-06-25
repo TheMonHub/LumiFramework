@@ -187,6 +187,7 @@ if (LUMI_BUILD_TESTS)
             GIT_REPOSITORY https://github.com/google/googletest
             GIT_TAG v1.17.0
     )
+    set(INSTALL_GTEST OFF CACHE BOOL "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" FORCE)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE) # To ensure Googletest links against shared C runtime
     FetchContent_MakeAvailable(googletest)
 endif ()
@@ -232,6 +233,12 @@ if (GIT_FOUND)
             OUTPUT_VARIABLE LUMI_GIT_COMMIT_HASH
             OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+            WORKING_DIRECTORY "${LUMI_SOURCE_DIR}"
+            OUTPUT_VARIABLE LUMI_GIT_BRANCH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 else ()
     message(WARNING "Git executable not found. Please make sure to install Git.")
 endif ()
@@ -247,6 +254,7 @@ configure_file(
         @ONLY
 )
 message(STATUS "Lumi git commit hash: ${LUMI_GIT_COMMIT_HASH}")
+message(STATUS "Lumi git branch: ${LUMI_GIT_BRANCH}")
 message(STATUS "Lumi version: ${PROJECT_VERSION}")
 message(STATUS "Lumi target platform: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Lumi target architecture: ${CMAKE_SYSTEM_PROCESSOR}")
@@ -289,14 +297,18 @@ message(STATUS "Lumi public headers: ${LUMI_ALL_PUBLIC_HEADERS}")
 message(STATUS "Lumi interfaces: ${LUMI_ALL_PUBLIC_INTERFACES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 
+set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/lumi")
+STRING(REPLACE ";" " " LUMI_STATIC_LIB_TARGETS_LIST "${LUMI_STATIC_LIB_TARGETS_LIST}")
+
 # An INTERFACE library to group all static components
 # This allows linking all static components using one target.
 if (LUMI_STATIC_LIB_TARGETS_LIST)
     add_library(Lumi INTERFACE)
     target_link_libraries(Lumi INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
     add_library(Lumi::Lumi ALIAS Lumi)
-    install(TARGETS Lumi EXPORT "${LUMI_COMMON_EXPORT_SET}")
-
+    install(TARGETS Lumi
+            EXPORT "${LUMI_COMMON_EXPORT_SET}"
+    )
     message(STATUS "Created Lumi::Lumi interface library to group all static components.")
 endif ()
 
@@ -352,7 +364,8 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
         install(EXPORT "${LUMI_COMMON_EXPORT_SET}"
                 FILE "lumi-targets.cmake"
                 DESTINATION "${LUMI_INSTALL_CMAKEDIR}"
-                NAMESPACE Lumi::)
+                NAMESPACE Lumi::
+        )
     endif ()
 
     install(FILES "${LUMI_SOURCE_DIR}/LICENSE"

@@ -4,11 +4,11 @@
 
 We are committed to providing security updates for the actively maintained versions of LumiFramework. We encourage all users to stay on the latest supported version.
 
-| Version | Support Status     |
-| ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
-| 0.0.x   | :x:                |
-| (Future versions will be added here upon release)
+| Version                                           | Support Status     |
+|---------------------------------------------------|--------------------|
+| 0.1.x                                             | :white_check_mark: |
+| 0.0.x                                             | :x:                |
+| (Future versions will be added here upon release) |                    |
 
 ## Reporting a Vulnerability
 

@@ -30,7 +30,7 @@ We envision LumiFramework as the **definitive foundation for C++ desktop develop
 
 LumiFramework is currently in **active development**, focusing on building a solid core foundation.
 
-**Great news! We are now accepting external contributions!** We deeply appreciate your interest and welcome your help in making LumiFramework even better.
+We deeply appreciate your interest and welcome your help in making LumiFramework even better.
 
 Please refer to our **[Contributing Guidelines](CONTRIBUTING.md)** for detailed information on how to get started, our workflow, coding standards, and more.
 

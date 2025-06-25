@@ -35,6 +35,7 @@ inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@"; // NOLIN
 
 inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@"; // NOLINT
 inline constexpr std::string_view kCommitHash = "@LUMI_GIT_COMMIT_HASH@"; // NOLINT
+inline constexpr std::string_view kGitBranch = "@LUMI_GIT_BRANCH@"; // NOLINT
 inline constexpr std::string_view kPlatform = "@CMAKE_SYSTEM_NAME@";
 inline constexpr std::string_view kArchitecture = "@CMAKE_SYSTEM_PROCESSOR";
 inline constexpr uint8_t kBitness = @LUMI_BITNESS@;

@@ -89,7 +89,50 @@ To build and contribute to LumiFramework, you will need:
 
 LumiFramework aims to be cross-platform, supporting Windows, Linux, and macOS. Please ensure your development environment is set up according to these requirements.
 
-#### 4\. Gitflow Workflow
+#### 4\. File and Naming Conventions
+
+To maintain consistency and readability across the LumiFramework codebase, please adhere to the following conventions:
+
+* **File Naming:** All source and header files (`.hpp`, `.cpp`, `.cppm`) should use **`snake_case`** for their names (e.g., `my_awesome_module.hpp`, `window_system.cpp`). If older files do not follow this, please update them if your changes touch them, or report an issue.
+
+* **File Headers (Copyright & License):** Every new or modified source file must begin with the standard LumiFramework copyright and license header. Please ensure the year is current.
+
+    ```cpp
+    // Copyright (c) 2025. // Or 2023-2025 if it was first created in 2023 and updated in 2025.
+    // Distributed under the Boost Software License, Version 1.0
+
+    //
+    // Created by Mono on 10/6/2025.
+    // // This "Created by" line is optional and for your convenience.
+    ```
+  *Note: The "Created by" line is primarily for your internal tracking or IDE integration and isn't strictly required for every file in a public project, but if you want it, keep it consistent.*
+
+* **Header Guards:** To prevent multiple inclusions, all header files (`.hpp`) must use include guards. The naming convention for these guards should follow the pattern:
+  `LUMI_COMPONENT_SUB_COMPONENT_FILENAME_HPP_`
+
+    * **Structure:** `LUMI_` (project prefix) `COMPONENT_` (major module/component, e.g., `WINDOW`, `INPUT`) `SUB_COMPONENT_` (optional sub-component, e.g., `DETAILS`, `VULKAN`) `FILENAME_` (snake_case filename) `EXTENSION_` (e.g., `HPP_`)
+
+    * **Example for `Lumi/Window/src/window_surface.hpp`:**
+        ```cpp
+        #ifndef LUMI_WINDOW_WINDOW_SURFACE_HPP_
+        #define LUMI_WINDOW_WINDOW_SURFACE_HPP_
+
+        // ... file content ...
+
+        #endif // LUMI_WINDOW_WINDOW_SURFACE_HPP_
+        ```
+    * **Example for `Lumi/Graphics/Vulkan/src/vulkan_device.cppm`:**
+        ```cpp
+        #ifndef LUMI_GRAPHICS_VULKAN_VULKAN_DEVICE_CPPM_
+        #define LUMI_GRAPHICS_VULKAN_VULKAN_DEVICE_CPPM_
+
+        // ... file content ...
+
+        #endif // LUMI_GRAPHICS_VULKAN_VULKAN_DEVICE_CPPM_
+        ```
+  This convention ensures uniqueness across your project and clearly indicates the file's location within the framework structure.
+
+#### 5\. Gitflow Workflow
 
 LumiFramework uses the **Gitflow Workflow**. This means we primarily work with feature branches.
 
@@ -112,7 +155,7 @@ LumiFramework uses the **Gitflow Workflow**. This means we primarily work with f
 
 **NOTE:** For more details on the Gitflow Workflow, refer to the [Gitflow](https://nvie.com/posts/a-successful-git-branching-model/).
 
-#### 5\. Build the Project
+#### 6\. Build the Project
 
 LumiFramework uses CMake for its build system. The primary build instructions are detailed directly within the [CMakeLists.txt](CMakeLists.txt) file at the root of the project.
 
@@ -127,7 +170,7 @@ cmake --build .
 
 Refer to the top of `CMakeLists.txt` for the most accurate and up-to-date build instructions, including any specific platform requirements or configuration options.
 
-#### 6\. Format Your Code (Crucial\!)
+#### 7\. Format Your Code (Crucial\!)
 
 LumiFramework enforces strict code formatting using Clang-Format. **We adhere strictly to the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).**
 
@@ -145,7 +188,7 @@ To only check the formatting without making changes, you can use:
 ./clang-format.sh
 ```
 
-#### 7\. Run Static Analysis (Important\!)
+#### 8\. Run Static Analysis (Important\!)
 
 We use Clang-Tidy for static analysis to catch potential bugs and enforce coding standards. **Before committing**, run the Clang-Tidy script:
 
@@ -161,11 +204,11 @@ To fix issues reported by Clang-Tidy automatically, you can use the `-fix` scrip
 ./clang-tidy-fix.sh
 ```
 
-#### 8\. Test Your Changes
+#### 9\. Test Your Changes
 
 Ensure your changes don't break existing functionality and, if applicable, add new unit tests for your feature or bug fix. Run the tests using your build system (e.g., `cmake --build . --target test` from your `build` directory).
 
-#### 9\. Commit Your Changes
+#### 10\. Commit Your Changes
 
 Once your changes are complete, formatted, analyzed, and tested, commit them to your feature branch. Write clear and concise commit messages.
 
@@ -188,7 +231,7 @@ git add .
 git commit -m "feat: Add new awesome widget"
 ```
 
-#### 10\. Push Your Feature Branch
+#### 11\. Push Your Feature Branch
 
 Push your feature branch to your forked repository on GitHub:
 
@@ -196,7 +239,7 @@ Push your feature branch to your forked repository on GitHub:
 git push origin feature/your-feature-name
 ```
 
-#### 11\. Create a Pull Request (PR)
+#### 12\. Create a Pull Request (PR)
 
 Before submitting your PR, please ensure:
 
@@ -216,7 +259,7 @@ Before submitting your PR, please ensure:
       * Reference any related issues (e.g., `Closes #123`, `Fixes #456`).
 5.  Submit the pull request.
 
-#### 12\. Code Review
+#### 13\. Code Review
 
 Maintainers will review your pull request. Be prepared to:
 

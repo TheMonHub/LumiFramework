@@ -55,15 +55,6 @@ BUILD_TYPE GetBuildType() noexcept {
   return BUILD_TYPE::UNKNOWN;
 }
 
-bool IsDebugMode() noexcept {
-  if (const auto k_build_type_enum = GetBuildType();
-      k_build_type_enum == BUILD_TYPE::DEBUG ||
-      k_build_type_enum == BUILD_TYPE::REL_WITH_DEB_INFO) {
-    return true;
-  }
-  return false;
-}
-
 std::string_view GetCommitHash() noexcept { return kCommitHash; }
 PLATFORM GetPlatform() noexcept {
   if constexpr (kPlatform == "Linux") {
@@ -74,6 +65,11 @@ PLATFORM GetPlatform() noexcept {
     return PLATFORM::MACOS;
   }
 }
+
+std::string_view GetGitBranch() noexcept {
+  return kGitBranch;
+}
+
 ARCHITECTURE GetArchitecture() noexcept {
   if constexpr (kArchitecture == "x86" || kArchitecture == "i386" ||
                 kArchitecture == "X86") {

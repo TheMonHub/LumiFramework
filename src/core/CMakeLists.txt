@@ -57,7 +57,7 @@ if (LUMI_BUILD_STATIC_LIBS)
             PRIVATE
                 ${LUMI_CORE_IMPLEMENTATION_SOURCES}
     )
-
+    target_compile_features(LumiCore INTERFACE cxx_std_20)
     add_library(Lumi::Core ALIAS LumiCore)
 
     target_link_libraries(
@@ -65,8 +65,7 @@ if (LUMI_BUILD_STATIC_LIBS)
             PUBLIC
             ${LUMI_CORE_DEPENDENCIES}
     )
-    configure_lumi_target(
-            LumiCore)
+    configure_lumi_target(LumiCore)
 
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
 

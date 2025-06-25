@@ -1,0 +1,40 @@
+name: Install Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  checks: write
+  contents: read
+
+jobs:
+  run-linters:
+    name: Verify installation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "19"
+          env: true
+      - name: Set up CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+      - name: Test installation
+        run: |
+          cmake -S . -B build -G Ninja -DLUMI_BUILD_ALL=ON
+          cmake --build build
+          cmake --install build
+          cd tests/install
+          cmake -S . -B build -G Ninja
+          cmake --build build
+          cd build
+      - name: Finish installation tests
+        run: |
+          ./LumiInstallTests
