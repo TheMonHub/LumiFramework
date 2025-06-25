@@ -10,4 +10,4 @@
 
 int main();
 
-#endif //LUMI_INST_TEST_MAIN_H
+#endif  // LUMI_INST_TEST_MAIN_H

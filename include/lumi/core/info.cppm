@@ -12,7 +12,7 @@ module;
 export module lumi.core:info;
 
 export namespace lumi {
-enum class VERSION_TAG : uint8_t {
+enum class VersionTag : uint8_t {
   NONE,
   DEV,
   ALPHA,
@@ -20,7 +20,7 @@ enum class VERSION_TAG : uint8_t {
   RELEASE_CANDIDATE,
   RELEASE
 };
-enum class BUILD_TYPE : uint8_t {
+enum class BuildType : uint8_t {
   DEBUG,
   RELEASE,
   REL_WITH_DEB_INFO,
@@ -53,9 +53,9 @@ std::string_view GetVersion(bool include_tag = false) noexcept;
 uint8_t GetVersionMajor() noexcept;
 uint8_t GetVersionMinor() noexcept;
 uint8_t GetVersionPatch() noexcept;
-VERSION_TAG GetVersionTag() noexcept;
+VersionTag GetVersionTag() noexcept;
 uint8_t GetVersionReleaseCandidate() noexcept;
-BUILD_TYPE GetBuildType() noexcept;
+BuildType GetBuildType() noexcept;
 std::string_view GetCommitHash() noexcept;
 std::string_view GetGitBranch() noexcept;
 PLATFORM GetPlatform() noexcept;

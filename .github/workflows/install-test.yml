@@ -28,7 +28,7 @@ jobs:
           ninjaVersion: latest
       - name: Test installation
         run: |
-          cmake -S . -B build -G Ninja -DLUMI_BUILD_ALL=ON
+          cmake -S . -B build -G Ninja -DLUMI_BUILD_ALL=ON -DLUMI_BUILD_DOCS=OFF
           cmake --build build
           cmake --install build
           cd tests/install

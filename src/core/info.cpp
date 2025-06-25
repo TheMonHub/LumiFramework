@@ -21,38 +21,38 @@ uint8_t GetVersionMajor() noexcept { return kVersionNumbers.major_; }
 uint8_t GetVersionMinor() noexcept { return kVersionNumbers.minor_; }
 uint8_t GetVersionPatch() noexcept { return kVersionNumbers.patch_; }
 
-VERSION_TAG GetVersionTag() noexcept {
+VersionTag GetVersionTag() noexcept {
   if constexpr (kVersionTag.empty()) {
-    return VERSION_TAG::NONE;
+    return VersionTag::NONE;
   }
   if constexpr (kVersionTag == "dev") {
-    return VERSION_TAG::DEV;
+    return VersionTag::DEV;
   } else if constexpr (kVersionTag == "alpha") {
-    return VERSION_TAG::ALPHA;
+    return VersionTag::ALPHA;
   } else if constexpr (kVersionTag == "beta") {
-    return VERSION_TAG::BETA;
+    return VersionTag::BETA;
   } else if constexpr (kVersionTag == "rc") {
-    return VERSION_TAG::RELEASE_CANDIDATE;
+    return VersionTag::RELEASE_CANDIDATE;
   } else if constexpr (kVersionTag == "release") {
-    return VERSION_TAG::RELEASE;
+    return VersionTag::RELEASE;
   }
-  return VERSION_TAG::NONE;
+  return VersionTag::NONE;
 }
 uint8_t GetVersionReleaseCandidate() noexcept {
   return kVersionReleaseCandidate;
 }
 
-BUILD_TYPE GetBuildType() noexcept {
+BuildType GetBuildType() noexcept {
   if constexpr (kBuildType == "Debug") {
-    return BUILD_TYPE::DEBUG;
+    return BuildType::DEBUG;
   } else if constexpr (kBuildType == "Release") {
-    return BUILD_TYPE::RELEASE;
+    return BuildType::RELEASE;
   } else if constexpr (kBuildType == "RelWithDebInfo") {
-    return BUILD_TYPE::REL_WITH_DEB_INFO;
+    return BuildType::REL_WITH_DEB_INFO;
   } else if constexpr (kBuildType == "MinSizeRel") {
-    return BUILD_TYPE::MINSIZEREL;
+    return BuildType::MINSIZEREL;
   }
-  return BUILD_TYPE::UNKNOWN;
+  return BuildType::UNKNOWN;
 }
 
 std::string_view GetCommitHash() noexcept { return kCommitHash; }
@@ -66,9 +66,7 @@ PLATFORM GetPlatform() noexcept {
   }
 }
 
-std::string_view GetGitBranch() noexcept {
-  return kGitBranch;
-}
+std::string_view GetGitBranch() noexcept { return kGitBranch; }
 
 ARCHITECTURE GetArchitecture() noexcept {
   if constexpr (kArchitecture == "x86" || kArchitecture == "i386" ||
