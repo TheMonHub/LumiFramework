@@ -31,4 +31,5 @@ jobs:
           echo "Running clang-format..."
           ./clang-format.sh
           echo "Running clang-tidy..."
+          echo "---------------------------------------------------"
           ./clang-tidy.sh
