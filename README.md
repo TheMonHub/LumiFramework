@@ -1,9 +1,11 @@
 ## LumiFramework: Your C++20 Companion for Cross-Platform Desktop Applications
 
-[](https://www.google.com/search?q=CODE_OF_CONDUCT.md)
-[](https://codecov.io/gh/TheMonHub/LumiFramework)
-[](https://discord.gg/2jJaC3yFEH)
-[](https://www.google.com/search?q=LICENSE)
+## LumiFramework: A C++ Framework Library for Desktop Applications
+
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![codecov](https://codecov.io/gh/TheMonHub/LumiFramework/graph/badge.svg?token=2YN92BA4JE)](https://codecov.io/gh/TheMonHub/LumiFramework)
+[![Discord](https://img.shields.io/discord/1386311411705315368?label=Discord)](https://discord.gg/2jJaC3yFEH)
+[![GitHub license](https://img.shields.io/github/license/TheMonHub/LumiFramework.svg)](LICENSE)
 LumiFramework is a cutting-edge C++ framework that streamlines **cross-platform desktop application development**. Built from the ground up with **C++20 Modules**, Lumi provides the essential scaffolding you need to build powerful, interactive apps for **Windows, Linux, and macOS** with unprecedented ease and speed. We cut the boilerplate so you can focus on your application's unique logic.
 
 -----
