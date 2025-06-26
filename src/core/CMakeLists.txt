@@ -8,73 +8,66 @@ if (NOT EXISTS "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm")
     message(FATAL_ERROR "Metadata interface file not found.")
 endif ()
 #-----------------------------------------------------------------------------
-set(LUMI_CORE_IMPLEMENTATION_SOURCES
-        "${LUMI_SOURCE_DIR}/src/core/info.cpp"
-        "${LUMI_SOURCE_DIR}/src/core/error_funny.cpp"
-        "${LUMI_SOURCE_DIR}/src/core/stacktrace.cpp"
+set(LUMI_INFO_IMPLEMENTATION_SOURCES
+        "${LUMI_SOURCE_DIR}/src/core/buildinfo.cpp"
+        "${LUMI_SOURCE_DIR}/src/core/systeminfo.cpp"
 )
 
-set(LUMI_CORE_PUBLIC_HEADERS
+set(LUMI_INFO_PUBLIC_HEADERS
 
 )
 
-set(LUMI_CORE_PUBLIC_INTERFACES
-        "${LUMI_SOURCE_DIR}/include/lumi/core/core.cppm"
+set(LUMI_INFO_PUBLIC_INTERFACES
         "${LUMI_SOURCE_DIR}/include/lumi/core/info.cppm"
-        "${LUMI_SOURCE_DIR}/include/lumi/core/error_handler.cppm"
-        "${LUMI_SOURCE_DIR}/include/lumi/core/error_funny.cppm"
-        "${LUMI_SOURCE_DIR}/include/lumi/core/stacktrace.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/buildinfo.cppm"
+        "${LUMI_SOURCE_DIR}/include/lumi/core/systeminfo.cppm"
 )
 
-set(LUMI_CORE_DEPENDENCIES
+set(LUMI_INFO_DEPENDENCIES
 
 )
 # IDE source organization
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_CORE_SOURCES})
-source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_CORE_PUBLIC_INTERFACES})
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LUMI_INFO_IMPLEMENTATION_SOURCES})
+source_group(TREE "${LUMI_SOURCE_DIR}/include/lumi" FILES ${LUMI_INFO_PUBLIC_INTERFACES})
 
 #-----------------------------------------------------------------------------
 # Build Configuration
 #-----------------------------------------------------------------------------
 if (LUMI_BUILD_STATIC_LIBS)
-    # core
-    add_library(LumiCore STATIC)
+    # info
+    add_library(LumiInfo STATIC)
 
-    target_sources(LumiCore
+    target_sources(LumiInfo
             PUBLIC
             FILE_SET HEADERS
             BASE_DIRS
                 "${LUMI_SOURCE_DIR}/include/lumi"
             FILES
-                ${LUMI_CORE_PUBLIC_HEADERS}
+                ${LUMI_INFO_PUBLIC_HEADERS}
             FILE_SET CXX_MODULES
             BASE_DIRS
                 "${LUMI_SOURCE_DIR}/include/lumi"
                 "${CMAKE_BINARY_DIR}/include/lumi"
             FILES
-                ${LUMI_CORE_PUBLIC_INTERFACES}
+                ${LUMI_INFO_PUBLIC_INTERFACES}
                 ${LUMI_GENERATED_METADATA_OUTPUT}
             PRIVATE
-                ${LUMI_CORE_IMPLEMENTATION_SOURCES}
+                ${LUMI_INFO_IMPLEMENTATION_SOURCES}
     )
-    target_compile_features(LumiCore INTERFACE cxx_std_20)
-    add_library(Lumi::Core ALIAS LumiCore)
+    add_library(Lumi::Info ALIAS LumiInfo)
 
     target_link_libraries(
-            LumiCore
+            LumiInfo
             PUBLIC
-            ${LUMI_CORE_DEPENDENCIES}
+            ${LUMI_INFO_DEPENDENCIES}
     )
-    configure_lumi_target(LumiCore)
+    configure_lumi_target(LumiInfo "Info")
 
-    set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS LumiCore)
+    list(APPEND LUMI_ALL_SOURCES ${LUMI_INFO_IMPLEMENTATION_SOURCES})
+    list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_INFO_PUBLIC_HEADERS})
+    list(APPEND LUMI_ALL_PUBLIC_INTERFACES ${LUMI_INFO_PUBLIC_INTERFACES} ${LUMI_GENERATED_METADATA_OUTPUT})
 
-    list(APPEND LUMI_ALL_SOURCES ${LUMI_CORE_IMPLEMENTATION_SOURCES})
-    list(APPEND LUMI_ALL_PUBLIC_HEADERS ${LUMI_CORE_PUBLIC_HEADERS})
-    list(APPEND LUMI_ALL_PUBLIC_INTERFACES ${LUMI_CORE_PUBLIC_INTERFACES} ${LUMI_GENERATED_METADATA_OUTPUT})
+    configure_lumi_interface_target(LumiCore "LumiInfo")
 endif ()
 
-# Push the data to the global scope
-set(LUMI_ALL_SOURCES ${LUMI_ALL_SOURCES} PARENT_SCOPE)
-set(LUMI_ALL_PUBLIC_HEADERS ${LUMI_ALL_PUBLIC_HEADERS} PARENT_SCOPE)
-set(LUMI_ALL_PUBLIC_INTERFACES ${LUMI_ALL_PUBLIC_INTERFACES} PARENT_SCOPE)
+push_data_to_global()

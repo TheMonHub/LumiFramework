@@ -1,0 +1,81 @@
+// Copyright (c) 2025.
+// Distributed under the Boost Software License, Version 1.0
+
+//
+// Created by Mono on 18/6/2025.
+//
+
+/**
+ * @file
+ * @brief Contains build information and metadata for the Lumi framework
+ *
+ * This file provides compile-time constants and configuration information about
+ * lumi framework's build environment, version numbers, and project metadata.
+ * @note Recommended to use this instead of directly accessing metadata constants.
+ */
+module;
+
+#include <cstdint>
+#include <string_view>
+
+export module lumi.info:buildinfo;
+export import :metadata;
+
+export namespace lumi::buildinfo {
+enum class VersionTag : uint8_t {
+  NONE,
+  DEV,
+  ALPHA,
+  BETA,
+  RELEASE_CANDIDATE,
+  RELEASE
+};
+enum class BuildType : uint8_t {
+  DEBUG,
+  RELEASE,
+  REL_WITH_DEB_INFO,
+  MINSIZEREL,
+  UNKNOWN
+};
+enum class PLATFORM : uint8_t {
+  WINDOWS,
+  LINUX,
+  MACOS,
+  UNKNOWN
+};
+enum class ARCHITECTURE : uint8_t {
+  X86,
+  X86_64,
+  ARM,
+  ARM64,
+  UNKNOWN
+};
+enum class COMPILER : uint8_t {
+  GCC,
+  CLANG,
+  MSVC,
+  UNKNOWN
+};
+
+std::string_view GetVersion(bool include_tag = false) noexcept;
+uint8_t GetVersionMajor() noexcept;
+uint8_t GetVersionMinor() noexcept;
+uint8_t GetVersionPatch() noexcept;
+VersionTag GetVersionTag() noexcept;
+uint8_t GetVersionReleaseCandidate() noexcept;
+BuildType GetBuildType() noexcept;
+std::string_view GetCommitHash() noexcept;
+std::string_view GetGitBranch() noexcept;
+PLATFORM GetPlatform() noexcept;
+ARCHITECTURE GetArchitecture() noexcept;
+uint8_t GetBitness() noexcept;
+COMPILER GetCompiler() noexcept;
+std::string_view GetCompilerName() noexcept;
+std::string_view GetCompilerVersion() noexcept;
+std::string_view GetFrameworkName() noexcept;
+std::string_view GetFrameworkDescription() noexcept;
+std::string_view GetFrameworkHomepage() noexcept;
+std::string_view GetFrameworkCopyrightHolder() noexcept;
+std::string_view GetFrameworkLicense() noexcept;
+std::string_view GetFrameworkLicenseText() noexcept;
+}  // namespace lumi::buildinfo

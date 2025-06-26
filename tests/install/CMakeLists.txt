@@ -20,5 +20,5 @@ add_executable(LumiInstallTests
 
 target_link_libraries(LumiInstallTests
         PRIVATE
-        Lumi::LumiCore
+        Lumi::Lumi
 )

@@ -5,7 +5,4 @@
 // Created by Mono on 26/6/2025.
 //
 
-export module lumi.info;
-export import :metadata;
-export import :buildinfo;
-export import :systeminfo;
+export module lumi.info:systeminfo;

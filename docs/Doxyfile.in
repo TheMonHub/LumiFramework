@@ -11,7 +11,6 @@ PROJECT_LOGO           =
 #---------------------------------------------------------------------------
 OUTPUT_DIRECTORY       = "@DOXY_OUTPUT_DIR@"
 GENERATE_HTML          = YES
-HTML_COLORSTYLE        = DARK
 HTML_OUTPUT            = html
 GENERATE_LATEX         = NO
 HTML_COLORSTYLE_HUE    = 220
@@ -20,7 +19,8 @@ HTML_COLORSTYLE_GAMMA  = 80
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_TREEVIEW      = YES
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = "@LUMI_SOURCE_DIR@"
+STRIP_FROM_PATH        = "@LUMI_SOURCE_DIR@" \
+                        "@CMAKE_BINARY_DIR@"
 DISABLE_INDEX          = NO
 FULL_SIDEBAR           = NO
 HTML_EXTRA_FILES       = @LUMI_SOURCE_DIR@/docs/doxygen-awesome-fragment-copy-button.js \

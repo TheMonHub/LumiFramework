@@ -5,18 +5,18 @@
 
 #include <iostream>
 
-import lumi.core;
+import lumi.info;
 
 int main() {
-  lumi::info::GetVersion(true);
-  std::cout << "Lumi Framework Version: " << lumi::info::GetVersion(true)
+  lumi::buildinfo::GetVersion(true);
+  std::cout << "Lumi Framework Version: " << lumi::buildinfo::GetVersion(true)
             << "\n"
-            << "Build Type: " << lumi::info::kBuildType << "\n"
-            << "Description: " << lumi::info::GetFrameworkDescription() << "\n"
-            << "Homepage: " << lumi::info::GetFrameworkHomepage() << "\n";
+            << "Build Type: " << lumi::buildinfo::kBuildType << "\n"
+            << "Description: " << lumi::buildinfo::GetFrameworkDescription() << "\n"
+            << "Homepage: " << lumi::buildinfo::GetFrameworkHomepage() << "\n";
   std::cout << "\n"
-            << "Copyright holder: " << lumi::info::GetFrameworkCopyrightHolder()
+            << "Copyright holder: " << lumi::buildinfo::GetFrameworkCopyrightHolder()
             << "\n"
-            << "License: " << lumi::info::GetFrameworkLicense() << "\n"
-            << lumi::info::GetFrameworkLicenseText() << "\n";
+            << "License: " << lumi::buildinfo::GetFrameworkLicense() << "\n"
+            << lumi::buildinfo::GetFrameworkLicenseText() << "\n";
 }

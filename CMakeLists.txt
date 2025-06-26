@@ -303,13 +303,7 @@ STRING(REPLACE ";" " " LUMI_STATIC_LIB_TARGETS_LIST "${LUMI_STATIC_LIB_TARGETS_L
 # An INTERFACE library to group all static components
 # This allows linking all static components using one target.
 if (LUMI_STATIC_LIB_TARGETS_LIST)
-    add_library(Lumi INTERFACE)
-    target_link_libraries(Lumi INTERFACE ${LUMI_STATIC_LIB_TARGETS_LIST})
-    add_library(Lumi::Lumi ALIAS Lumi)
-    install(TARGETS Lumi
-            EXPORT "${LUMI_COMMON_EXPORT_SET}"
-    )
-    message(STATUS "Created Lumi::Lumi interface library to group all static components.")
+    configure_lumi_interface_target(Lumi "${LUMI_STATIC_LIB_TARGETS_LIST}")
 endif ()
 
 #-----------------------------------------------------------------------------

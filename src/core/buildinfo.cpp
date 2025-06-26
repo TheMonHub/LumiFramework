@@ -10,16 +10,23 @@ module;
 #include <cstdint>
 #include <string_view>
 
-module lumi.core;
-import :metadata;
+module lumi.info;
 
-namespace lumi::info {
+namespace lumi::buildinfo {
+/**
+ * @namespace lumi::buildinfo
+ * @brief Contains build information and version metadata for the Lumi framework
+ *
+ * This namespace provides compile-time constants and configuration information about
+ * the build environment, version numbers, and project metadata.
+ */
+
 std::string_view GetVersion(const bool include_tag) noexcept {
   return include_tag ? kVersionFull : kVersion;
 }
-uint8_t GetVersionMajor() noexcept { return kVersionNumbers.major_; }
-uint8_t GetVersionMinor() noexcept { return kVersionNumbers.minor_; }
-uint8_t GetVersionPatch() noexcept { return kVersionNumbers.patch_; }
+uint8_t GetVersionMajor() noexcept { return kVersionMajor; }
+uint8_t GetVersionMinor() noexcept { return kVersionMinor; }
+uint8_t GetVersionPatch() noexcept { return kVersionPatch; }
 
 VersionTag GetVersionTag() noexcept {
   if constexpr (kVersionTag.empty()) {
@@ -64,6 +71,7 @@ PLATFORM GetPlatform() noexcept {
   } else if constexpr (kPlatform == "Darwin") {
     return PLATFORM::MACOS;
   }
+  return PLATFORM::UNKNOWN;
 }
 
 std::string_view GetGitBranch() noexcept { return kGitBranch; }
@@ -95,6 +103,7 @@ COMPILER GetCompiler() noexcept {
   return COMPILER::UNKNOWN;
 }
 std::string_view GetCompilerName() noexcept { return kCompiler; }
+std::string_view GetCompilerVersion() noexcept { return kCompilerVersion; }
 
 std::string_view GetFrameworkName() noexcept { return kProjectName; }
 std::string_view GetFrameworkDescription() noexcept {
@@ -105,7 +114,8 @@ std::string_view GetFrameworkCopyrightHolder() noexcept {
   return kCopyrightHolder;
 }
 std::string_view GetFrameworkLicense() noexcept {
-  return "Boost Software License - Version 1.0";
+  static constexpr std::string_view kLicense = "Boost Software License - Version 1.0";
+  return kLicense;
 }
 std::string_view GetFrameworkLicenseText() noexcept { return kLicenseText; }
-}  // namespace lumi::info
+}  // namespace lumi::buildinfo

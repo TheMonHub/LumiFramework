@@ -5,40 +5,84 @@
 // Created by Mono on 1/6/2025.
 //
 
+/** @file
+ * @brief Contains build metadata and version information for the Lumi framework.
+ *
+ * This file provides constants related to the Lumi framework's version,
+ * build environment, and other metadata useful for identification and debugging.
+ * @note This file is generated during the CMake configuration process.
+ */
+
 module;
 # include <string_view>
 # include <cstdint>
 
-export module lumi.core:metadata;
+export module lumi.info:metadata;
 
-export namespace lumi::info {
-// Version information
+export namespace lumi::buildinfo {
+
+/** @name Version Information
+ * Constants related to version numbering and release information
+ * @{
+ */
+/// Complete version string including tags
 inline constexpr std::string_view kVersionFull = "@PROJECT_VERSION@";
+/// Version number in semantic versioning format (MAJOR.MINOR.PATCH)
 inline constexpr std::string_view kVersion = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@";
-inline constexpr std::string_view kVersionTag = "@VERSION_TAG@"; // NOLINT
+/// Version tag indicating release type (e.g., alpha, beta, rc)
+inline constexpr std::string_view kVersionTag = "@VERSION_TAG@";
+/// Release candidate version number (if applicable)
 inline constexpr uint8_t kVersionReleaseCandidate = @LUMI_RELEASE_CANDIDATE_VERSION@;
 
-inline constexpr struct KVersionNumbers {
-  uint8_t major_ = @PROJECT_VERSION_MAJOR@;
-  uint8_t minor_ = @PROJECT_VERSION_MINOR@;
-  uint8_t patch_ = @PROJECT_VERSION_PATCH@;
-} kVersionNumbers;
+/// Major version number
+inline constexpr uint8_t kVersionMajor = @PROJECT_VERSION_MAJOR@;
+/// Minor version number
+inline constexpr uint8_t kVersionMinor = @PROJECT_VERSION_MINOR@;
+/// Patch version number
+inline constexpr uint8_t kVersionPatch = @PROJECT_VERSION_PATCH@;
+/** @} */
 
-// Project information
+/** @name Lumi Information
+ * Framework metadata and identification
+ * @{
+ */
+/// Name of the Framework
 inline constexpr std::string_view kProjectName = "@PROJECT_NAME@";
-inline constexpr std::string_view kProjectDescription = "@PROJECT_DESCRIPTION@"; // NOLINT
-inline constexpr std::string_view kProjectHomepage = "@PROJECT_HOMEPAGE_URL@"; // NOLINT
-inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@"; // NOLINT
+/// Lumi description
+inline constexpr std::string_view kProjectDescription = "@PROJECT_DESCRIPTION@";
+/// Lumi homepage URL
+inline constexpr std::string_view kProjectHomepage = "@PROJECT_HOMEPAGE_URL@";
+/// Copyright holder information
+inline constexpr std::string_view kCopyrightHolder = "@PROJECT_COPYRIGHT_HOLDER@";
+/** @} */
 
-// License information
-inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@"; // NOLINT
+/** @name License Information
+ * @{
+ */
+/// Full license text
+inline constexpr std::string_view kLicenseText = "@LUMI_LICENSE_TEXT@";
+/** @} */
 
-inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@"; // NOLINT
-inline constexpr std::string_view kCommitHash = "@LUMI_GIT_COMMIT_HASH@"; // NOLINT
-inline constexpr std::string_view kGitBranch = "@LUMI_GIT_BRANCH@"; // NOLINT
+/** @name Build Environment Information
+ * Information about the build configuration and environment
+ * @{
+ */
+/// Build type (Debug, Release, etc.)
+inline constexpr std::string_view kBuildType = "@CMAKE_BUILD_TYPE@";
+/// Git commit hash of the build
+inline constexpr std::string_view kCommitHash = "@LUMI_GIT_COMMIT_HASH@";
+/// Git branch name
+inline constexpr std::string_view kGitBranch = "@LUMI_GIT_BRANCH@";
+/// Target platform name
 inline constexpr std::string_view kPlatform = "@CMAKE_SYSTEM_NAME@";
-inline constexpr std::string_view kArchitecture = "@CMAKE_SYSTEM_PROCESSOR";
+/// Target architecture
+inline constexpr std::string_view kArchitecture = "@CMAKE_SYSTEM_PROCESSOR@";
+/// Platform bitness (32/64)
 inline constexpr uint8_t kBitness = @LUMI_BITNESS@;
+/// Compiler identifier
 inline constexpr std::string_view kCompiler = "@CMAKE_CXX_COMPILER_ID@";
+/// Compiler version string
 inline constexpr std::string_view kCompilerVersion = "@CMAKE_CXX_COMPILER_VERSION@";
-}  // namespace lumi::info
+/** @} */
+
+}  // namespace lumi::buildinfo
