@@ -5,6 +5,8 @@
 // Created by Mono on 22/6/2025.
 //
 
+/// @file
+/// For grouping all error handler-related modules.
 module;
 export module lumi.error_handler;
 export import :stacktrace;

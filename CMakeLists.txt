@@ -35,12 +35,13 @@
 # -DLUMI_BUILD_EXAMPLES=ON/OFF      Build examples (Default: ON if top-level)
 # -DLUMI_BUILD_TESTS=ON/OFF         Build tests (Default: ON if top-level)
 
+# Documentation:
+# -DLUMI_DOCS_INTERNAL=ON/OFF       Show internal documentation (Default: OFF)
+
 # Installation:
 # -DLUMI_INSTALL=ON/OFF             Install library (Default: ON if top-level)
 # -DLUMI_INSTALL_DOCS=ON/OFF        Install documentation (Default: ON)
 # -DLUMI_INSTALL_EXAMPLES=ON/OFF    Install examples (Default: ON)
-
-# TODO: Add Window component
 
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 project(Lumi
@@ -115,6 +116,8 @@ option(LUMI_INSTALL_EXAMPLES "Install Lumi examples" ${IS_TOP_LEVEL_PROJECT})
 option(LUMI_BUILD_DOCS "Build project documentation with Doxygen" ON)
 option(LUMI_BUILD_EXAMPLES "Build Lumi examples" OFF)
 option(LUMI_BUILD_TESTS "Build Lumi tests" ${IS_TOP_LEVEL_PROJECT})
+
+option(LUMI_DOCS_INTERNAL "Show internal documentation" OFF)
 
 option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 

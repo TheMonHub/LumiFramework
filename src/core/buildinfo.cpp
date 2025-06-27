@@ -5,6 +5,10 @@
 // Created by Mono on 18/6/2025.
 //
 
+/** * @file
+ * @brief Implementation for buildinfo.cppm
+ * @see buildinfo.cppm
+ */
 module;
 
 #include <cstdint>
@@ -13,14 +17,6 @@ module;
 module lumi.info;
 
 namespace lumi::buildinfo {
-/**
- * @namespace lumi::buildinfo
- * @brief Contains build information and version metadata for the Lumi framework
- *
- * This namespace provides compile-time constants and configuration information about
- * the build environment, version numbers, and project metadata.
- */
-
 std::string_view GetVersion(const bool include_tag) noexcept {
   return include_tag ? kVersionFull : kVersion;
 }

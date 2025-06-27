@@ -5,6 +5,8 @@
 // Created by Mono on 26/6/2025.
 //
 
+/// @file
+/// For grouping all info-related modules.
 export module lumi.info;
 export import :metadata;
 export import :buildinfo;

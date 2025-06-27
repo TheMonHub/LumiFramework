@@ -6,7 +6,7 @@
 //
 
 /** @file
- * @brief Contains build metadata and version information for the Lumi framework.
+ * @brief Contains constant metadata and other information for the Lumi framework.
  *
  * This file provides constants related to the Lumi framework's version,
  * build environment, and other metadata useful for identification and debugging.
