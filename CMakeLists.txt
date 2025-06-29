@@ -36,7 +36,7 @@
 # -DLUMI_BUILD_TESTS=ON/OFF         Build tests (Default: ON if top-level)
 
 # Documentation:
-# -DLUMI_DOCS_INTERNAL=ON/OFF       Show internal documentation (Default: OFF)
+# -DLUMI_DOCS_INTERNAL="YES/NO"       Show internal documentation (Default: "NO")
 
 # Installation:
 # -DLUMI_INSTALL=ON/OFF             Install library (Default: ON if top-level)
@@ -117,7 +117,7 @@ option(LUMI_BUILD_DOCS "Build project documentation with Doxygen" ON)
 option(LUMI_BUILD_EXAMPLES "Build Lumi examples" OFF)
 option(LUMI_BUILD_TESTS "Build Lumi tests" ${IS_TOP_LEVEL_PROJECT})
 
-option(LUMI_DOCS_INTERNAL "Show internal documentation" OFF)
+option(LUMI_DOCS_INTERNAL "Show internal documentation" "YES")
 
 option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 
@@ -301,7 +301,6 @@ message(STATUS "Lumi interfaces: ${LUMI_ALL_PUBLIC_INTERFACES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 
 set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/lumi")
-STRING(REPLACE ";" " " LUMI_STATIC_LIB_TARGETS_LIST "${LUMI_STATIC_LIB_TARGETS_LIST}")
 
 # An INTERFACE library to group all static components
 # This allows linking all static components using one target.

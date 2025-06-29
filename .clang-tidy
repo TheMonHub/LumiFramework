@@ -17,13 +17,15 @@ Checks: "*,
         -bugprone-suspicious-missing-comma,
         -readability-redundant-declaration,
         -*-include-cleaner,
-        -misc-use-internal-linkage
+        -misc-use-internal-linkage,
+        -*-avoid-non-const-global-variables
 "
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 ExcludeHeaderFilterRegex: '.*[/\\]_deps[/\\]?.*'
 
 CheckOptions:
+  readability-function-cognitive-complexity.Threshold: 50
   readability-identifier-length.MinimumVariableNameLength: 2
   readability-identifier-length.MinimumParameterNameLength: 2
   readability-identifier-naming.NamespaceCase: lower_case

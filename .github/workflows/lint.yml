@@ -11,25 +11,36 @@ permissions:
 jobs:
   run-linters:
     name: Format and Lint Code
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v2
         with:
-         version: "19"
-         env: true
+          version: "19"
+          env: true
+
       - name: Set up CMake and Ninja
         uses: lukka/get-cmake@latest
         with:
           cmakeVersion: latest
           ninjaVersion: latest
-      - name: Run Linters
+
+      - name: Run Clang-Format
         run: |
           echo "Running clang-format..."
           ./clang-format.sh
+        shell: bash
+
+      - name: Run Clang-Tidy
+        run: |
           echo "Running clang-tidy..."
           echo "---------------------------------------------------"
           ./clang-tidy.sh
+        shell: bash

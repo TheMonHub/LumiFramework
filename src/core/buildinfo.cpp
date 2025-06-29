@@ -110,7 +110,8 @@ std::string_view GetFrameworkCopyrightHolder() noexcept {
   return kCopyrightHolder;
 }
 std::string_view GetFrameworkLicense() noexcept {
-  static constexpr std::string_view kLicense = "Boost Software License - Version 1.0";
+  static constexpr std::string_view kLicense =
+      "Boost Software License - Version 1.0";
   return kLicense;
 }
 std::string_view GetFrameworkLicenseText() noexcept { return kLicenseText; }

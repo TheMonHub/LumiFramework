@@ -15,11 +15,12 @@ int main() {
   std::cout << "Lumi Framework Version: " << lumi::buildinfo::GetVersion(true)
             << "\n"
             << "Build Type: " << lumi::buildinfo::kBuildType << "\n"
-            << "Description: " << lumi::buildinfo::GetFrameworkDescription() << "\n"
+            << "Description: " << lumi::buildinfo::GetFrameworkDescription()
+            << "\n"
             << "Homepage: " << lumi::buildinfo::GetFrameworkHomepage() << "\n";
   std::cout << "\n"
-            << "Copyright holder: " << lumi::buildinfo::GetFrameworkCopyrightHolder()
-            << "\n"
+            << "Copyright holder: "
+            << lumi::buildinfo::GetFrameworkCopyrightHolder() << "\n"
             << "License: " << lumi::buildinfo::GetFrameworkLicense() << "\n"
             << lumi::buildinfo::GetFrameworkLicenseText() << "\n";
 }

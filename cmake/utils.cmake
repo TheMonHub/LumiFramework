@@ -40,7 +40,7 @@ macro(configure_lumi_interface_target target_name target_lists)
 
     add_library(${target_name} INTERFACE)
     target_link_libraries(${target_name} INTERFACE ${target_lists})
-    add_library(Lumi::${target_name} ALIAS ${target_name})
+    add_library("Lumi::${target_name}" ALIAS ${target_name})
     if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
         install(TARGETS ${target_name}
                 EXPORT "${LUMI_COMMON_EXPORT_SET}"
