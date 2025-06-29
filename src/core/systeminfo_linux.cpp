@@ -60,13 +60,13 @@ std::vector<lumi::systeminfo::Cpuinfo> ParseCpuInfo() {
       continue;
     }
 
-    size_t const colon_pos = line.find(':');
+    const size_t colon_pos = line.find(':');
     if (colon_pos == std::string::npos) {
       continue;
     }
 
-    std::string const key = Trim(line.substr(0, colon_pos));
-    std::string const value = Trim(line.substr(colon_pos + 1));
+    const std::string key = Trim(line.substr(0, colon_pos));
+    const std::string value = Trim(line.substr(colon_pos + 1));
 
     if (key == "processor") {
       current_proc_info.logical_id_ = std::stoul(value);

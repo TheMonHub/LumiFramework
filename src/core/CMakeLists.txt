@@ -8,12 +8,18 @@ if (NOT EXISTS "${CMAKE_BINARY_DIR}/include/lumi/metadata.cppm")
     message(FATAL_ERROR "Metadata interface file not found.")
 endif ()
 #-----------------------------------------------------------------------------
-if (${CMAKE_HOST_LINUX})
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     set(LUMI_INFO_IMPLEMENTATION_SOURCES
             "${LUMI_SOURCE_DIR}/src/core/systeminfo_linux.cpp"
     )
-elseif (${CMAKE_HOST_WIN32})
-else ()
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    set(LUMI_INFO_IMPLEMENTATION_SOURCES
+            "${LUMI_SOURCE_DIR}/src/core/systeminfo_windows.cpp"
+    )
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    set(LUMI_INFO_IMPLEMENTATION_SOURCES
+            "${LUMI_SOURCE_DIR}/src/core/systeminfo_mac.cpp"
+    )
 endif ()
 
 set(LUMI_INFO_PUBLIC_HEADERS
