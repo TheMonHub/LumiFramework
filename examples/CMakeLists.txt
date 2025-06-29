@@ -8,4 +8,5 @@ target_include_directories(LumiExamples
 target_link_libraries(LumiExamples
         PRIVATE
         Lumi::Info
+        Lumi::Unit
 )
