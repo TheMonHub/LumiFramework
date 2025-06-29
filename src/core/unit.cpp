@@ -36,9 +36,9 @@ uint64_t GetUnitMultiplier(const StorageUnit unit) {
       return 1;
   }
 }
-uint64_t UnitConvert(const uint64_t value,
-                     const UnitConversionParams
-                         params) {  // NOLINT(*-easily-swappable-parameters)
+uint64_t UnitConvert(
+    const uint64_t value,  // NOLINT(*-easily-swappable-parameters)
+    const UnitConversionParams params) {
   const StorageUnit from_unit = params.from_unit_;
   const StorageUnit to_unit = params.to_unit_;
 
@@ -57,9 +57,9 @@ uint64_t UnitConvert(const uint64_t value,
 
   return value_in_bytes / to_multiplier;
 }
-uint64_t UnitConvert(const uint64_t value,
-                     const UnitConversionParamsUint
-                         params) {  // NOLINT(*-easily-swappable-parameters)
+uint64_t UnitConvert(
+    const uint64_t value,  // NOLINT(*-easily-swappable-parameters)
+    const UnitConversionParamsUint params) {
   const uint64_t from_multiplier = params.from_exp_;
 
   if (from_multiplier != 0 &&

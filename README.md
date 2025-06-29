@@ -4,7 +4,7 @@
 [![Discord](https://img.shields.io/discord/1386311411705315368?label=Discord)](https://discord.gg/2jJaC3yFEH)
 [![GitHub license](https://img.shields.io/github/license/TheMonHub/LumiFramework.svg)](LICENSE)
 
-LumiFramework is a cutting-edge C++ framework that streamlines **cross-platform desktop application development**. Built from the ground up with **C++20 Modules**, Lumi provides the essential scaffolding you need to build powerful, interactive apps for **Windows, Linux, and macOS** with unprecedented ease and speed. We cut the boilerplate so you can focus on your application's unique logic.
+LumiFramework is a cutting-edge C++ framework that streamlines **cross-platform desktop application development**. Built from the ground up with **C++20 Modules**, Lumi provides the essential scaffolding you need to build powerful, interactive apps for **Windows, Linux, and ~~macOS~~** with unprecedented ease and speed. We cut the boilerplate so you can focus on your application's unique logic.
 
 -----
 
@@ -12,7 +12,7 @@ LumiFramework is a cutting-edge C++ framework that streamlines **cross-platform 
 
 * **Engineered for Modern C++**: Embrace the future of C++ development. Lumi is built using **C++20 Modules**, which unlocks faster compile times, robust dependency management, and a cleaner codebase by design.
 * **Highly Modular & Low-Coupling Architecture**: Lumi is not a monolithic framework but a **collection of independent libraries**. Designed with minimal internal dependencies, this architecture allows you to consume only the specific components you need. You can seamlessly integrate Lumi’s libraries into your existing C++ project, giving you complete control over your application's structure.
-* **Flexible, High-to-Low Level Control**: Lumi adapts to your needs, not the other way around. You can harness **precise, low-level control** when you need it, or leverage powerful, ready-made components like our application loop and event handling for rapid development. This design empowers your architectural choices, fitting your unique ecosystem without restriction.
+* **Flexible, High-to-Low-Level Control**: Lumi adapts to your needs, not the other way around. You can harness **precise, low-level control** when you need it, or leverage powerful, ready-made components like our application loop and event handling for rapid development. This design empowers your architectural choices, fitting your unique ecosystem without restriction.
 * **Robust Cross-Platform Foundations**: We've tackled the trickiest parts of cross-platform development for you. Get started quickly with robust solutions for **window management, input processing, and graphics integration**, providing a solid foundation for your app.
 
 -----
@@ -26,6 +26,8 @@ We envision LumiFramework as the **definitive foundation for modern C++ desktop 
 ### Project Status & Contributions
 
 LumiFramework is currently in **active development**, focused on building a solid core foundation.
+
+Currently, **macOS** support is **not available**, but we are actively working on it. We welcome contributions from the community to help us expand our capabilities and improve the framework.
 
 We deeply appreciate your interest and welcome your help in making LumiFramework even better.
 

@@ -43,6 +43,9 @@
 # -DLUMI_INSTALL_DOCS=ON/OFF        Install documentation (Default: ON)
 # -DLUMI_INSTALL_EXAMPLES=ON/OFF    Install examples (Default: ON)
 
+# Development & Debugging:
+# -DLUMI_SPOOF_OS=OFF/WINDOWS/LINUX/MAC          Spoof OS for testing purposes (Default: OFF)
+
 cmake_minimum_required(VERSION 3.29 FATAL_ERROR)
 project(Lumi
         VERSION 0.1.0
@@ -117,7 +120,8 @@ option(LUMI_BUILD_DOCS "Build project documentation with Doxygen" ON)
 option(LUMI_BUILD_EXAMPLES "Build Lumi examples" OFF)
 option(LUMI_BUILD_TESTS "Build Lumi tests" ${IS_TOP_LEVEL_PROJECT})
 
-option(LUMI_DOCS_INTERNAL "Show internal documentation" "YES")
+set(LUMI_DOCS_INTERNAL "NO" CACHE STRING "Show internal documentation")
+set(LUMI_SPOOF_OS "OFF" CACHE STRING "Spoof OS for testing purposes (OFF, WINDOWS, LINUX, MAC)")
 
 option(LUMI_BUILD_WINDOW "Build Lumi Window component" ON)
 
@@ -132,10 +136,18 @@ set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME_LOWER_C
 set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME_LOWER_CASE}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/lumi")
 
-# core configuration
+# configuration
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (${LUMI_SPOOF_OS} STREQUAL "LINUX")
+    set(CMAKE_SYSTEM_NAME "Linux")
+elseif (${LUMI_SPOOF_OS} STREQUAL "WINDOWS")
+    set(CMAKE_SYSTEM_NAME "Windows")
+elseif (${LUMI_SPOOF_OS} STREQUAL "MAC")
+    set(CMAKE_SYSTEM_NAME "Darwin")
+endif ()
 
 # Configure symbol visibility
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
