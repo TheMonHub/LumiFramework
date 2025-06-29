@@ -43,7 +43,7 @@
 # -DLUMI_INSTALL_DOCS=ON/OFF        Install documentation (Default: ON)
 # -DLUMI_INSTALL_EXAMPLES=ON/OFF    Install examples (Default: ON)
 
-cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.29 FATAL_ERROR)
 project(Lumi
         VERSION 0.1.0
         DESCRIPTION "A modular C++ framework library that streamlines cross-platform desktop application development, cutting boilerplate and empowering developers with deep control."
@@ -130,6 +130,7 @@ set(LUMI_INSTALL_DOCDIR "${CMAKE_INSTALL_DOCDIR}/${PROJECT_VERSION_MAJOR}.${PROJ
 set(LUMI_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME_LOWER_CASE}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
         CACHE STRING "Install path for Lumi package-related CMake files")
 set(LUMI_VERSIONED_SUBDIR "${PROJECT_NAME_LOWER_CASE}/${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/lumi")
 
 # core configuration
 set(CMAKE_CXX_STANDARD 20)
@@ -300,14 +301,6 @@ message(STATUS "Lumi public headers: ${LUMI_ALL_PUBLIC_HEADERS}")
 message(STATUS "Lumi interfaces: ${LUMI_ALL_PUBLIC_INTERFACES}")
 message(STATUS "Lumi static library targets: ${LUMI_STATIC_LIB_TARGETS_LIST}")
 
-set(INSTALL_DESTINATION "/${LUMI_VERSIONED_SUBDIR}/lumi")
-
-# An INTERFACE library to group all static components
-# This allows linking all static components using one target.
-if (LUMI_STATIC_LIB_TARGETS_LIST)
-    configure_lumi_interface_target(Lumi "${LUMI_STATIC_LIB_TARGETS_LIST}")
-endif ()
-
 #-----------------------------------------------------------------------------
 # Testing and Examples
 #-----------------------------------------------------------------------------
@@ -361,6 +354,7 @@ if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
                 FILE "lumi-targets.cmake"
                 DESTINATION "${LUMI_INSTALL_CMAKEDIR}"
                 NAMESPACE Lumi::
+                CXX_MODULES_DIRECTORY "modules"
         )
     endif ()
 

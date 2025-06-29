@@ -8,7 +8,8 @@ add_executable(LumiTests
 
 target_link_libraries(LumiTests
         PRIVATE
-        Lumi::Lumi
+        Lumi::Info
+        Lumi::Unit
         GTest::gtest_main
         GTest::gmock_main
 )

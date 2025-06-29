@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.29 FATAL_ERROR)
 project(
         LumiInstallTests
         LANGUAGES CXX
@@ -20,5 +20,6 @@ add_executable(LumiInstallTests
 
 target_link_libraries(LumiInstallTests
         PRIVATE
-        Lumi::Lumi
+        Lumi::LumiInfo
+        Lumi::LumiUnit
 )

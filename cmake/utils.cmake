@@ -30,22 +30,10 @@ macro(configure_lumi_target target_name component_name)
                 RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}${INSTALL_DESTINATION}/${component_name}"
                 FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}${INSTALL_DESTINATION}"
                 FILE_SET CXX_MODULES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}${INSTALL_DESTINATION}"
+                CXX_MODULES_BMI DESTINATION "${CMAKE_INSTALL_BINDIR}${INSTALL_DESTINATION}/${component_name}/modules"
         )
     endif ()
     set_property(GLOBAL APPEND PROPERTY LUMI_STATIC_LIB_TARGETS ${target_name})
-endmacro()
-
-macro(configure_lumi_interface_target target_name target_lists)
-    STRING(REPLACE ";" " " target_lists "${target_lists}")
-
-    add_library(${target_name} INTERFACE)
-    target_link_libraries(${target_name} INTERFACE ${target_lists})
-    add_library("Lumi::${target_name}" ALIAS ${target_name})
-    if (LUMI_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
-        install(TARGETS ${target_name}
-                EXPORT "${LUMI_COMMON_EXPORT_SET}"
-        )
-    endif ()
 endmacro()
 
 macro(push_data_to_global)

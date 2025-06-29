@@ -82,7 +82,7 @@ if (LUMI_BUILD_STATIC_LIBS)
             PUBLIC
             ${LUMI_INFO_DEPENDENCIES}
     )
-    configure_lumi_target(LumiInfo "Info")
+    configure_lumi_target(LumiInfo "info")
 
     # unit
     add_library(LumiUnit STATIC)
@@ -109,13 +109,11 @@ if (LUMI_BUILD_STATIC_LIBS)
             PUBLIC
             ${LUMI_UNIT_DEPENDENCIES}
     )
-    configure_lumi_target(LumiUnit "Unit")
+    configure_lumi_target(LumiUnit "unit")
 
     list(APPEND LUMI_ALL_SOURCES "${LUMI_INFO_IMPLEMENTATION_SOURCES} ${LUMI_UNIT_IMPLEMENTATION_SOURCES}")
     list(APPEND LUMI_ALL_PUBLIC_HEADERS "${LUMI_INFO_PUBLIC_HEADERS} ${LUMI_UNIT_PUBLIC_HEADERS}")
     list(APPEND LUMI_ALL_PUBLIC_INTERFACES "${LUMI_INFO_PUBLIC_INTERFACES} ${LUMI_GENERATED_METADATA_OUTPUT} ${LUMI_UNIT_PUBLIC_INTERFACES}")
-
-    configure_lumi_interface_target(Core "LumiInfo;LumiUnit")
 endif ()
 
 push_data_to_global()
